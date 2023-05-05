@@ -20,4 +20,13 @@ describe('Testa o componente Footer', () => {
     const { pathname } = history.location;
     expect(pathname).toBe('/drinks');
   });
+
+  it('Testa se o botão Meals redireciona para a rota "/meals"', () => {
+    const { history } = renderWithRouter(<Footer />);
+    const allBtns = screen.getAllByRole('button');
+    userEvent.click(allBtns[1]);
+
+    const { pathname } = history.location;
+    expect(pathname).toBe('/meals');
+  });
 });
