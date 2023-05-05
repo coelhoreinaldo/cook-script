@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Recipe from '../components/Recipe';
+import { RecipeContext } from '../context/RecipeProvider';
 
 function Meals() {
+  const { mealsData } = useContext(RecipeContext);
   return (
     <div>
       Meals
-      <Recipe />
+      <Recipe mealsData={ mealsData } />
     </div>
   );
 }

@@ -6,21 +6,22 @@ export const RecipeContext = createContext();
 
 const MEALS_URL = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
 const DRINKS_URL = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+const MAX_ITEMS_QUANTITY = 12;
 
 function RecipeProvider({ children }) {
   const { fetchApi } = useFetch();
   const [mealsData, setMealsData] = useState([]);
   const [drinksData, setDrinksData] = useState([]);
 
-  const fetchMeals = useCallback(async () => {
+  const getData = useCallback(async () => {
     const meals = await fetchApi(MEALS_URL);
     const drinks = await fetchApi(DRINKS_URL);
-    setMealsData(meals);
-    setDrinksData(drinks);
+    setMealsData(meals.meals.filter((_, index) => index < MAX_ITEMS_QUANTITY));
+    setDrinksData(drinks.drinks.filter((_, index) => index < MAX_ITEMS_QUANTITY));
   }, [fetchApi]);
 
   useEffect(() => {
-    fetchMeals();
+    getData();
   }, []);
 
   const values = useMemo(() => ({
