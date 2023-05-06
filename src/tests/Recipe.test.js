@@ -1,7 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import RecipeProvider from '../context/RecipeProvider';
-import renderWithRouter from './helpers/renderWithRouder';
+import renderWithRouter from './helpers/renderWithRouter';
 import meals from './mocks/meals';
 // import drinks from './mocks/drinks';
 import mealsCategories from './mocks/mealsCategories';
