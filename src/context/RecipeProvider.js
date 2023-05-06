@@ -61,7 +61,8 @@ function RecipeProvider({ children }) {
       }
       setFilteredDrinks(filtered);
     }
-  }, [drinksData, fetchApi, history.location.pathname, mealsData]);
+  }, [drinksData, fetchApi,
+    history.location.pathname, mealsData, filteredDrinks, filteredMeals]);
 
   const getCategories = useCallback(async () => {
     const mealsCategoriesData = await fetchApi(MEALS_CATEGORIES);

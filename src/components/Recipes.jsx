@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { RecipeContext } from '../context/RecipeProvider';
 
 function Recipes() {
@@ -54,10 +54,10 @@ function Recipes() {
       <ul>
         {pathname === '/meals'
           ? filteredMeals.map((e, index) => (
-            <li
+            <Link
               data-testid={ `${index}-recipe-card` }
               key={ e.idMeal }
-
+              to={ `/meals/${e.idMeal}` }
             >
               <h3 data-testid={ `${index}-card-name` }>{e.strMeal}</h3>
               <figure className="figure">
@@ -70,11 +70,12 @@ function Recipes() {
                   data-testid={ `${index}-card-img` }
                 />
               </figure>
-            </li>
+            </Link>
           )) : filteredDrinks.map((e, index) => (
-            <li
+            <Link
               data-testid={ `${index}-recipe-card` }
               key={ e.idDrink }
+              to={ `/drinks/${e.idDrink}` }
             >
               <h3 data-testid={ `${index}-card-name` }>{e.strDrink}</h3>
               <figure className="figure">
@@ -87,7 +88,7 @@ function Recipes() {
                   data-testid={ `${index}-card-img` }
                 />
               </figure>
-            </li>
+            </Link>
           ))}
       </ul>
     </>
