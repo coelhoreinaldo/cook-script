@@ -1,10 +1,10 @@
-import Recipe from '../components/Recipe';
+import Recipes from '../components/Recipes';
 
 function Drinks() {
   return (
     <div>
       Drinks
-      <Recipe />
+      <Recipes />
     </div>
   );
 }

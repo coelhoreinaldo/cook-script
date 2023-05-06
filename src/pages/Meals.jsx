@@ -1,11 +1,11 @@
 import React from 'react';
-import Recipe from '../components/Recipe';
+import Recipes from '../components/Recipes';
 
 function Meals() {
   return (
     <div>
       Meals
-      <Recipe />
+      <Recipes />
     </div>
   );
 }

@@ -2,11 +2,24 @@ import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { RecipeContext } from '../context/RecipeProvider';
 
-function Recipe() {
+function Recipes() {
   const { location: { pathname } } = useHistory();
   const {
-    mealsData, drinksData, mealsCategories, drinksCategories,
+    mealsData, drinksData, mealsCategories, drinksCategories, isFetching, errorMessage,
   } = useContext(RecipeContext);
+
+  if (isFetching) {
+    return (
+      <div className="spinner-grow text-primary" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    );
+  }
+
+  if (errorMessage) {
+    return (<h3>{errorMessage}</h3>);
+  }
+
   return (
     <>
       <nav>
@@ -71,4 +84,4 @@ function Recipe() {
   );
 }
 
-export default Recipe;
+export default Recipes;

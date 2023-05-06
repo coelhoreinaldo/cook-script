@@ -12,7 +12,7 @@ const MAX_ITEMS_QUANTITY = 12;
 const MAX_CATEGORIES_QUANTITY = 5;
 
 function RecipeProvider({ children }) {
-  const { fetchApi } = useFetch();
+  const { fetchApi, isFetching, errorMessage } = useFetch();
   const [mealsData, setMealsData] = useState([]);
   const [drinksData, setDrinksData] = useState([]);
   const [mealsCategories, setMealsCategories] = useState([]);
@@ -40,8 +40,10 @@ function RecipeProvider({ children }) {
   }, []);
 
   const values = useMemo(() => ({
-    mealsData, drinksData, mealsCategories, drinksCategories,
-  }), [mealsData, drinksData, mealsCategories, drinksCategories]);
+    mealsData, drinksData, mealsCategories, drinksCategories, isFetching, errorMessage,
+  }), [
+    mealsData, drinksData, mealsCategories, drinksCategories, isFetching, errorMessage,
+  ]);
 
   return (
     <RecipeContext.Provider value={ values }>
