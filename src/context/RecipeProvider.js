@@ -39,14 +39,27 @@ function RecipeProvider({ children }) {
         return;
       }
       const mealsFilter = await fetchApi(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${tag}`);
-      setFilteredMeals(mealsFilter.meals.filter((_, i) => i < MAX_ITEMS_QUANT));
+      const filtered = mealsFilter.meals.filter((_, i) => i < MAX_ITEMS_QUANT);
+      if (filteredMeals[0].idMeal === filtered[0].idMeal) {
+        console.log('entrou');
+        setFilteredMeals(mealsData);
+        return;
+      }
+      setFilteredMeals(filtered);
     } else {
       if (tag === 'All') {
         setFilteredDrinks(drinksData);
         return;
       }
       const drinksFilter = await fetchApi(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${tag}`);
-      setFilteredDrinks(drinksFilter.drinks.filter((_, i) => i < MAX_ITEMS_QUANT));
+      const filtered = drinksFilter.drinks.filter((_, i) => i < MAX_ITEMS_QUANT);
+      console.log(filtered);
+      console.log(filteredDrinks);
+      if (filteredDrinks[0].idDrink === filtered[0].idDrink) {
+        setFilteredDrinks(drinksData);
+        return;
+      }
+      setFilteredDrinks(filtered);
     }
   }, [drinksData, fetchApi, history.location.pathname, mealsData]);
 
