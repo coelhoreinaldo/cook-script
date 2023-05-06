@@ -5,7 +5,8 @@ import { RecipeContext } from '../context/RecipeProvider';
 function Recipes() {
   const { location: { pathname } } = useHistory();
   const {
-    mealsData, drinksData, mealsCategories, drinksCategories, isFetching, errorMessage,
+    filteredMeals, filteredDrinks, mealsCategories, drinksCategories,
+    isFetching, errorMessage, handleMealsFilterByCategory,
   } = useContext(RecipeContext);
 
   if (isFetching) {
@@ -28,6 +29,7 @@ function Recipes() {
             <button
               data-testid={ `${strCategory}-category-filter` }
               key={ strCategory }
+              onClick={ () => handleMealsFilterByCategory(strCategory) }
             >
               {strCategory}
             </button>
@@ -36,14 +38,22 @@ function Recipes() {
             <button
               data-testid={ `${strCategory}-category-filter` }
               key={ strCategory }
+              onClick={ () => handleMealsFilterByCategory(strCategory) }
             >
               {strCategory}
             </button>
           ))}
+        <button
+          data-testid="All-category-filter"
+          onClick={ () => handleMealsFilterByCategory('All') }
+        >
+          All
+
+        </button>
       </nav>
       <ul>
         {pathname === '/meals'
-          ? mealsData.map((e, index) => (
+          ? filteredMeals.map((e, index) => (
             <li
               data-testid={ `${index}-recipe-card` }
               key={ e.idMeal }
@@ -61,7 +71,7 @@ function Recipes() {
                 />
               </figure>
             </li>
-          )) : drinksData.map((e, index) => (
+          )) : filteredDrinks.map((e, index) => (
             <li
               data-testid={ `${index}-recipe-card` }
               key={ e.idDrink }
