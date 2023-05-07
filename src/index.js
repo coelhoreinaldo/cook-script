@@ -3,14 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+import LoginProvider from './provider/LoginProvider';
 
-ReactDOM
-  .createRoot(document.getElementById('root'))
-  .render(
-    <BrowserRouter>
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <BrowserRouter>
+    <LoginProvider>
       <App />
-    </BrowserRouter>,
-  );
-
-serviceWorker.unregister();
+    </LoginProvider>
+  </BrowserRouter>,
+);
