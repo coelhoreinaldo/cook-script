@@ -27,7 +27,7 @@ describe('Testa a Página de Login', () => {
     const senhaInput = screen.getByTestId(testidSenha);
     userEvent.type(emailInput, email);
     userEvent.type(senhaInput, senha);
-    const buttonEnter = screen.getByRole('link', { name: /entrar/i });
+    const buttonEnter = screen.getByRole('button', { name: /entrar/i });
     expect(buttonEnter).toBeInTheDocument();
 
     userEvent.click(buttonEnter);

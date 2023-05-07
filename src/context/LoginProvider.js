@@ -1,25 +1,32 @@
-import React, { useState, useEffect, useMemo, createContext } from 'react';
+import React, { useState, useEffect, useMemo, createContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 export const LoginContext = createContext();
 
 function LoginProvider({ children }) {
-  const [email, setEmail] = useState('');
+  const [emailInput, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [disabled, setIsValid] = useState(true);
-  console.log(password);
+
   useEffect(() => {
     const min = 6;
-    setIsValid(!(email.match(/\S+@\S+\.\S+/) && password.length > min));
-  }, [email, password]);
+    setIsValid(!(emailInput.match(/\S+@\S+\.\S+/) && password.length > min));
+  }, [emailInput, password]);
+
+  const submitButton = useCallback(() => {
+    console.log('aaa');
+    window.location.href = '/meals';
+    localStorage.setItem('user', JSON.stringify({ email: emailInput }));
+  }, [emailInput]);
 
   const valor = useMemo(() => ({
-    email,
+    emailInput,
     disabled,
     password,
     setEmail,
     setPassword,
-  }), [email, disabled, password, setEmail, setPassword]);
+    submitButton,
+  }), [emailInput, disabled, password, setEmail, setPassword, submitButton]);
   return (
     <LoginContext.Provider value={ valor }>
       <div>

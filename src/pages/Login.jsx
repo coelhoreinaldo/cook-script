@@ -1,16 +1,16 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { LoginContext } from '../context/LoginProvider';
 
 function Login() {
-  const { email, password, setEmail, setPassword, disabled } = useContext(LoginContext);
+  const { emailInput, password, setEmail, setPassword,
+    disabled, submitButton } = useContext(LoginContext);
   return (
     <div>
       <section>
         <input
           type="email"
           name="email"
-          value={ email }
+          value={ emailInput }
           id="email"
           placeholder="E-mail"
           data-testid="email-input"
@@ -30,8 +30,9 @@ function Login() {
           type="button"
           data-testid="login-submit-btn"
           id="buttonLogin"
+          onClick={ () => submitButton() }
         >
-          { disabled ? 'Entrar' : <Link to="/meals">Entrar</Link>}
+          Entrar
         </button>
       </section>
     </div>
