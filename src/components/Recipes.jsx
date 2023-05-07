@@ -51,7 +51,7 @@ function Recipes() {
 
         </button>
       </nav>
-      <ul>
+      <section className="d-flex flex-wrap justify-content-around gap-1">
         {pathname === '/meals'
           ? filteredMeals.map((e, index) => (
             <Link
@@ -63,7 +63,7 @@ function Recipes() {
               <figure className="figure">
 
                 <img
-                  width={ 200 }
+                  width={ 144 }
                   className="img-thumbnail figure-img img-fluid rounded"
                   src={ e.strMealThumb }
                   alt={ e.strMeal }
@@ -81,7 +81,7 @@ function Recipes() {
               <figure className="figure">
 
                 <img
-                  width={ 200 }
+                  width={ 144 }
                   className="img-thumbnail figure-img img-fluid rounded"
                   src={ e.strDrinkThumb }
                   alt={ e.strDrink }
@@ -90,7 +90,7 @@ function Recipes() {
               </figure>
             </Link>
           ))}
-      </ul>
+      </section>
     </>
   );
 }
