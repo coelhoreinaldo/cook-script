@@ -5,11 +5,18 @@ import { act } from 'react-dom/test-utils';
 import renderWithRouter from './renderWithRouter';
 import App from '../App';
 import RecipeProvider from '../context/RecipeProvider';
+import SearchBarProvider from '../context/SearchBarProvider';
 
 const testIDTitle = 'page-title';
 describe('<Header />', () => {
   it('Should present title according to the route', async () => {
-    const { history } = renderWithRouter(<RecipeProvider><App /></RecipeProvider>);
+    const { history } = renderWithRouter(
+      <SearchBarProvider>
+        <RecipeProvider>
+          <App />
+        </RecipeProvider>
+      </SearchBarProvider>,
+    );
     act(() => {
       history.push('/meals');
     });
@@ -40,7 +47,13 @@ describe('<Header />', () => {
   });
 
   it('Should redirect to the route "/profile" after clicking the profile button ', () => {
-    const { history } = renderWithRouter(<RecipeProvider><App /></RecipeProvider>);
+    const { history } = renderWithRouter(
+      <SearchBarProvider>
+        <RecipeProvider>
+          <App />
+        </RecipeProvider>
+      </SearchBarProvider>,
+    );
     act(() => {
       history.push('/meals');
     });
@@ -50,5 +63,24 @@ describe('<Header />', () => {
 
     const { pathname } = history.location;
     expect(pathname).toBe('/profile');
+  });
+
+  it('Should show the search input after clicking the search button ', async () => {
+    const { history } = renderWithRouter(
+      <SearchBarProvider>
+        <RecipeProvider>
+          <App />
+        </RecipeProvider>
+      </SearchBarProvider>,
+    );
+    act(() => {
+      history.push('/meals');
+    });
+
+    const searchBnEl = screen.getByTestId('search-top-btn');
+    userEvent.click(searchBnEl);
+
+    const searchInputEl = await screen.findByTestId('search-input');
+    expect(searchInputEl).toBeInTheDocument();
   });
 });
