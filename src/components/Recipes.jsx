@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { RecipeContext } from '../context/RecipeProvider';
 
 function Recipes() {
   const { location: { pathname } } = useHistory();
   const {
-    mealsData, drinksData, mealsCategories, drinksCategories, isFetching, errorMessage,
+    filteredMeals, filteredDrinks, mealsCategories, drinksCategories,
+    isFetching, errorMessage, handleMealsFilterByCategory,
   } = useContext(RecipeContext);
 
   if (isFetching) {
@@ -28,6 +29,7 @@ function Recipes() {
             <button
               data-testid={ `${strCategory}-category-filter` }
               key={ strCategory }
+              onClick={ () => handleMealsFilterByCategory(strCategory) }
             >
               {strCategory}
             </button>
@@ -36,18 +38,26 @@ function Recipes() {
             <button
               data-testid={ `${strCategory}-category-filter` }
               key={ strCategory }
+              onClick={ () => handleMealsFilterByCategory(strCategory) }
             >
               {strCategory}
             </button>
           ))}
+        <button
+          data-testid="All-category-filter"
+          onClick={ () => handleMealsFilterByCategory('All') }
+        >
+          All
+
+        </button>
       </nav>
       <ul>
         {pathname === '/meals'
-          ? mealsData.map((e, index) => (
-            <li
+          ? filteredMeals.map((e, index) => (
+            <Link
               data-testid={ `${index}-recipe-card` }
               key={ e.idMeal }
-
+              to={ `/meals/${e.idMeal}` }
             >
               <h3 data-testid={ `${index}-card-name` }>{e.strMeal}</h3>
               <figure className="figure">
@@ -60,11 +70,12 @@ function Recipes() {
                   data-testid={ `${index}-card-img` }
                 />
               </figure>
-            </li>
-          )) : drinksData.map((e, index) => (
-            <li
+            </Link>
+          )) : filteredDrinks.map((e, index) => (
+            <Link
               data-testid={ `${index}-recipe-card` }
               key={ e.idDrink }
+              to={ `/drinks/${e.idDrink}` }
             >
               <h3 data-testid={ `${index}-card-name` }>{e.strDrink}</h3>
               <figure className="figure">
@@ -77,7 +88,7 @@ function Recipes() {
                   data-testid={ `${index}-card-img` }
                 />
               </figure>
-            </li>
+            </Link>
           ))}
       </ul>
     </>
