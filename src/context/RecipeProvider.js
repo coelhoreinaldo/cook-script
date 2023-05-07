@@ -53,8 +53,6 @@ function RecipeProvider({ children }) {
       }
       const drinksFilter = await fetchApi(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${tag}`);
       const filtered = drinksFilter.drinks.filter((_, i) => i < MAX_ITEMS_QUANT);
-      console.log(filtered);
-      console.log(filteredDrinks);
       if (filteredDrinks[0].idDrink === filtered[0].idDrink) {
         setFilteredDrinks(drinksData);
         return;
