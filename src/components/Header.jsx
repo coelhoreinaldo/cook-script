@@ -7,7 +7,6 @@ function Header() {
   const history = useHistory();
   const location = history.location.pathname
     .split('').filter((_e, index) => index !== 0).join('');
-  console.log(location);
   const title = location.includes('-')
     ? location.split('-').join(' ').replace(/(^\w{1})|(\s+\w{1})/g, (letra) => letra.toUpperCase())
     : location[0].toUpperCase() + location.substring(1);
