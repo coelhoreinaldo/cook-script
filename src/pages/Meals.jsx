@@ -5,11 +5,11 @@ import Footer from '../components/Footer';
 
 function Meals() {
   return (
-    <div>
+    <>
       <Header />
       <Recipes />
       <Footer />
-    </div>
+    </>
   );
 }
 

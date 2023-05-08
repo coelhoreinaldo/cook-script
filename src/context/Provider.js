@@ -3,15 +3,18 @@ import PropTypes from 'prop-types';
 import RecipeProvider from './RecipeProvider';
 import LoginProvider from './LoginProvider';
 import SearchBarProvider from './SearchBarProvider';
+import RecipeDetailsProvider from './RecipeDetailsProvider';
 
 function Provider({ children }) {
   return (
     <RecipeProvider>
-      <LoginProvider>
-        <SearchBarProvider>
-          {children}
-        </SearchBarProvider>
-      </LoginProvider>
+      <RecipeDetailsProvider>
+        <LoginProvider>
+          <SearchBarProvider>
+            {children}
+          </SearchBarProvider>
+        </LoginProvider>
+      </RecipeDetailsProvider>
     </RecipeProvider>
   );
 }

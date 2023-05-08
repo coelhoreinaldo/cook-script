@@ -100,11 +100,11 @@ function RecipeProvider({ children }) {
   );
 }
 
-export default RecipeProvider;
-
 RecipeProvider.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
 };
+
+export default RecipeProvider;
