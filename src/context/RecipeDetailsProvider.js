@@ -8,6 +8,7 @@ function RecipeDetailsProvider({ children }) {
   const { isFetching, errorMessage, fetchApi } = useFetch();
   const [currentRecipe, setCurrentRecipe] = useState([]);
   const [recipeIngredients, setRecipeIngredients] = useState([]);
+  const [recipeMeasures, setRecipeMeasures] = useState([]);
 
   const values = useMemo(() => ({
     isFetching,
@@ -17,7 +18,11 @@ function RecipeDetailsProvider({ children }) {
     fetchApi,
     recipeIngredients,
     setRecipeIngredients,
-  }), [isFetching, errorMessage, currentRecipe, fetchApi, recipeIngredients]);
+    recipeMeasures,
+    setRecipeMeasures,
+  }), [
+    isFetching, errorMessage, currentRecipe, fetchApi, recipeIngredients, recipeMeasures,
+  ]);
 
   return (
     <RecipeDetailsContext.Provider value={ values }>

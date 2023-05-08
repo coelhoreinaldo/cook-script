@@ -5,7 +5,7 @@ import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
 function RecipeDetails() {
   const {
     currentRecipe, setCurrentRecipe, isFetching, errorMessage, fetchApi,
-    setRecipeIngredients, recipeIngredients,
+    setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
   } = useContext(RecipeDetailsContext);
 
   const { location: { pathname } } = useHistory();
@@ -21,13 +21,24 @@ function RecipeDetails() {
     }
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
+    if (response.meals) {
+      const embed = recipeDetails[0].strYoutube.replace('watch?v=', 'embed/');
+      recipeDetails[0].strYoutube = embed;
+      console.log(recipeDetails[0].strYoutube);
+    }
     setCurrentRecipe(recipeDetails);
     const recipeEntries = Object.entries(recipeDetails[0]);
     const ingredients = recipeEntries
       .filter(([key, value]) => key.includes('strIngredient') && value)
       .map((item) => item[1]);
+
+    const measures = recipeEntries
+      .filter(([key, value]) => key.includes('strMeasure') && value)
+      .map((item) => item[1]);
+
     setRecipeIngredients(ingredients);
-  }, [fetchApi, pathname, setCurrentRecipe, setRecipeIngredients]);
+    setRecipeMeasures(measures);
+  }, [fetchApi, pathname, setCurrentRecipe, setRecipeIngredients, setRecipeMeasures]);
 
   useEffect(() => {
     getRecipeDetails();
@@ -41,22 +52,17 @@ function RecipeDetails() {
     return <p>{errorMessage}</p>;
   }
 
-  // console.log(currentRecipe);
-
-  // if (currentRecipe.length > 0) {
-  //   const ingredients = Object.entries(currentRecipe[0]);
-  //   const filtered = ingredients
-  //     .filter(([key, value]) => key.includes('strIngredient') && value)
-  //     .map((item) => item[1]);
-  //   console.log(filtered);
-  // }
-
   return (
     <div>
       {pathname.includes('meals')
         ? currentRecipe.map((e) => (
           <section key={ e.idMeal }>
-            <img src={ e.strMealThumb } alt={ e.strMeal } data-testid="recipe-photo" />
+            <img
+              src={ e.strMealThumb }
+              alt={ e.strMeal }
+              data-testid="recipe-photo"
+              width={ 260 }
+            />
             <h2 data-testid="recipe-title">{e.strMeal}</h2>
             <h3 data-testid="recipe-category">{e.strCategory}</h3>
             <ul>
@@ -67,24 +73,48 @@ function RecipeDetails() {
                 >
                   {ing}
                 </li>))}
+              {recipeMeasures.map((ing, i) => (
+                <li
+                  data-testid={ `${i}-ingredient-name-and-measure` }
+                  key={ i }
+                >
+                  {ing}
+                </li>))}
             </ul>
             <p data-testid="instructions">{e.strInstructions}</p>
             <iframe
               title="Recipe"
-              width="420"
+              width="260"
               height="315"
               data-testid="video"
+              allowFullScreen
               src={ e.strYoutube }
             />
           </section>
         ))
         : currentRecipe.map((e) => (
           <section key={ e.idDrink }>
-            <img src={ e.strDrinkThumb } alt={ e.strDrink } data-testid="recipe-photo" />
+            <img
+              src={ e.strDrinkThumb }
+              alt={ e.strDrink }
+              data-testid="recipe-photo"
+              width={ 260 }
+            />
             <h2 data-testid="recipe-title">{e.strDrink}</h2>
-            <h3 data-testid="recipe-category">{e.strCategory}</h3>
+            <h3 data-testid="recipe-category">
+              {e.strCategory}
+              {' '}
+              {e.strAlcoholic}
+            </h3>
             <ul>
               {recipeIngredients.map((ing, i) => (
+                <li
+                  data-testid={ `${i}-ingredient-name-and-measure` }
+                  key={ i }
+                >
+                  {ing}
+                </li>))}
+              {recipeMeasures.map((ing, i) => (
                 <li
                   data-testid={ `${i}-ingredient-name-and-measure` }
                   key={ i }
