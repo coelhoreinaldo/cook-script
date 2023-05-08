@@ -8,6 +8,9 @@ function ProfileProvider({ children }) {
 
   useEffect(() => {
     const retorno = JSON.parse(localStorage.getItem('user'));
+    if (retorno === null) {
+      setGetEmail('');
+    }
     setGetEmail(retorno);
   }, []);
 

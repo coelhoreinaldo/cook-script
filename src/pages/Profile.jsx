@@ -9,7 +9,7 @@ function Profile() {
     <div>
       <Header />
       <section>
-        <h2 data-testid="profile-email">{ getEmail }</h2>
+        <h2 data-testid="profile-email">{ getEmail.email }</h2>
         <button
           data-testid="profile-done-btn"
           type="button"

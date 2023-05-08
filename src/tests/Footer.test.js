@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Footer from '../components/Footer';
 import renderWithRouter from './renderWithRouter';
+import Provider from '../context/Provider';
 
 describe('Testa o componente Footer', () => {
   it('Testa se existem dois botões', () => {
@@ -13,7 +14,7 @@ describe('Testa o componente Footer', () => {
   });
 
   it('Testa se o botão Drink redireciona para a rota "/drinks"', () => {
-    const { history } = renderWithRouter(<Footer />);
+    const { history } = renderWithRouter(<Provider><Footer /></Provider>);
     const allBtns = screen.getAllByRole('button');
     userEvent.click(allBtns[0]);
 
@@ -22,7 +23,7 @@ describe('Testa o componente Footer', () => {
   });
 
   it('Testa se o botão Meals redireciona para a rota "/meals"', () => {
-    const { history } = renderWithRouter(<Footer />);
+    const { history } = renderWithRouter(<Provider><Footer /></Provider>);
     const allBtns = screen.getAllByRole('button');
     userEvent.click(allBtns[1]);
 
