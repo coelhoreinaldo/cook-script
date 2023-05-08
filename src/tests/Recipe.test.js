@@ -32,6 +32,13 @@ describe('the recipe component', () => {
     jest.restoreAllMocks();
   });
 
+  // beforeAll(() => {
+  //   jest.spyOn(global, 'fetch').mockImplementation(async (url) => {
+  //     switch (url) {
+  //       case 'http://minha-url.com?id=34':
+  //     }
+  //   });
+
   it('should fetch twice on meals page load', async () => {
     renderWithRouter(<Provider><App /></Provider>, { initialEntries: ['/meals'] });
     expect(fetch).toHaveBeenCalledTimes(2);
@@ -69,5 +76,15 @@ describe('the recipe component', () => {
     const ggDrink = await screen.findByRole('heading', { name: /GG/i });
     expect(ggDrink).toBeInTheDocument();
     userEvent.click(ordinaryDrinkBtn);
+
+    const mileLongIsland = await screen.findByRole('heading', { name: /long island iced tea/i });
+    expect(mileLongIsland).toBeInTheDocument();
+
+    userEvent.click(mileLongIsland);
+    const currentRecipeTitle = await screen.findByRole('heading', { name: /mile long island iced tea/i });
+    expect(currentRecipeTitle).toBeInTheDocument();
+
+    const ingredientEl = screen.getByText(/sweet and sour/i);
+    expect(ingredientEl).toBeInTheDocument();
   });
 });

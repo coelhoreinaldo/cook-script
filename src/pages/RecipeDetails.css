@@ -1,0 +1,27 @@
+.recipe-details {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.recipe-details .recomendations {
+  display: flex;
+  gap: 16;
+  margin: 0 auto;
+  max-width: 250px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.recipe-details .recomendation-card {
+  margin: 16px;
+  width: 100%;
+}
+
+.recipe-details .recomendation-card img {
+  width: 100px;
+}
+
+iframe {
+  aspect-ratio: 16/9;
+}

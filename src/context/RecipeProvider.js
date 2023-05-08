@@ -41,7 +41,6 @@ function RecipeProvider({ children }) {
       const mealsFilter = await fetchApi(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${tag}`);
       const filtered = mealsFilter.meals.filter((_, i) => i < MAX_ITEMS_QUANT);
       if (filteredMeals[0].idMeal === filtered[0].idMeal) {
-        console.log('entrou');
         setFilteredMeals(mealsData);
         return;
       }

@@ -56,6 +56,9 @@ function Recipes() {
         {pathname === '/meals'
           ? filteredMeals.map((e, index) => (
             <RecipeCard
+              cardClass="recipe-page-card"
+              dataTestId={ `${index}-recipe-card` }
+              dataTestIdTitle={ `${index}-card-name` }
               key={ index }
               index={ index }
               pathname="meals"
@@ -65,6 +68,9 @@ function Recipes() {
             />
           )) : filteredDrinks.map((e, index) => (
             <RecipeCard
+              cardClass="recipe-page-card"
+              dataTestId={ `${index}-recipe-card` }
+              dataTestIdTitle={ `${index}-card-name` }
               key={ index }
               index={ index }
               pathname="drinks"

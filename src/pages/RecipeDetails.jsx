@@ -2,6 +2,10 @@ import React, { useCallback, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
 import { RecipeContext } from '../context/RecipeProvider';
+import RecipeCard from '../components/RecipeCard';
+import './RecipeDetails.css';
+
+const MAX_RECIPES_QUANTITY = 6;
 
 function RecipeDetails() {
   const {
@@ -9,7 +13,7 @@ function RecipeDetails() {
     setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
   } = useContext(RecipeDetailsContext);
 
-  const { drinksData } = useContext(RecipeContext);
+  const { mealsData, drinksData } = useContext(RecipeContext);
 
   const { location: { pathname } } = useHistory();
 
@@ -27,7 +31,6 @@ function RecipeDetails() {
     if (response.meals) {
       const embed = recipeDetails[0].strYoutube.replace('watch?v=', 'embed/');
       recipeDetails[0].strYoutube = embed;
-      console.log(recipeDetails[0].strYoutube);
     }
     setCurrentRecipe(recipeDetails);
     const recipeEntries = Object.entries(recipeDetails[0]);
@@ -56,9 +59,8 @@ function RecipeDetails() {
     return <p>{errorMessage}</p>;
   }
 
-  console.log(drinksData);
   return (
-    <div>
+    <div className="recipe-details">
       {pathname.includes('meals')
         ? (
           <section>
@@ -92,16 +94,28 @@ function RecipeDetails() {
                 <iframe
                   title="Recipe"
                   width="260"
-                  height="315"
                   data-testid="video"
                   allowFullScreen
                   src={ e.strYoutube }
                 />
               </section>
             ))}
-            <section>
-              {/* {mealsData
-                .filter((e, i) => i < 7)} */}
+            <section
+              className="recomendations"
+            >
+              {drinksData
+                .filter((e, i) => i < MAX_RECIPES_QUANTITY)
+                .map((e, index) => (<RecipeCard
+                  cardClass="recomendation-card"
+                  dataTestId={ `${index}-recommendation-card` }
+                  dataTestIdTitle={ `${index}-recommendation-title` }
+                  key={ index }
+                  index={ index }
+                  pathname="drinks"
+                  idRecipe={ e.idDrink }
+                  strRecipe={ e.strDrink }
+                  strRecipeThumb={ e.strDrinkThumb }
+                />))}
             </section>
           </section>)
 
@@ -140,6 +154,24 @@ function RecipeDetails() {
                 <p data-testid="instructions">{e.strInstructions}</p>
               </section>
             ))}
+            <section
+              className="recomendations"
+            >
+              {mealsData
+                .filter((e, i) => i < MAX_RECIPES_QUANTITY)
+                .map((e, index) => (<RecipeCard
+                  cardClass="recomendation-card"
+                  dataTestId={ `${index}-recommendation-card` }
+                  dataTestIdTitle={ `${index}-recommendation-title` }
+                  key={ index }
+                  index={ index }
+                  pathname="meals"
+                  idRecipe={ e.idMeal }
+                  strRecipe={ e.strMeal }
+                  strRecipeThumb={ e.strMealThumb }
+                />))}
+
+            </section>
           </section>
         )}
 
