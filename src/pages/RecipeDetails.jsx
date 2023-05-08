@@ -1,12 +1,15 @@
 import React, { useCallback, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
+import { RecipeContext } from '../context/RecipeProvider';
 
 function RecipeDetails() {
   const {
     currentRecipe, setCurrentRecipe, isFetching, errorMessage, fetchApi,
     setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
   } = useContext(RecipeDetailsContext);
+
+  const { drinksData } = useContext(RecipeContext);
 
   const { location: { pathname } } = useHistory();
 
@@ -53,79 +56,92 @@ function RecipeDetails() {
     return <p>{errorMessage}</p>;
   }
 
+  console.log(drinksData);
   return (
     <div>
       {pathname.includes('meals')
-        ? currentRecipe.map((e) => (
-          <section key={ e.idMeal }>
-            <img
-              src={ e.strMealThumb }
-              alt={ e.strMeal }
-              data-testid="recipe-photo"
-              width={ 260 }
-            />
-            <h2 data-testid="recipe-title">{e.strMeal}</h2>
-            <h3 data-testid="recipe-category">{e.strCategory}</h3>
-            <ul>
-              {recipeIngredients.map((ing, i) => (
-                <li
-                  data-testid={ `${i}-ingredient-name-and-measure` }
-                  key={ i }
-                >
-                  {ing}
-                </li>))}
-              {recipeMeasures.map((ing, i) => (
-                <li
-                  data-testid={ `${i}-ingredient-name-and-measure` }
-                  key={ i }
-                >
-                  {ing}
-                </li>))}
-            </ul>
-            <p data-testid="instructions">{e.strInstructions}</p>
-            <iframe
-              title="Recipe"
-              width="260"
-              height="315"
-              data-testid="video"
-              allowFullScreen
-              src={ e.strYoutube }
-            />
+        ? (
+          <section>
+            {currentRecipe.map((e) => (
+              <section key={ e.idMeal }>
+                <img
+                  src={ e.strMealThumb }
+                  alt={ e.strMeal }
+                  data-testid="recipe-photo"
+                  width={ 260 }
+                />
+                <h2 data-testid="recipe-title">{e.strMeal}</h2>
+                <h3 data-testid="recipe-category">{e.strCategory}</h3>
+                <ul>
+                  {recipeIngredients.map((ing, i) => (
+                    <li
+                      data-testid={ `${i}-ingredient-name-and-measure` }
+                      key={ i }
+                    >
+                      {ing}
+                    </li>))}
+                  {recipeMeasures.map((ing, i) => (
+                    <li
+                      data-testid={ `${i}-ingredient-name-and-measure` }
+                      key={ i }
+                    >
+                      {ing}
+                    </li>))}
+                </ul>
+                <p data-testid="instructions">{e.strInstructions}</p>
+                <iframe
+                  title="Recipe"
+                  width="260"
+                  height="315"
+                  data-testid="video"
+                  allowFullScreen
+                  src={ e.strYoutube }
+                />
+              </section>
+            ))}
+            <section>
+              {/* {mealsData
+                .filter((e, i) => i < 7)} */}
+            </section>
+          </section>)
+
+        : (
+          <section>
+            {currentRecipe.map((e) => (
+              <section key={ e.idDrink }>
+                <img
+                  src={ e.strDrinkThumb }
+                  alt={ e.strDrink }
+                  data-testid="recipe-photo"
+                  width={ 260 }
+                />
+                <h2 data-testid="recipe-title">{e.strDrink}</h2>
+                <h3 data-testid="recipe-category">
+                  {e.strCategory}
+                  {' '}
+                  {e.strAlcoholic}
+                </h3>
+                <ul>
+                  {recipeIngredients.map((ing, i) => (
+                    <li
+                      data-testid={ `${i}-ingredient-name-and-measure` }
+                      key={ i }
+                    >
+                      {ing}
+                    </li>))}
+                  {recipeMeasures.map((ing, i) => (
+                    <li
+                      data-testid={ `${i}-ingredient-name-and-measure` }
+                      key={ i }
+                    >
+                      {ing}
+                    </li>))}
+                </ul>
+                <p data-testid="instructions">{e.strInstructions}</p>
+              </section>
+            ))}
           </section>
-        ))
-        : currentRecipe.map((e) => (
-          <section key={ e.idDrink }>
-            <img
-              src={ e.strDrinkThumb }
-              alt={ e.strDrink }
-              data-testid="recipe-photo"
-              width={ 260 }
-            />
-            <h2 data-testid="recipe-title">{e.strDrink}</h2>
-            <h3 data-testid="recipe-category">
-              {e.strCategory}
-              {' '}
-              {e.strAlcoholic}
-            </h3>
-            <ul>
-              {recipeIngredients.map((ing, i) => (
-                <li
-                  data-testid={ `${i}-ingredient-name-and-measure` }
-                  key={ i }
-                >
-                  {ing}
-                </li>))}
-              {recipeMeasures.map((ing, i) => (
-                <li
-                  data-testid={ `${i}-ingredient-name-and-measure` }
-                  key={ i }
-                >
-                  {ing}
-                </li>))}
-            </ul>
-            <p data-testid="instructions">{e.strInstructions}</p>
-          </section>
-        ))}
+        )}
 
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { RecipeContext } from '../context/RecipeProvider';
+import RecipeCard from './RecipeCard';
 
 function Recipes() {
   const { location: { pathname } } = useHistory();
@@ -54,41 +55,23 @@ function Recipes() {
       <section className="d-flex flex-wrap justify-content-around gap-1">
         {pathname === '/meals'
           ? filteredMeals.map((e, index) => (
-            <Link
-              data-testid={ `${index}-recipe-card` }
-              key={ e.idMeal }
-              to={ `/meals/${e.idMeal}` }
-            >
-              <h3 data-testid={ `${index}-card-name` }>{e.strMeal}</h3>
-              <figure className="figure">
-
-                <img
-                  width={ 144 }
-                  className="img-thumbnail figure-img img-fluid rounded"
-                  src={ e.strMealThumb }
-                  alt={ e.strMeal }
-                  data-testid={ `${index}-card-img` }
-                />
-              </figure>
-            </Link>
+            <RecipeCard
+              key={ index }
+              index={ index }
+              pathname="meals"
+              idRecipe={ e.idMeal }
+              strRecipe={ e.strMeal }
+              strRecipeThumb={ e.strMealThumb }
+            />
           )) : filteredDrinks.map((e, index) => (
-            <Link
-              data-testid={ `${index}-recipe-card` }
-              key={ e.idDrink }
-              to={ `/drinks/${e.idDrink}` }
-            >
-              <h3 data-testid={ `${index}-card-name` }>{e.strDrink}</h3>
-              <figure className="figure">
-
-                <img
-                  width={ 144 }
-                  className="img-thumbnail figure-img img-fluid rounded"
-                  src={ e.strDrinkThumb }
-                  alt={ e.strDrink }
-                  data-testid={ `${index}-card-img` }
-                />
-              </figure>
-            </Link>
+            <RecipeCard
+              key={ index }
+              index={ index }
+              pathname="drinks"
+              idRecipe={ e.idDrink }
+              strRecipe={ e.strDrink }
+              strRecipeThumb={ e.strDrinkThumb }
+            />
           ))}
       </section>
     </>
