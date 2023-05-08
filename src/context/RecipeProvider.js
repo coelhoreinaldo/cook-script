@@ -1,14 +1,14 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 
 export const RecipeContext = createContext();
 
-const MEALS_URL = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
-const DRINKS_URL = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
-const MEALS_CATEGORIES = 'https://www.themealdb.com/api/json/v1/1/list.php?c=list';
-const DRINKS_CATEGORIES = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
+export const MEALS_URL = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
+export const DRINKS_URL = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+export const MEALS_CATEGORIES_URL = 'https://www.themealdb.com/api/json/v1/1/list.php?c=list';
+export const DRINKS_CATEGORIES_URL = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
 const MAX_ITEMS_QUANT = 12;
 const MAX_CATEGORIES_QUANTITY = 5;
 
@@ -24,10 +24,9 @@ function RecipeProvider({ children }) {
 
   const getData = useCallback(async () => {
     const meals = await fetchApi(MEALS_URL);
-    const drinks = await fetchApi(DRINKS_URL);
     setMealsData(meals.meals.filter((_, i) => i < MAX_ITEMS_QUANT));
-    setFilteredMeals(meals.meals
-      .filter((_, i) => i < MAX_ITEMS_QUANT));
+    setFilteredMeals(meals.meals.filter((_, i) => i < MAX_ITEMS_QUANT));
+    const drinks = await fetchApi(DRINKS_URL);
     setDrinksData(drinks.drinks.filter((_, i) => i < MAX_ITEMS_QUANT));
     setFilteredDrinks(drinks.drinks.filter((_, i) => i < MAX_ITEMS_QUANT));
   }, [fetchApi]);
@@ -62,19 +61,13 @@ function RecipeProvider({ children }) {
     history.location.pathname, mealsData, filteredDrinks, filteredMeals]);
 
   const getCategories = useCallback(async () => {
-    const mealsCategoriesData = await fetchApi(MEALS_CATEGORIES);
-    const drinksCategoriesData = await fetchApi(DRINKS_CATEGORIES);
+    const mealsCategoriesData = await fetchApi(MEALS_CATEGORIES_URL);
+    const drinksCategoriesData = await fetchApi(DRINKS_CATEGORIES_URL);
     setMealsCategories(mealsCategoriesData.meals
       .filter((_, i) => i < MAX_CATEGORIES_QUANTITY));
     setDrinksCategories(drinksCategoriesData.drinks
       .filter((_, i) => i < MAX_CATEGORIES_QUANTITY));
   }, [fetchApi]);
-
-  useEffect(() => {
-    getData();
-    getCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const values = useMemo(() => ({
     mealsData,
@@ -88,10 +81,12 @@ function RecipeProvider({ children }) {
     filteredDrinks,
     setFilteredMeals,
     setFilteredDrinks,
+    getData,
+    getCategories,
   }), [
     mealsData, drinksData, mealsCategories, drinksCategories,
     isFetching, errorMessage, handleMealsFilterByCategory, filteredMeals,
-    filteredDrinks, setFilteredMeals,
+    filteredDrinks, getCategories, getData, setFilteredMeals,
     setFilteredDrinks,
   ]);
 
@@ -102,11 +97,11 @@ function RecipeProvider({ children }) {
   );
 }
 
-export default RecipeProvider;
-
 RecipeProvider.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
 };
+
+export default RecipeProvider;

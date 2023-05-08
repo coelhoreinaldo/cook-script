@@ -11,7 +11,7 @@ function useFetch() {
       const data = await response.json();
       return data;
     } catch (error) {
-      setErrorMessage(error.message);
+      setErrorMessage('404 not found');
     } finally {
       setIsFetching(false);
     }
