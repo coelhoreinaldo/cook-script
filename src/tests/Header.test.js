@@ -4,19 +4,12 @@ import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import renderWithRouter from './renderWithRouter';
 import App from '../App';
-import RecipeProvider from '../context/RecipeProvider';
-import SearchBarProvider from '../context/SearchBarProvider';
+import Provider from '../context/Provider';
 
 const testIDTitle = 'page-title';
 describe('<Header />', () => {
   it('Should present title according to the route', async () => {
-    const { history } = renderWithRouter(
-      <SearchBarProvider>
-        <RecipeProvider>
-          <App />
-        </RecipeProvider>
-      </SearchBarProvider>,
-    );
+    const { history } = renderWithRouter(<Provider><App /></Provider>);
     act(() => {
       history.push('/meals');
     });
@@ -47,13 +40,7 @@ describe('<Header />', () => {
   });
 
   it('Should redirect to the route "/profile" after clicking the profile button ', () => {
-    const { history } = renderWithRouter(
-      <SearchBarProvider>
-        <RecipeProvider>
-          <App />
-        </RecipeProvider>
-      </SearchBarProvider>,
-    );
+    const { history } = renderWithRouter(<Provider><App /></Provider>);
     act(() => {
       history.push('/meals');
     });
@@ -66,13 +53,7 @@ describe('<Header />', () => {
   });
 
   it('Should show the search input after clicking the search button ', async () => {
-    const { history } = renderWithRouter(
-      <SearchBarProvider>
-        <RecipeProvider>
-          <App />
-        </RecipeProvider>
-      </SearchBarProvider>,
-    );
+    const { history } = renderWithRouter(<Provider><App /></Provider>);
     act(() => {
       history.push('/meals');
     });

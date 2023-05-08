@@ -6,21 +6,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import RecipeProvider from './context/RecipeProvider';
-import RecipeDetailsProvider from './context/RecipeDetailsProvider';
-import SearchBarProvider from './context/SearchBarProvider';
+import Provider from './context/Provider';
 
 ReactDOM
   .createRoot(document.getElementById('root'))
   .render(
     <BrowserRouter>
-      <SearchBarProvider>
-        <RecipeProvider>
-          <RecipeDetailsProvider>
-            <App />
-          </RecipeDetailsProvider>
-        </RecipeProvider>
-      </SearchBarProvider>
+      <Provider>
+        <App />
+      </Provider>
     </BrowserRouter>,
   );
 

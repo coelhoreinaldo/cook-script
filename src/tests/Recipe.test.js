@@ -1,15 +1,13 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import RecipeProvider from '../context/RecipeProvider';
 import renderWithRouter from './helpers/renderWithRouter';
 import meals from './mocks/meals';
 import drinks from './mocks/drinks';
 import mealsCategories from './mocks/mealsCategories';
 import drinksCategories from './mocks/drinksCategories';
 import App from '../App';
-import SearchBarProvider from '../context/SearchBarProvider';
-import RecipeDetailsProvider from '../context/RecipeDetailsProvider';
+import Provider from '../context/Provider';
 // import corbaMealDetails from './mocks/corbaMealDetails';
 // import filteredByBeef from './mocks/mealsFilteredBeef';
 // import filteredByCocktail from './mocks/drinksFilteredCocktail';
@@ -35,16 +33,7 @@ describe('the recipe component', () => {
   });
 
   it('should fetch twice on meals page load', async () => {
-    renderWithRouter(
-      <SearchBarProvider>
-        <RecipeProvider>
-          <RecipeDetailsProvider>
-            <App />
-          </RecipeDetailsProvider>
-        </RecipeProvider>
-      </SearchBarProvider>,
-      { initialEntries: ['/meals'] },
-    );
+    renderWithRouter(<Provider><App /></Provider>, { initialEntries: ['/meals'] });
     expect(fetch).toHaveBeenCalledTimes(2);
 
     const loadingEl = screen.getByRole('status');
@@ -57,16 +46,7 @@ describe('the recipe component', () => {
     expect(corbaMeal).toBeInTheDocument();
   });
   it('should fetch twice on drinks page load', async () => {
-    renderWithRouter(
-      <SearchBarProvider>
-        <RecipeProvider>
-          <RecipeDetailsProvider>
-            <App />
-          </RecipeDetailsProvider>
-        </RecipeProvider>
-      </SearchBarProvider>,
-      { initialEntries: ['/drinks'] },
-    );
+    renderWithRouter(<Provider><App /></Provider>, { initialEntries: ['/drinks'] });
     expect(fetch).toHaveBeenCalledTimes(2);
 
     const loadingEl = screen.getByRole('status');
@@ -79,16 +59,7 @@ describe('the recipe component', () => {
     expect(ggDrink).toBeInTheDocument();
   });
   it('should redirect to items recipes page', async () => {
-    renderWithRouter(
-      <SearchBarProvider>
-        <RecipeProvider>
-          <RecipeDetailsProvider>
-            <App />
-          </RecipeDetailsProvider>
-        </RecipeProvider>
-      </SearchBarProvider>,
-      { initialEntries: ['/drinks'] },
-    );
+    renderWithRouter(<Provider><App /></Provider>, { initialEntries: ['/drinks'] });
 
     const loadingEl = screen.getByRole('status');
     expect(loadingEl).toBeInTheDocument();
