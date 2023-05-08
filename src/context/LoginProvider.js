@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, createContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
 export const LoginContext = createContext();
 
@@ -7,6 +8,7 @@ function LoginProvider({ children }) {
   const [emailInput, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [disabled, setIsValid] = useState(true);
+  const history = useHistory();
 
   useEffect(() => {
     const min = 6;
@@ -14,8 +16,7 @@ function LoginProvider({ children }) {
   }, [emailInput, password]);
 
   const submitButton = useCallback(() => {
-    console.log('aaa');
-    window.location.href = '/meals';
+    history.location.pathname = '/meals';
     localStorage.setItem('user', JSON.stringify({ email: emailInput }));
   }, [emailInput]);
 

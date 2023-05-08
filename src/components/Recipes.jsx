@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { RecipeContext } from '../context/RecipeProvider';
 import RecipeCard from './RecipeCard';
@@ -7,8 +7,14 @@ function Recipes() {
   const { location: { pathname } } = useHistory();
   const {
     filteredMeals, filteredDrinks, mealsCategories, drinksCategories,
-    isFetching, errorMessage, handleMealsFilterByCategory,
+    isFetching, errorMessage, handleMealsFilterByCategory, getData, getCategories,
   } = useContext(RecipeContext);
+
+  useEffect(() => {
+    getData();
+    getCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isFetching) {
     return (

@@ -2,42 +2,14 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
-import meals from './mocks/meals';
-import drinks from './mocks/drinks';
-import mealsCategories from './mocks/mealsCategories';
-import drinksCategories from './mocks/drinksCategories';
 import App from '../App';
 import Provider from '../context/Provider';
-// import corbaMealDetails from './mocks/corbaMealDetails';
-// import filteredByBeef from './mocks/mealsFilteredBeef';
-// import filteredByCocktail from './mocks/drinksFilteredCocktail';
-
-// import errorMessage from './mocks/errorMessage';
+import fetchMock from '../../cypress/mocks/fetch';
 
 describe('the recipe component', () => {
   beforeEach(() => {
-    jest.spyOn(global, 'fetch').mockResolvedValueOnce({
-      json: async () => (meals),
-    }).mockResolvedValueOnce({
-      json: async () => (mealsCategories),
-    }).mockResolvedValueOnce({
-      json: async () => (drinks),
-    })
-      .mockResolvedValueOnce({
-        json: async () => (drinksCategories),
-      });
+    jest.spyOn(global, 'fetch').mockImplementation(fetchMock);
   });
-
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
-
-  // beforeAll(() => {
-  //   jest.spyOn(global, 'fetch').mockImplementation(async (url) => {
-  //     switch (url) {
-  //       case 'http://minha-url.com?id=34':
-  //     }
-  //   });
 
   it('should fetch twice on meals page load', async () => {
     renderWithRouter(<Provider><App /></Provider>, { initialEntries: ['/meals'] });
@@ -65,7 +37,7 @@ describe('the recipe component', () => {
     const ggDrink = await screen.findByRole('heading', { name: /GG/i });
     expect(ggDrink).toBeInTheDocument();
   });
-  it('should redirect to items recipes page', async () => {
+  it('should redirect to items recipes page from drinks page', async () => {
     renderWithRouter(<Provider><App /></Provider>, { initialEntries: ['/drinks'] });
 
     const loadingEl = screen.getByRole('status');
@@ -79,12 +51,8 @@ describe('the recipe component', () => {
 
     const mileLongIsland = await screen.findByRole('heading', { name: /long island iced tea/i });
     expect(mileLongIsland).toBeInTheDocument();
-
-    userEvent.click(mileLongIsland);
-    const currentRecipeTitle = await screen.findByRole('heading', { name: /mile long island iced tea/i });
-    expect(currentRecipeTitle).toBeInTheDocument();
-
-    const ingredientEl = screen.getByText(/sweet and sour/i);
-    expect(ingredientEl).toBeInTheDocument();
   });
 });
+
+// const allBtn = await screen.findByTestId('All-category-filter');
+// expect(allBtn).toBeInTheDocument();

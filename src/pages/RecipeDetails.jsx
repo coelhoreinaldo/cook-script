@@ -13,7 +13,7 @@ function RecipeDetails() {
     setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
   } = useContext(RecipeDetailsContext);
 
-  const { mealsData, drinksData } = useContext(RecipeContext);
+  const { mealsData, drinksData, getData, getCategories } = useContext(RecipeContext);
 
   const { location: { pathname } } = useHistory();
 
@@ -48,6 +48,8 @@ function RecipeDetails() {
 
   useEffect(() => {
     getRecipeDetails();
+    getData();
+    getCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -56,15 +58,15 @@ function RecipeDetails() {
   }
 
   if (errorMessage) {
-    return <p>{errorMessage}</p>;
+    return <p>{ errorMessage }</p>;
   }
 
   return (
     <div className="recipe-details">
-      {pathname.includes('meals')
+      { pathname.includes('meals')
         ? (
           <section>
-            {currentRecipe.map((e) => (
+            { currentRecipe.map((e) => (
               <section key={ e.idMeal }>
                 <img
                   src={ e.strMealThumb }
@@ -72,25 +74,25 @@ function RecipeDetails() {
                   data-testid="recipe-photo"
                   width={ 260 }
                 />
-                <h2 data-testid="recipe-title">{e.strMeal}</h2>
-                <h3 data-testid="recipe-category">{e.strCategory}</h3>
+                <h2 data-testid="recipe-title">{ e.strMeal }</h2>
+                <h3 data-testid="recipe-category">{ e.strCategory }</h3>
                 <ul>
-                  {recipeIngredients.map((ing, i) => (
+                  { recipeIngredients.map((ing, i) => (
                     <li
                       data-testid={ `${i}-ingredient-name-and-measure` }
                       key={ i }
                     >
-                      {ing}
-                    </li>))}
-                  {recipeMeasures.map((ing, i) => (
+                      { ing }
+                    </li>)) }
+                  { recipeMeasures.map((ing, i) => (
                     <li
                       data-testid={ `${i}-ingredient-name-and-measure` }
                       key={ i }
                     >
-                      {ing}
-                    </li>))}
+                      { ing }
+                    </li>)) }
                 </ul>
-                <p data-testid="instructions">{e.strInstructions}</p>
+                <p data-testid="instructions">{ e.strInstructions }</p>
                 <iframe
                   title="Recipe"
                   width="260"
@@ -99,11 +101,11 @@ function RecipeDetails() {
                   src={ e.strYoutube }
                 />
               </section>
-            ))}
+            )) }
             <section
               className="recomendations"
             >
-              {drinksData
+              { drinksData
                 .filter((e, i) => i < MAX_RECIPES_QUANTITY)
                 .map((e, index) => (<RecipeCard
                   cardClass="recomendation-card"
@@ -115,13 +117,13 @@ function RecipeDetails() {
                   idRecipe={ e.idDrink }
                   strRecipe={ e.strDrink }
                   strRecipeThumb={ e.strDrinkThumb }
-                />))}
+                />)) }
             </section>
           </section>)
 
         : (
           <section>
-            {currentRecipe.map((e) => (
+            { currentRecipe.map((e) => (
               <section key={ e.idDrink }>
                 <img
                   src={ e.strDrinkThumb }
@@ -129,35 +131,35 @@ function RecipeDetails() {
                   data-testid="recipe-photo"
                   width={ 260 }
                 />
-                <h2 data-testid="recipe-title">{e.strDrink}</h2>
+                <h2 data-testid="recipe-title">{ e.strDrink }</h2>
                 <h3 data-testid="recipe-category">
-                  {e.strCategory}
-                  {' '}
-                  {e.strAlcoholic}
+                  { e.strCategory }
+                  { ' ' }
+                  { e.strAlcoholic }
                 </h3>
                 <ul>
-                  {recipeIngredients.map((ing, i) => (
+                  { recipeIngredients.map((ing, i) => (
                     <li
                       data-testid={ `${i}-ingredient-name-and-measure` }
                       key={ i }
                     >
-                      {ing}
-                    </li>))}
-                  {recipeMeasures.map((ing, i) => (
+                      { ing }
+                    </li>)) }
+                  { recipeMeasures.map((ing, i) => (
                     <li
                       data-testid={ `${i}-ingredient-name-and-measure` }
                       key={ i }
                     >
-                      {ing}
-                    </li>))}
+                      { ing }
+                    </li>)) }
                 </ul>
-                <p data-testid="instructions">{e.strInstructions}</p>
+                <p data-testid="instructions">{ e.strInstructions }</p>
               </section>
-            ))}
+            )) }
             <section
               className="recomendations"
             >
-              {mealsData
+              { mealsData
                 .filter((e, i) => i < MAX_RECIPES_QUANTITY)
                 .map((e, index) => (<RecipeCard
                   cardClass="recomendation-card"
@@ -169,11 +171,11 @@ function RecipeDetails() {
                   idRecipe={ e.idMeal }
                   strRecipe={ e.strMeal }
                   strRecipeThumb={ e.strMealThumb }
-                />))}
+                />)) }
 
             </section>
           </section>
-        )}
+        ) }
       <button
         data-testid="start-recipe-btn"
         className="start-recipe-btn"
