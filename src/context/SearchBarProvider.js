@@ -17,9 +17,7 @@ function SearchBarProvider({ children }) {
 
   return (
     <SearchBarContext.Provider value={ values }>
-      <div>
-        {children}
-      </div>
+      {children}
     </SearchBarContext.Provider>
   );
 }
