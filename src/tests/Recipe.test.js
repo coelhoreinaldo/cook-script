@@ -1,24 +1,38 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import RecipeProvider from '../context/RecipeProvider';
 import renderWithRouter from './helpers/renderWithRouter';
 import meals from './mocks/meals';
-// import drinks from './mocks/drinks';
+import drinks from './mocks/drinks';
 import mealsCategories from './mocks/mealsCategories';
-// import drinksCategories from './mocks/drinksCategories';
-// import Meals from '../pages/Meals';
+import drinksCategories from './mocks/drinksCategories';
 import App from '../App';
+// import corbaMealDetails from './mocks/corbaMealDetails';
+// import filteredByBeef from './mocks/mealsFilteredBeef';
+// import filteredByCocktail from './mocks/drinksFilteredCocktail';
 
-describe('the meals component', () => {
+// import errorMessage from './mocks/errorMessage';
+
+describe('the recipe component', () => {
   beforeEach(() => {
     jest.spyOn(global, 'fetch').mockResolvedValueOnce({
       json: async () => (meals),
     }).mockResolvedValueOnce({
       json: async () => (mealsCategories),
-    });
+    }).mockResolvedValueOnce({
+      json: async () => (drinks),
+    })
+      .mockResolvedValueOnce({
+        json: async () => (drinksCategories),
+      });
   });
 
-  it('should fetch twice on page load', async () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should fetch twice on meals page load', async () => {
     renderWithRouter(<RecipeProvider><App /></RecipeProvider>, { initialEntries: ['/meals'] });
     expect(fetch).toHaveBeenCalledTimes(2);
 
@@ -30,5 +44,30 @@ describe('the meals component', () => {
 
     const corbaMeal = await screen.findByRole('heading', { name: /corba/i });
     expect(corbaMeal).toBeInTheDocument();
+  });
+  it('should fetch twice on drinks page load', async () => {
+    renderWithRouter(<RecipeProvider><App /></RecipeProvider>, { initialEntries: ['/drinks'] });
+    expect(fetch).toHaveBeenCalledTimes(2);
+
+    const loadingEl = screen.getByRole('status');
+    expect(loadingEl).toBeInTheDocument();
+
+    const ordinaryDrinkBtn = await screen.findByRole('button', { name: /ordinary/i });
+    expect(ordinaryDrinkBtn).toBeInTheDocument();
+
+    const ggDrink = await screen.findByRole('heading', { name: /GG/i });
+    expect(ggDrink).toBeInTheDocument();
+  });
+  it('should redirect to items recipes page', async () => {
+    renderWithRouter(<RecipeProvider><App /></RecipeProvider>, { initialEntries: ['/drinks'] });
+
+    const loadingEl = screen.getByRole('status');
+    expect(loadingEl).toBeInTheDocument();
+
+    const ordinaryDrinkBtn = await screen.findByRole('button', { name: /ordinary/i });
+    expect(ordinaryDrinkBtn).toBeInTheDocument();
+    const ggDrink = await screen.findByRole('heading', { name: /GG/i });
+    expect(ggDrink).toBeInTheDocument();
+    userEvent.click(ordinaryDrinkBtn);
   });
 });
