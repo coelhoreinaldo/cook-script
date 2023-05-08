@@ -51,8 +51,29 @@ describe('the recipe component', () => {
 
     const mileLongIsland = await screen.findByRole('heading', { name: /long island iced tea/i });
     expect(mileLongIsland).toBeInTheDocument();
+
+    const allBtn = await screen.findByTestId('All-category-filter');
+    userEvent.click(allBtn);
+
+    const gg2 = await screen.findByRole('heading', { name: /gg/i });
+    userEvent.click(gg2);
+
+    const ingredient1 = await screen.findByText('Galliano');
+    expect(ingredient1).toBeInTheDocument();
+  });
+  it('should redirect to items recipes page from meals page', async () => {
+    renderWithRouter(<Provider><App /></Provider>, { initialEntries: ['/meals'] });
+
+    const loadingEl = screen.getByRole('status');
+    expect(loadingEl).toBeInTheDocument();
+
+    const corbaEl = await screen.findByRole('heading', { name: /corba/i });
+    expect(corbaEl).toBeInTheDocument();
+    const chickenButton = await screen.findByRole('button', { name: /chicken/i });
+    expect(chickenButton).toBeInTheDocument();
+    userEvent.click(chickenButton);
+
+    const ayamPercikEl = await screen.findByRole('heading', { name: /brown stew chicken/i });
+    expect(ayamPercikEl).toBeInTheDocument();
   });
 });
-
-// const allBtn = await screen.findByTestId('All-category-filter');
-// expect(allBtn).toBeInTheDocument();

@@ -18,7 +18,7 @@ function LoginProvider({ children }) {
   const submitButton = useCallback(() => {
     history.location.pathname = '/meals';
     localStorage.setItem('user', JSON.stringify({ email: emailInput }));
-  }, [emailInput]);
+  }, [emailInput, history.location]);
 
   const valor = useMemo(() => ({
     emailInput,

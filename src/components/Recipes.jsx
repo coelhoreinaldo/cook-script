@@ -7,7 +7,7 @@ function Recipes() {
   const { location: { pathname } } = useHistory();
   const {
     filteredMeals, filteredDrinks, mealsCategories, drinksCategories,
-    isFetching, errorMessage, handleMealsFilterByCategory, getData, getCategories,
+    isFetching, handleMealsFilterByCategory, getData, getCategories,
   } = useContext(RecipeContext);
 
   useEffect(() => {
@@ -24,21 +24,21 @@ function Recipes() {
     );
   }
 
-  if (errorMessage) {
-    return (<h3>{errorMessage}</h3>);
-  }
+  // if (errorMessage) {
+  //   return (<h3>{errorMessage}</h3>);
+  // }
 
   return (
     <>
       <nav>
-        {pathname === '/meals'
+        { pathname === '/meals'
           ? mealsCategories.map(({ strCategory }) => (
             <button
               data-testid={ `${strCategory}-category-filter` }
               key={ strCategory }
               onClick={ () => handleMealsFilterByCategory(strCategory) }
             >
-              {strCategory}
+              { strCategory }
             </button>
           ))
           : drinksCategories.map(({ strCategory }) => (
@@ -47,9 +47,9 @@ function Recipes() {
               key={ strCategory }
               onClick={ () => handleMealsFilterByCategory(strCategory) }
             >
-              {strCategory}
+              { strCategory }
             </button>
-          ))}
+          )) }
         <button
           data-testid="All-category-filter"
           onClick={ () => handleMealsFilterByCategory('All') }
@@ -59,7 +59,7 @@ function Recipes() {
         </button>
       </nav>
       <section className="d-flex flex-wrap justify-content-around gap-1">
-        {pathname === '/meals'
+        { pathname === '/meals'
           ? filteredMeals.map((e, index) => (
             <RecipeCard
               cardClass="recipe-page-card"
@@ -84,7 +84,7 @@ function Recipes() {
               strRecipe={ e.strDrink }
               strRecipeThumb={ e.strDrinkThumb }
             />
-          ))}
+          )) }
       </section>
     </>
   );
