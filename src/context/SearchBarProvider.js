@@ -53,17 +53,15 @@ function SearchBarProvider({ children }) {
         `https://www.${URLByLocation}.com/api/json/v1/1/search.php?f=${inputSearch}`,
       );
     }
-    console.log(searchData);
+
     if (param.includes('meals')) {
       const filteredMeals = searchData.meals.filter((_, i) => i < MAX_ITEMS_QUANT);
       setFilteredMeals(filteredMeals);
-      console.log(filteredMeals);
     } else {
       const filteredDrinks = searchData.drinks.filter((_, i) => i < MAX_ITEMS_QUANT);
       setFilteredDrinks(filteredDrinks);
-      console.log('outro');
     }
-  }, [fetchApi, setFilteredDrinks, setFilteredMeals]);
+  }, [fetchApi, searchFilter, setFilteredDrinks, setFilteredMeals]);
 
   const values = useMemo(() => ({
     searchBarVisible,
