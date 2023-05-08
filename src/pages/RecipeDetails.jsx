@@ -1,12 +1,19 @@
 import React, { useCallback, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
+import { RecipeContext } from '../context/RecipeProvider';
+import RecipeCard from '../components/RecipeCard';
+import './RecipeDetails.css';
+
+const MAX_RECIPES_QUANTITY = 6;
 
 function RecipeDetails() {
   const {
     currentRecipe, setCurrentRecipe, isFetching, errorMessage, fetchApi,
     setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
   } = useContext(RecipeDetailsContext);
+
+  const { mealsData, drinksData, getData, getCategories } = useContext(RecipeContext);
 
   const { location: { pathname } } = useHistory();
 
@@ -24,7 +31,6 @@ function RecipeDetails() {
     if (response.meals) {
       const embed = recipeDetails[0].strYoutube.replace('watch?v=', 'embed/');
       recipeDetails[0].strYoutube = embed;
-      console.log(recipeDetails[0].strYoutube);
     }
     setCurrentRecipe(recipeDetails);
     const recipeEntries = Object.entries(recipeDetails[0]);
@@ -42,6 +48,8 @@ function RecipeDetails() {
 
   useEffect(() => {
     getRecipeDetails();
+    getData();
+    getCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -50,83 +58,131 @@ function RecipeDetails() {
   }
 
   if (errorMessage) {
-    return <p>{errorMessage}</p>;
+    return <p>{ errorMessage }</p>;
   }
 
   return (
-    <div>
-      {pathname.includes('meals')
-        ? currentRecipe.map((e) => (
-          <section key={ e.idMeal }>
-            <img
-              src={ e.strMealThumb }
-              alt={ e.strMeal }
-              data-testid="recipe-photo"
-              width={ 260 }
-            />
-            <h2 data-testid="recipe-title">{e.strMeal}</h2>
-            <h3 data-testid="recipe-category">{e.strCategory}</h3>
-            <ul>
-              {recipeIngredients.map((ing, i) => (
-                <li
-                  data-testid={ `${i}-ingredient-name-and-measure` }
-                  key={ i }
-                >
-                  {ing}
-                </li>))}
-              {recipeMeasures.map((ing, i) => (
-                <li
-                  data-testid={ `${i}-ingredient-name-and-measure` }
-                  key={ i }
-                >
-                  {ing}
-                </li>))}
-            </ul>
-            <p data-testid="instructions">{e.strInstructions}</p>
-            <iframe
-              title="Recipe"
-              width="260"
-              height="315"
-              data-testid="video"
-              allowFullScreen
-              src={ e.strYoutube }
-            />
-          </section>
-        ))
-        : currentRecipe.map((e) => (
-          <section key={ e.idDrink }>
-            <img
-              src={ e.strDrinkThumb }
-              alt={ e.strDrink }
-              data-testid="recipe-photo"
-              width={ 260 }
-            />
-            <h2 data-testid="recipe-title">{e.strDrink}</h2>
-            <h3 data-testid="recipe-category">
-              {e.strCategory}
-              {' '}
-              {e.strAlcoholic}
-            </h3>
-            <ul>
-              {recipeIngredients.map((ing, i) => (
-                <li
-                  data-testid={ `${i}-ingredient-name-and-measure` }
-                  key={ i }
-                >
-                  {ing}
-                </li>))}
-              {recipeMeasures.map((ing, i) => (
-                <li
-                  data-testid={ `${i}-ingredient-name-and-measure` }
-                  key={ i }
-                >
-                  {ing}
-                </li>))}
-            </ul>
-            <p data-testid="instructions">{e.strInstructions}</p>
-          </section>
-        ))}
+    <div className="recipe-details">
+      { pathname.includes('meals')
+        ? (
+          <section>
+            { currentRecipe.map((e) => (
+              <section key={ e.idMeal }>
+                <img
+                  src={ e.strMealThumb }
+                  alt={ e.strMeal }
+                  data-testid="recipe-photo"
+                  width={ 260 }
+                />
+                <h2 data-testid="recipe-title">{ e.strMeal }</h2>
+                <h3 data-testid="recipe-category">{ e.strCategory }</h3>
+                <ul>
+                  { recipeIngredients.map((ing, i) => (
+                    <li
+                      data-testid={ `${i}-ingredient-name-and-measure` }
+                      key={ i }
+                    >
+                      { ing }
+                    </li>)) }
+                  { recipeMeasures.map((ing, i) => (
+                    <li
+                      data-testid={ `${i}-ingredient-name-and-measure` }
+                      key={ i }
+                    >
+                      { ing }
+                    </li>)) }
+                </ul>
+                <p data-testid="instructions">{ e.strInstructions }</p>
+                <iframe
+                  title="Recipe"
+                  width="260"
+                  data-testid="video"
+                  allowFullScreen
+                  src={ e.strYoutube }
+                />
+              </section>
+            )) }
+            <section
+              className="recomendations"
+            >
+              { drinksData
+                .filter((e, i) => i < MAX_RECIPES_QUANTITY)
+                .map((e, index) => (<RecipeCard
+                  cardClass="recomendation-card"
+                  dataTestId={ `${index}-recommendation-card` }
+                  dataTestIdTitle={ `${index}-recommendation-title` }
+                  key={ index }
+                  index={ index }
+                  pathname="drinks"
+                  idRecipe={ e.idDrink }
+                  strRecipe={ e.strDrink }
+                  strRecipeThumb={ e.strDrinkThumb }
+                />)) }
+            </section>
+          </section>)
 
+        : (
+          <section>
+            { currentRecipe.map((e) => (
+              <section key={ e.idDrink }>
+                <img
+                  src={ e.strDrinkThumb }
+                  alt={ e.strDrink }
+                  data-testid="recipe-photo"
+                  width={ 260 }
+                />
+                <h2 data-testid="recipe-title">{ e.strDrink }</h2>
+                <h3 data-testid="recipe-category">
+                  { e.strCategory }
+                  { ' ' }
+                  { e.strAlcoholic }
+                </h3>
+                <ul>
+                  { recipeIngredients.map((ing, i) => (
+                    <li
+                      data-testid={ `${i}-ingredient-name-and-measure` }
+                      key={ i }
+                    >
+                      { ing }
+                    </li>)) }
+                  { recipeMeasures.map((ing, i) => (
+                    <li
+                      data-testid={ `${i}-ingredient-name-and-measure` }
+                      key={ i }
+                    >
+                      { ing }
+                    </li>)) }
+                </ul>
+                <p data-testid="instructions">{ e.strInstructions }</p>
+              </section>
+            )) }
+            <section
+              className="recomendations"
+            >
+              { mealsData
+                .filter((e, i) => i < MAX_RECIPES_QUANTITY)
+                .map((e, index) => (<RecipeCard
+                  cardClass="recomendation-card"
+                  dataTestId={ `${index}-recommendation-card` }
+                  dataTestIdTitle={ `${index}-recommendation-title` }
+                  key={ index }
+                  index={ index }
+                  pathname="meals"
+                  idRecipe={ e.idMeal }
+                  strRecipe={ e.strMeal }
+                  strRecipeThumb={ e.strMealThumb }
+                />)) }
+
+            </section>
+          </section>
+        ) }
+      <button
+        data-testid="start-recipe-btn"
+        className="start-recipe-btn"
+      >
+        Start Recipe
+
+      </button>
     </div>
   );
 }
