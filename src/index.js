@@ -8,16 +8,19 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import RecipeProvider from './context/RecipeProvider';
 import RecipeDetailsProvider from './context/RecipeDetailsProvider';
+import SearchBarProvider from './context/SearchBarProvider';
 
 ReactDOM
   .createRoot(document.getElementById('root'))
   .render(
     <BrowserRouter>
-      <RecipeProvider>
-        <RecipeDetailsProvider>
-          <App />
-        </RecipeDetailsProvider>
-      </RecipeProvider>
+      <SearchBarProvider>
+        <RecipeProvider>
+          <RecipeDetailsProvider>
+            <App />
+          </RecipeDetailsProvider>
+        </RecipeProvider>
+      </SearchBarProvider>
     </BrowserRouter>,
   );
 
