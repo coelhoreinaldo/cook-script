@@ -93,6 +93,40 @@ function RecipeDetails() {
     copy(window.location.href);
   };
 
+  const handleFavoriteClick = (item) => {
+    let recipeInfo;
+    if (pathname.includes('/meals')) {
+      recipeInfo = {
+        id: item.idMeal,
+        type: 'meal',
+        nationality: item.strArea || '',
+        category: item.strCategory,
+        alcoholicOrNot: '',
+        name: item.strMeal,
+        image: item.strMealThumb,
+      };
+    } else {
+      recipeInfo = {
+        id: item.idDrink,
+        type: 'drink',
+        nationality: item.strArea || '',
+        category: item.strCategory,
+        alcoholicOrNot: item.strAlcoholic || 'Non-alcoholic',
+        name: item.strDrink,
+        image: item.strDrinkThumb,
+      };
+    }
+    if (localStorage.getItem('favoriteRecipes')) {
+      const favoriteRecipesStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      localStorage.setItem(
+        'favoriteRecipes',
+        JSON.stringify([...favoriteRecipesStorage, recipeInfo]),
+      );
+    } else {
+      localStorage.setItem('favoriteRecipes', JSON.stringify([recipeInfo]));
+    }
+  };
+
   useEffect(() => {
     getRecipeDetails();
     getData();
@@ -222,7 +256,13 @@ function RecipeDetails() {
 
       </button>
       {showLinkCopied && <small>Link copied!</small>}
-      <button data-testid="favorite-btn">Favorite</button>
+      <button
+        data-testid="favorite-btn"
+        onClick={ () => handleFavoriteClick(currentRecipe[0]) }
+      >
+        Favorite
+
+      </button>
     </div>
   );
 }
