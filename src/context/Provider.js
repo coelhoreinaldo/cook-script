@@ -8,17 +8,17 @@ import ProfileProvider from './ProfileProvider';
 
 function Provider({ children }) {
   return (
-    <LoginProvider>
-      <SearchBarProvider>
-        <RecipeProvider>
-          <RecipeDetailsProvider>
-            <ProfileProvider>
+    <RecipeProvider>
+      <RecipeDetailsProvider>
+        <LoginProvider>
+          <ProfileProvider>
+            <SearchBarProvider>
               {children}
-            </ProfileProvider>
-          </RecipeDetailsProvider>
-        </RecipeProvider>
-      </SearchBarProvider>
-    </LoginProvider>
+            </SearchBarProvider>
+          </ProfileProvider>
+        </LoginProvider>
+      </RecipeDetailsProvider>
+    </RecipeProvider>
   );
 }
 
