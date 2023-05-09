@@ -207,6 +207,8 @@ function RecipeDetails() {
             Start Recipe
           </button>) }
       {isInProgress && <button data-testid="start-recipe-btn">Continue Recipe</button>}
+      <button data-testid="share-btn">Share</button>
+      <button data-testid="favorite-btn">Favorite</button>
     </div>
   );
 }
