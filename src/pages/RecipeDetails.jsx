@@ -4,6 +4,10 @@ import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
 import { RecipeContext } from '../context/RecipeProvider';
 import RecipeCard from '../components/RecipeCard';
 import './RecipeDetails.css';
+// import shareIcon from '../images/shareIcon.svg';
+import shareIcon from '../images/shareIcon.svg';
+
+const copy = require('clipboard-copy');
 
 const MAX_RECIPES_QUANTITY = 6;
 
@@ -16,6 +20,7 @@ function RecipeDetails() {
   const { mealsData, drinksData, getData, getCategories } = useContext(RecipeContext);
   const [isDone, setIsDone] = useState(false);
   const [isInProgress, setIsInProgress] = useState(false);
+  const [showLinkCopied, setShowLinkCopied] = useState(false);
 
   const { location: { pathname } } = useHistory();
   const history = useHistory();
@@ -81,6 +86,11 @@ function RecipeDetails() {
       recipeId = currentRecipe[0].idDrink;
     }
     history.push(`/${PATHNAME_PAGE}/${recipeId}/in-progress`);
+  };
+
+  const handleShareClick = () => {
+    setShowLinkCopied(true);
+    copy(window.location.href);
   };
 
   useEffect(() => {
@@ -207,7 +217,11 @@ function RecipeDetails() {
             Start Recipe
           </button>) }
       {isInProgress && <button data-testid="start-recipe-btn">Continue Recipe</button>}
-      <button data-testid="share-btn">Share</button>
+      <button data-testid="share-btn" onClick={ handleShareClick }>
+        <img src={ shareIcon } alt="share icon" />
+
+      </button>
+      {showLinkCopied && <small>Link copied!</small>}
       <button data-testid="favorite-btn">Favorite</button>
     </div>
   );
