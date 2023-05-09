@@ -5,10 +5,10 @@ import { useHistory } from 'react-router-dom';
 export const LoginContext = createContext();
 
 function LoginProvider({ children }) {
+  const history = useHistory();
   const [emailInput, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [disabled, setIsValid] = useState(true);
-  const history = useHistory();
 
   useEffect(() => {
     const min = 6;
@@ -16,9 +16,9 @@ function LoginProvider({ children }) {
   }, [emailInput, password]);
 
   const submitButton = useCallback(() => {
-    history.location.pathname = '/meals';
     localStorage.setItem('user', JSON.stringify({ email: emailInput }));
-  }, [emailInput, history.location]);
+    history.push('/meals');
+  }, [history, emailInput]);
 
   const valor = useMemo(() => ({
     emailInput,
