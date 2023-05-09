@@ -9,7 +9,7 @@ function Profile() {
     <div>
       <Header />
       <section>
-        <h2 data-testid="profile-email">{ getEmail.email }</h2>
+        <h2 data-testid="profile-email">{ getEmail ? getEmail.email : []}</h2>
         <button
           data-testid="profile-done-btn"
           type="button"
@@ -26,7 +26,14 @@ function Profile() {
           Favorite Recipes
 
         </button>
-        <button data-testid="profile-logout-btn" type="button">Logout</button>
+        <button
+          data-testid="profile-logout-btn"
+          type="button"
+          onClick={ () => submitButton('logout') }
+        >
+          Logout
+
+        </button>
       </section>
       <Footer />
 

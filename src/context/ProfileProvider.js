@@ -1,31 +1,31 @@
 import React, { useState, useEffect, useMemo, createContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
 export const ProfileContext = createContext();
 
 function ProfileProvider({ children }) {
+  const history = useHistory();
   const [getEmail, setGetEmail] = useState('');
 
   useEffect(() => {
-    const retorno = JSON.parse(localStorage.getItem('user'));
-    if (retorno === null) {
-      setGetEmail('');
-    }
-    setGetEmail(retorno);
+    const email = JSON.parse(localStorage.getItem('user'));
+    setGetEmail(email);
   }, []);
 
   const submitButton = useCallback((retorno) => {
     console.log(retorno);
     if (retorno === 'done') {
-      window.location.href = '/done-recipes';
+      history.push('/done-recipes');
     }
     if (retorno === 'favorite') {
-      window.location.href = '/favorite-recipes';
+      history.push('/favorite-recipes');
     }
     if (retorno === 'logout') {
-      window.location.href = '/';
+      localStorage.clear();
+      history.push('/');
     }
-  }, []);
+  }, [history]);
 
   const valor = useMemo(() => ({
     getEmail,
