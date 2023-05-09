@@ -112,7 +112,7 @@ function RecipeDetails() {
                   cardClass="recomendation-card"
                   dataTestId={ `${index}-recommendation-card` }
                   dataTestIdTitle={ `${index}-recommendation-title` }
-                  key={ index }
+                  key={ e.idDrink }
                   index={ index }
                   pathname="drinks"
                   idRecipe={ e.idDrink }
@@ -158,7 +158,7 @@ function RecipeDetails() {
                   cardClass="recomendation-card"
                   dataTestId={ `${index}-recommendation-card` }
                   dataTestIdTitle={ `${index}-recommendation-title` }
-                  key={ index }
+                  key={ e.idMeal }
                   index={ index }
                   pathname="meals"
                   idRecipe={ e.idMeal }
