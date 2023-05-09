@@ -4,15 +4,18 @@ import RecipeProvider from './RecipeProvider';
 import LoginProvider from './LoginProvider';
 import SearchBarProvider from './SearchBarProvider';
 import RecipeDetailsProvider from './RecipeDetailsProvider';
+import ProfileProvider from './ProfileProvider';
 
 function Provider({ children }) {
   return (
     <RecipeProvider>
       <RecipeDetailsProvider>
         <LoginProvider>
-          <SearchBarProvider>
-            {children}
-          </SearchBarProvider>
+          <ProfileProvider>
+            <SearchBarProvider>
+              {children}
+            </SearchBarProvider>
+          </ProfileProvider>
         </LoginProvider>
       </RecipeDetailsProvider>
     </RecipeProvider>

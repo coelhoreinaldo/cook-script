@@ -25,12 +25,12 @@ function RecipeDetails() {
     }
   };
 
-  const getLocalStorageInProgressRecipes = (currRecipe) => {
-    if (localStorage.getItem('inProgressRecipes')) {
-      const inProgressLocal = JSON.parse(localStorage.getItem('inProgressRecipes'));
-      console.log(inProgressLocal);
-    }
-  };
+  // const getLocalStorageInProgressRecipes = () => {
+  //   if (localStorage.getItem('inProgressRecipes')) {
+  //     const inProgressLocal = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  //     console.log(inProgressLocal);
+  //   }
+  // };
 
   const getRecipeDetails = useCallback(async () => {
     let API_URL;
@@ -44,7 +44,7 @@ function RecipeDetails() {
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
     getLocalStorageDoneRecipes(recipeDetails);
-    getLocalStorageInProgressRecipes(recipeDetails);
+    // getLocalStorageInProgressRecipes(recipeDetails);
     if (response.meals) {
       const embed = recipeDetails[0].strYoutube.replace('watch?v=', 'embed/');
       recipeDetails[0].strYoutube = embed;

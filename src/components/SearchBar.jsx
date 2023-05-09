@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { SearchBarContext } from '../context/SearchBarProvider';
 
 function SearchBar() {
@@ -7,9 +6,6 @@ function SearchBar() {
     handleFilter,
     handleFilteredRecipes,
   } = useContext(SearchBarContext);
-
-  const history = useHistory();
-  const location = history.location.pathname;
 
   return (
     <form>
@@ -56,7 +52,7 @@ function SearchBar() {
         <button
           type="button"
           data-testid="exec-search-btn"
-          onClick={ () => handleFilteredRecipes(location) }
+          onClick={ handleFilteredRecipes }
         >
           SEARCH
         </button>
