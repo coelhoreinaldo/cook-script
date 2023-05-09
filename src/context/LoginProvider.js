@@ -16,7 +16,7 @@ function LoginProvider({ children }) {
   }, [emailInput, password]);
 
   const submitButton = useCallback(() => {
-    history.location.pathname = '/meals';
+    history.push('/meals');
     localStorage.setItem('user', JSON.stringify({ email: emailInput }));
   }, [emailInput, history.location]);
 

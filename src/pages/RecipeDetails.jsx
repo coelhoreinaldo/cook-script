@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
 import { RecipeContext } from '../context/RecipeProvider';
@@ -14,8 +14,16 @@ function RecipeDetails() {
   } = useContext(RecipeDetailsContext);
 
   const { mealsData, drinksData, getData, getCategories } = useContext(RecipeContext);
-
+  const [isDone, setIsDone] = useState(false);
   const { location: { pathname } } = useHistory();
+
+  const getLocalStorage = (currRecipe) => {
+    if (localStorage.getItem('doneRecipes')) {
+      const doneRecipesXD = JSON.parse(localStorage.getItem('doneRecipes'));
+      const hasInLocalStorage = doneRecipesXD.some((e) => e.id === currRecipe[0].idMeal);
+      setIsDone(hasInLocalStorage);
+    }
+  };
 
   const getRecipeDetails = useCallback(async () => {
     let API_URL;
@@ -28,6 +36,7 @@ function RecipeDetails() {
     }
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
+    getLocalStorage(recipeDetails);
     if (response.meals) {
       const embed = recipeDetails[0].strYoutube.replace('watch?v=', 'embed/');
       recipeDetails[0].strYoutube = embed;
@@ -78,17 +87,11 @@ function RecipeDetails() {
                 <h3 data-testid="recipe-category">{ e.strCategory }</h3>
                 <ul>
                   { recipeIngredients.map((ing, i) => (
-                    <li
-                      data-testid={ `${i}-ingredient-name-and-measure` }
-                      key={ i }
-                    >
+                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
                       { ing }
                     </li>)) }
                   { recipeMeasures.map((ing, i) => (
-                    <li
-                      data-testid={ `${i}-ingredient-name-and-measure` }
-                      key={ i }
-                    >
+                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
                       { ing }
                     </li>)) }
                 </ul>
@@ -102,9 +105,7 @@ function RecipeDetails() {
                 />
               </section>
             )) }
-            <section
-              className="recomendations"
-            >
+            <section className="recomendations">
               { drinksData
                 .filter((e, i) => i < MAX_RECIPES_QUANTITY)
                 .map((e, index) => (<RecipeCard
@@ -139,26 +140,18 @@ function RecipeDetails() {
                 </h3>
                 <ul>
                   { recipeIngredients.map((ing, i) => (
-                    <li
-                      data-testid={ `${i}-ingredient-name-and-measure` }
-                      key={ i }
-                    >
+                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
                       { ing }
                     </li>)) }
                   { recipeMeasures.map((ing, i) => (
-                    <li
-                      data-testid={ `${i}-ingredient-name-and-measure` }
-                      key={ i }
-                    >
+                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
                       { ing }
                     </li>)) }
                 </ul>
                 <p data-testid="instructions">{ e.strInstructions }</p>
               </section>
             )) }
-            <section
-              className="recomendations"
-            >
+            <section className="recomendations">
               { mealsData
                 .filter((e, i) => i < MAX_RECIPES_QUANTITY)
                 .map((e, index) => (<RecipeCard
@@ -176,13 +169,11 @@ function RecipeDetails() {
             </section>
           </section>
         ) }
-      <button
-        data-testid="start-recipe-btn"
-        className="start-recipe-btn"
-      >
-        Start Recipe
-
-      </button>
+      { !isDone
+        && (
+          <button data-testid="start-recipe-btn" className="start-recipe-btn">
+            Start Recipe
+          </button>) }
     </div>
   );
 }
