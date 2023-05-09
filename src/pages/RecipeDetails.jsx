@@ -15,6 +15,8 @@ function RecipeDetails() {
 
   const { mealsData, drinksData, getData, getCategories } = useContext(RecipeContext);
   const [isDone, setIsDone] = useState(false);
+  const [isInProgress, setIsInProgress] = useState(false);
+
   const { location: { pathname } } = useHistory();
 
   const getLocalStorageDoneRecipes = (currRecipe) => {
@@ -25,12 +27,15 @@ function RecipeDetails() {
     }
   };
 
-  // const getLocalStorageInProgressRecipes = () => {
-  //   if (localStorage.getItem('inProgressRecipes')) {
-  //     const inProgressLocal = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  //     console.log(inProgressLocal);
-  //   }
-  // };
+  const getLocalStorageInProgressRecipes = useCallback(async (currRecipe) => {
+    if (localStorage.getItem('inProgressRecipes')) {
+      const inProgressLocal = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      const inProgressRecipes = Object.keys(inProgressLocal[pathname.split('/')[1]]);
+      if (inProgressRecipes.includes(currRecipe[0].idDrink || currRecipe[0].idMeal)) {
+        setIsInProgress(true);
+      }
+    }
+  }, [pathname]);
 
   const getRecipeDetails = useCallback(async () => {
     let API_URL;
@@ -44,7 +49,7 @@ function RecipeDetails() {
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
     getLocalStorageDoneRecipes(recipeDetails);
-    // getLocalStorageInProgressRecipes(recipeDetails);
+    getLocalStorageInProgressRecipes(recipeDetails);
     if (response.meals) {
       const embed = recipeDetails[0].strYoutube.replace('watch?v=', 'embed/');
       recipeDetails[0].strYoutube = embed;
@@ -61,7 +66,10 @@ function RecipeDetails() {
 
     setRecipeIngredients(ingredients);
     setRecipeMeasures(measures);
-  }, [fetchApi, pathname, setCurrentRecipe, setRecipeIngredients, setRecipeMeasures]);
+  }, [
+    fetchApi, getLocalStorageInProgressRecipes, pathname,
+    setCurrentRecipe, setRecipeIngredients, setRecipeMeasures,
+  ]);
 
   useEffect(() => {
     getRecipeDetails();
@@ -69,17 +77,6 @@ function RecipeDetails() {
     getCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // const inProgress = {
-  //   drinks: {
-  //     15997: ['lista-de-ingredientes-utilizados'],
-  //   },
-  //   meals: {
-  //     53060: ['lista-de-ingredientes-utilizados'],
-  //   },
-  // };
-
-  // localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
 
   if (isFetching) {
     return <p>Loading</p>;
@@ -193,6 +190,7 @@ function RecipeDetails() {
           <button data-testid="start-recipe-btn" className="start-recipe-btn">
             Start Recipe
           </button>) }
+      {isInProgress && <button data-testid="start-recipe-btn">Continue Recipe</button>}
     </div>
   );
 }
