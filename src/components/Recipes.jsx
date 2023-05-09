@@ -1,13 +1,20 @@
-import React, { useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { RecipeContext } from '../context/RecipeProvider';
+import RecipeCard from './RecipeCard';
 
 function Recipes() {
   const { location: { pathname } } = useHistory();
   const {
     filteredMeals, filteredDrinks, mealsCategories, drinksCategories,
-    isFetching, errorMessage, handleMealsFilterByCategory,
+    isFetching, handleMealsFilterByCategory, getData, getCategories,
   } = useContext(RecipeContext);
+
+  useEffect(() => {
+    getData();
+    getCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isFetching) {
     return (
@@ -17,21 +24,21 @@ function Recipes() {
     );
   }
 
-  if (errorMessage) {
-    return (<h3>{errorMessage}</h3>);
-  }
+  // if (errorMessage) {
+  //   return (<h3>{errorMessage}</h3>);
+  // }
 
   return (
     <>
       <nav>
-        {pathname === '/meals'
+        { pathname === '/meals'
           ? mealsCategories.map(({ strCategory }) => (
             <button
               data-testid={ `${strCategory}-category-filter` }
               key={ strCategory }
               onClick={ () => handleMealsFilterByCategory(strCategory) }
             >
-              {strCategory}
+              { strCategory }
             </button>
           ))
           : drinksCategories.map(({ strCategory }) => (
@@ -40,9 +47,9 @@ function Recipes() {
               key={ strCategory }
               onClick={ () => handleMealsFilterByCategory(strCategory) }
             >
-              {strCategory}
+              { strCategory }
             </button>
-          ))}
+          )) }
         <button
           data-testid="All-category-filter"
           onClick={ () => handleMealsFilterByCategory('All') }
@@ -52,44 +59,32 @@ function Recipes() {
         </button>
       </nav>
       <section className="d-flex flex-wrap justify-content-around gap-1">
-        {pathname === '/meals'
+        { pathname === '/meals'
           ? filteredMeals.map((e, index) => (
-            <Link
-              data-testid={ `${index}-recipe-card` }
+            <RecipeCard
+              cardClass="recipe-page-card"
+              dataTestId={ `${index}-recipe-card` }
+              dataTestIdTitle={ `${index}-card-name` }
               key={ e.idMeal }
-              to={ `/meals/${e.idMeal}` }
-            >
-              <h3 data-testid={ `${index}-card-name` }>{e.strMeal}</h3>
-              <figure className="figure">
-
-                <img
-                  width={ 144 }
-                  className="img-thumbnail figure-img img-fluid rounded"
-                  src={ e.strMealThumb }
-                  alt={ e.strMeal }
-                  data-testid={ `${index}-card-img` }
-                />
-              </figure>
-            </Link>
+              index={ index }
+              pathname="meals"
+              idRecipe={ e.idMeal }
+              strRecipe={ e.strMeal }
+              strRecipeThumb={ e.strMealThumb }
+            />
           )) : filteredDrinks.map((e, index) => (
-            <Link
-              data-testid={ `${index}-recipe-card` }
+            <RecipeCard
+              cardClass="recipe-page-card"
+              dataTestId={ `${index}-recipe-card` }
+              dataTestIdTitle={ `${index}-card-name` }
               key={ e.idDrink }
-              to={ `/drinks/${e.idDrink}` }
-            >
-              <h3 data-testid={ `${index}-card-name` }>{e.strDrink}</h3>
-              <figure className="figure">
-
-                <img
-                  width={ 144 }
-                  className="img-thumbnail figure-img img-fluid rounded"
-                  src={ e.strDrinkThumb }
-                  alt={ e.strDrink }
-                  data-testid={ `${index}-card-img` }
-                />
-              </figure>
-            </Link>
-          ))}
+              index={ index }
+              pathname="drinks"
+              idRecipe={ e.idDrink }
+              strRecipe={ e.strDrink }
+              strRecipeThumb={ e.strDrinkThumb }
+            />
+          )) }
       </section>
     </>
   );

@@ -6,6 +6,10 @@ import renderWithRouter from './renderWithRouter';
 import App from '../App';
 import Provider from '../context/Provider';
 
+const email = 'trybe@trybe.com';
+const senha = '1234567';
+const testidEmail = 'email-input';
+const testidSenha = 'password-input';
 const testIDTitle = 'page-title';
 describe('<Header />', () => {
   it('Should present title according to the route', async () => {
@@ -42,11 +46,18 @@ describe('<Header />', () => {
   it('Should redirect to the route "/profile" after clicking the profile button ', () => {
     const { history } = renderWithRouter(<Provider><App /></Provider>);
     act(() => {
-      history.push('/meals');
+      history.push('/');
     });
+    const emailInput = screen.getByTestId(testidEmail);
+    const senhaInput = screen.getByTestId(testidSenha);
+    userEvent.type(emailInput, email);
+    userEvent.type(senhaInput, senha);
+    const buttonEnter = screen.getByTestId('login-submit-btn');
+    expect(buttonEnter).toBeInTheDocument();
+    userEvent.click(buttonEnter);
 
-    const profileBnEl = screen.getByTestId('profile-top-btn');
-    userEvent.click(profileBnEl);
+    const buttonProfile = screen.getByRole('img', { name: /userimage/i });
+    userEvent.click(buttonProfile);
 
     const { pathname } = history.location;
     expect(pathname).toBe('/profile');
