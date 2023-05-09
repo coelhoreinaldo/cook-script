@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
 import { RecipeContext } from '../context/RecipeProvider';
@@ -14,8 +14,23 @@ function RecipeDetails() {
   } = useContext(RecipeDetailsContext);
 
   const { mealsData, drinksData, getData, getCategories } = useContext(RecipeContext);
-
+  const [isDone, setIsDone] = useState(false);
   const { location: { pathname } } = useHistory();
+
+  const getLocalStorageDoneRecipes = (currRecipe) => {
+    if (localStorage.getItem('doneRecipes')) {
+      const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+      const hasInLocalStorage = doneRecipes.some((e) => e.id === currRecipe[0].idMeal);
+      setIsDone(hasInLocalStorage);
+    }
+  };
+
+  // const getLocalStorageInProgressRecipes = () => {
+  //   if (localStorage.getItem('inProgressRecipes')) {
+  //     const inProgressLocal = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  //     console.log(inProgressLocal);
+  //   }
+  // };
 
   const getRecipeDetails = useCallback(async () => {
     let API_URL;
@@ -28,6 +43,8 @@ function RecipeDetails() {
     }
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
+    getLocalStorageDoneRecipes(recipeDetails);
+    // getLocalStorageInProgressRecipes(recipeDetails);
     if (response.meals) {
       const embed = recipeDetails[0].strYoutube.replace('watch?v=', 'embed/');
       recipeDetails[0].strYoutube = embed;
@@ -52,6 +69,17 @@ function RecipeDetails() {
     getCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // const inProgress = {
+  //   drinks: {
+  //     15997: ['lista-de-ingredientes-utilizados'],
+  //   },
+  //   meals: {
+  //     53060: ['lista-de-ingredientes-utilizados'],
+  //   },
+  // };
+
+  // localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
 
   if (isFetching) {
     return <p>Loading</p>;
@@ -78,17 +106,11 @@ function RecipeDetails() {
                 <h3 data-testid="recipe-category">{ e.strCategory }</h3>
                 <ul>
                   { recipeIngredients.map((ing, i) => (
-                    <li
-                      data-testid={ `${i}-ingredient-name-and-measure` }
-                      key={ i }
-                    >
+                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
                       { ing }
                     </li>)) }
                   { recipeMeasures.map((ing, i) => (
-                    <li
-                      data-testid={ `${i}-ingredient-name-and-measure` }
-                      key={ i }
-                    >
+                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
                       { ing }
                     </li>)) }
                 </ul>
@@ -102,16 +124,14 @@ function RecipeDetails() {
                 />
               </section>
             )) }
-            <section
-              className="recomendations"
-            >
+            <section className="recomendations">
               { drinksData
                 .filter((e, i) => i < MAX_RECIPES_QUANTITY)
                 .map((e, index) => (<RecipeCard
                   cardClass="recomendation-card"
                   dataTestId={ `${index}-recommendation-card` }
                   dataTestIdTitle={ `${index}-recommendation-title` }
-                  key={ index }
+                  key={ e.idDrink }
                   index={ index }
                   pathname="drinks"
                   idRecipe={ e.idDrink }
@@ -139,33 +159,25 @@ function RecipeDetails() {
                 </h3>
                 <ul>
                   { recipeIngredients.map((ing, i) => (
-                    <li
-                      data-testid={ `${i}-ingredient-name-and-measure` }
-                      key={ i }
-                    >
+                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
                       { ing }
                     </li>)) }
                   { recipeMeasures.map((ing, i) => (
-                    <li
-                      data-testid={ `${i}-ingredient-name-and-measure` }
-                      key={ i }
-                    >
+                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
                       { ing }
                     </li>)) }
                 </ul>
                 <p data-testid="instructions">{ e.strInstructions }</p>
               </section>
             )) }
-            <section
-              className="recomendations"
-            >
+            <section className="recomendations">
               { mealsData
                 .filter((e, i) => i < MAX_RECIPES_QUANTITY)
                 .map((e, index) => (<RecipeCard
                   cardClass="recomendation-card"
                   dataTestId={ `${index}-recommendation-card` }
                   dataTestIdTitle={ `${index}-recommendation-title` }
-                  key={ index }
+                  key={ e.idMeal }
                   index={ index }
                   pathname="meals"
                   idRecipe={ e.idMeal }
@@ -176,13 +188,11 @@ function RecipeDetails() {
             </section>
           </section>
         ) }
-      <button
-        data-testid="start-recipe-btn"
-        className="start-recipe-btn"
-      >
-        Start Recipe
-
-      </button>
+      { !isDone
+        && (
+          <button data-testid="start-recipe-btn" className="start-recipe-btn">
+            Start Recipe
+          </button>) }
     </div>
   );
 }

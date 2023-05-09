@@ -75,6 +75,7 @@ function SearchBarProvider({ children }) {
       const filteredDrinks = searchData.drinks.filter((_, i) => i < MAX_ITEMS_QUANT);
       setFilteredDrinks(filteredDrinks);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchApi, searchFilter, setFilteredDrinks, setFilteredMeals]);
 
   const values = useMemo(() => ({
@@ -87,7 +88,7 @@ function SearchBarProvider({ children }) {
 
   return (
     <SearchBarContext.Provider value={ values }>
-      {children}
+      { children }
     </SearchBarContext.Provider>
   );
 }

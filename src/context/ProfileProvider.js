@@ -14,7 +14,6 @@ function ProfileProvider({ children }) {
   }, []);
 
   const submitButton = useCallback((retorno) => {
-    console.log(retorno);
     if (retorno === 'done') {
       history.push('/done-recipes');
     }

@@ -22,7 +22,6 @@ describe('Testa a Página de Profile', () => {
     const buttonEnter = screen.getByTestId('login-submit-btn');
     expect(buttonEnter).toBeInTheDocument();
     userEvent.click(buttonEnter);
-    console.log(history.location.pathname);
     const buttonProfile = screen.getByAltText(/userimage/i);
     userEvent.click(buttonProfile);
     console.log(history.location.pathname);
