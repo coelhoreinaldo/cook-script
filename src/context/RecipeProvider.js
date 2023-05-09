@@ -79,12 +79,15 @@ function RecipeProvider({ children }) {
     handleMealsFilterByCategory,
     filteredMeals,
     filteredDrinks,
+    setFilteredMeals,
+    setFilteredDrinks,
     getData,
     getCategories,
   }), [
     mealsData, drinksData, mealsCategories, drinksCategories,
     isFetching, errorMessage, handleMealsFilterByCategory, filteredMeals,
-    filteredDrinks, getCategories, getData,
+    filteredDrinks, getCategories, getData, setFilteredMeals,
+    setFilteredDrinks,
   ]);
 
   return (
