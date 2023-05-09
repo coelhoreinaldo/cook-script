@@ -17,11 +17,18 @@ function RecipeDetails() {
   const [isDone, setIsDone] = useState(false);
   const { location: { pathname } } = useHistory();
 
-  const getLocalStorage = (currRecipe) => {
+  const getLocalStorageDoneRecipes = (currRecipe) => {
     if (localStorage.getItem('doneRecipes')) {
-      const doneRecipesXD = JSON.parse(localStorage.getItem('doneRecipes'));
-      const hasInLocalStorage = doneRecipesXD.some((e) => e.id === currRecipe[0].idMeal);
+      const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+      const hasInLocalStorage = doneRecipes.some((e) => e.id === currRecipe[0].idMeal);
       setIsDone(hasInLocalStorage);
+    }
+  };
+
+  const getLocalStorageInProgressRecipes = (currRecipe) => {
+    if (localStorage.getItem('inProgressRecipes')) {
+      const inProgressLocal = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      console.log(inProgressLocal);
     }
   };
 
@@ -36,7 +43,8 @@ function RecipeDetails() {
     }
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
-    getLocalStorage(recipeDetails);
+    getLocalStorageDoneRecipes(recipeDetails);
+    getLocalStorageInProgressRecipes(recipeDetails);
     if (response.meals) {
       const embed = recipeDetails[0].strYoutube.replace('watch?v=', 'embed/');
       recipeDetails[0].strYoutube = embed;
@@ -61,6 +69,17 @@ function RecipeDetails() {
     getCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // const inProgress = {
+  //   drinks: {
+  //     15997: ['lista-de-ingredientes-utilizados'],
+  //   },
+  //   meals: {
+  //     53060: ['lista-de-ingredientes-utilizados'],
+  //   },
+  // };
+
+  // localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
 
   if (isFetching) {
     return <p>Loading</p>;
