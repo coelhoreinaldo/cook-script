@@ -6,6 +6,8 @@ import RecipeCard from '../components/RecipeCard';
 import './RecipeDetails.css';
 // import shareIcon from '../images/shareIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
+import DrinkDetails from '../components/DrinkDetails';
+import MealDetails from '../components/MealDetails';
 
 const copy = require('clipboard-copy');
 
@@ -148,34 +150,16 @@ function RecipeDetails() {
         ? (
           <section>
             { currentRecipe.map((e) => (
-              <section key={ e.idMeal }>
-                <img
-                  src={ e.strMealThumb }
-                  alt={ e.strMeal }
-                  data-testid="recipe-photo"
-                  width={ 260 }
-                />
-                <h2 data-testid="recipe-title">{ e.strMeal }</h2>
-                <h3 data-testid="recipe-category">{ e.strCategory }</h3>
-                <ul>
-                  { recipeIngredients.map((ing, i) => (
-                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-                      { ing }
-                    </li>)) }
-                  { recipeMeasures.map((ing, i) => (
-                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-                      { ing }
-                    </li>)) }
-                </ul>
-                <p data-testid="instructions">{ e.strInstructions }</p>
-                <iframe
-                  title="Recipe"
-                  width="260"
-                  data-testid="video"
-                  allowFullScreen
-                  src={ e.strYoutube }
-                />
-              </section>
+              <MealDetails
+                key={ e.idMeal }
+                strMealThumb={ e.strMealThumb }
+                strMeal={ e.strMeal }
+                strCategory={ e.strCategory }
+                strYoutube={ e.strYoutube }
+                recipeIngredients={ recipeIngredients }
+                recipeMeasures={ recipeMeasures }
+                strInstructions={ e.strInstructions }
+              />
             )) }
             <section className="recomendations">
               { drinksData
@@ -197,31 +181,16 @@ function RecipeDetails() {
         : (
           <section>
             { currentRecipe.map((e) => (
-              <section key={ e.idDrink }>
-                <img
-                  src={ e.strDrinkThumb }
-                  alt={ e.strDrink }
-                  data-testid="recipe-photo"
-                  width={ 260 }
-                />
-                <h2 data-testid="recipe-title">{ e.strDrink }</h2>
-                <h3 data-testid="recipe-category">
-                  { e.strCategory }
-                  { ' ' }
-                  { e.strAlcoholic }
-                </h3>
-                <ul>
-                  { recipeIngredients.map((ing, i) => (
-                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-                      { ing }
-                    </li>)) }
-                  { recipeMeasures.map((ing, i) => (
-                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-                      { ing }
-                    </li>)) }
-                </ul>
-                <p data-testid="instructions">{ e.strInstructions }</p>
-              </section>
+              <DrinkDetails
+                key={ e.idDrink }
+                strDrinkThumb={ e.strDrinkThumb }
+                strDrink={ e.strDrink }
+                strCategory={ e.strCategory }
+                strAlcoholic={ e.strAlcoholic }
+                recipeIngredients={ recipeIngredients }
+                recipeMeasures={ recipeMeasures }
+                strInstructions={ e.strInstructions }
+              />
             )) }
             <section className="recomendations">
               { mealsData

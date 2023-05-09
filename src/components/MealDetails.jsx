@@ -1,25 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function DrinkDetails({
-  strDrinkThumb, strDrink, strCategory, strAlcoholic,
-  recipeIngredients, recipeMeasures, strInstructions,
+function MealDetails({
+  strMealThumb, strMeal, strCategory,
+  recipeIngredients, recipeMeasures, strInstructions, strYoutube,
 }) {
   return (
     <div>
       <section>
         <img
-          src={ strDrinkThumb }
-          alt={ strDrink }
+          src={ strMealThumb }
+          alt={ strMeal }
           data-testid="recipe-photo"
           width={ 260 }
         />
-        <h2 data-testid="recipe-title">{ strDrink }</h2>
-        <h3 data-testid="recipe-category">
-          { strCategory }
-          { ' ' }
-          { strAlcoholic }
-        </h3>
+        <h2 data-testid="recipe-title">{ strMeal }</h2>
+        <h3 data-testid="recipe-category">{ strCategory }</h3>
         <ul>
           { recipeIngredients.map((ing, i) => (
             <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
@@ -31,19 +27,26 @@ function DrinkDetails({
             </li>)) }
         </ul>
         <p data-testid="instructions">{ strInstructions }</p>
+        <iframe
+          title="Recipe"
+          width="260"
+          data-testid="video"
+          allowFullScreen
+          src={ strYoutube }
+        />
       </section>
     </div>
   );
 }
 
-DrinkDetails.propTypes = {
-  strDrinkThumb: PropTypes.string.isRequired,
-  strDrink: PropTypes.string.isRequired,
+MealDetails.propTypes = {
+  strMealThumb: PropTypes.string.isRequired,
+  strMeal: PropTypes.string.isRequired,
   strCategory: PropTypes.string.isRequired,
-  strAlcoholic: PropTypes.string.isRequired,
+  strYoutube: PropTypes.string.isRequired,
   recipeIngredients: PropTypes.arrayOf(PropTypes.string).isRequired,
   recipeMeasures: PropTypes.arrayOf(PropTypes.string).isRequired,
   strInstructions: PropTypes.string.isRequired,
 };
 
-export default DrinkDetails;
+export default MealDetails;
