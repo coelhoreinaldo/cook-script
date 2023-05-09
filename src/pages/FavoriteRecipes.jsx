@@ -1,18 +1,30 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import Header from '../components/Header';
-import { RecipeContext } from '../context/RecipeProvider';
 
 function FavoriteRecipes() {
-  const {
-    filteredMeals,
-    // filteredDrinks,
-    // mealsCategories,
-    // drinksCategories,
-    // isFetching,
-    // errorMessage,
-    // handleMealsFilterByCategory,
-  } = useContext(RecipeContext);
+  const teste = [{
+    id: '52977',
+    type: 'meal',
+    nationality: 'turkish',
+    category: 'side',
+    alcoholicOrNot: '',
+    name: 'corba',
+    image: 'https://www.themealdb.com/images/media/meals/58oia61564916529.jpg',
+  },
+  {
+    id: '15997',
+    type: 'drink',
+    nationality: '',
+    category: 'Ordinary Drink',
+    alcoholicOrNot: 'Optional alcohol',
+    name: 'GG',
+    image: 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg',
+  }];
+
+  localStorage.setItem('teste', JSON.stringify(teste));
+  const recovery = localStorage.getItem('teste');
+  const newTeste = JSON.parse(recovery);
+  console.log(newTeste);
   return (
     <div>
       <Header />
@@ -31,24 +43,22 @@ function FavoriteRecipes() {
       >
         Drinks
       </button>
-      {filteredMeals.map((e, index) => (
-        <div key={ e.idMeal }>
-          <Link
-            data-testid={ `${index}-recipe-card` }
-            to={ `/meals/${e.idMeal}` }
+      {newTeste.map((e, index) => (
+        <div key={ e.id }>
+          <figure className="figure">
+            <img
+              width={ 144 }
+              src={ e.image }
+              alt={ e.nome }
+              data-testid={ `${index}-horizontal-image` }
+            />
+          </figure>
+          <h3 data-testid={ `${index}-horizontal-name` }>{e.nome}</h3>
+          <p
+            data-testid={ `${index}-horizontal-top-text` }
           >
-            <h3 data-testid={ `${index}-horizontal-name` }>{e.strMeal}</h3>
-            <figure className="figure">
-              <img
-                width={ 144 }
-                className="img-thumbnail figure-img img-fluid rounded"
-                src={ e.strMealThumb }
-                alt={ e.strMeal }
-                data-testid={ `${index}-horizontal-image` }
-              />
-            </figure>
-          </Link>
-          <p data-testid={ `${index}-horizontal-top-text` }>teste</p>
+            {`${e.nationality}.${e.type} `}
+          </p>
           <button data-testid={ `${index}-horizontal-share-btn` }>Share</button>
           <button data-testid={ `${index}-horizontal-favorite-btn` }>Favorite</button>
         </div>
