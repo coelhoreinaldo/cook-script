@@ -15,12 +15,12 @@ function App() {
     <Switch>
       <Route
         exact
-        path="/meals/:id-da-receita/in-progress"
+        path="/meals/:id/in-progress"
         component={ RecipesInProgress }
       />
       <Route
         exact
-        path="/drinks/:id-da-receita/in-progress"
+        path="/drinks/:id/in-progress"
         component={ RecipesInProgress }
       />
       <Route exact path="/meals/:id" component={ RecipeDetails } />

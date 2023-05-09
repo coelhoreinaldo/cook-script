@@ -18,6 +18,7 @@ function RecipeDetails() {
   const [isInProgress, setIsInProgress] = useState(false);
 
   const { location: { pathname } } = useHistory();
+  const history = useHistory();
 
   const getLocalStorageDoneRecipes = (currRecipe) => {
     if (localStorage.getItem('doneRecipes')) {
@@ -70,6 +71,17 @@ function RecipeDetails() {
     fetchApi, getLocalStorageInProgressRecipes, pathname,
     setCurrentRecipe, setRecipeIngredients, setRecipeMeasures,
   ]);
+
+  const handleStartClick = () => {
+    const PATHNAME_PAGE = pathname.split('/')[1];
+    let recipeId;
+    if (PATHNAME_PAGE === 'meals') {
+      recipeId = currentRecipe[0].idMeal;
+    } else {
+      recipeId = currentRecipe[0].idDrink;
+    }
+    history.push(`/${PATHNAME_PAGE}/${recipeId}/in-progress`);
+  };
 
   useEffect(() => {
     getRecipeDetails();
@@ -187,7 +199,11 @@ function RecipeDetails() {
         ) }
       { !isDone
         && (
-          <button data-testid="start-recipe-btn" className="start-recipe-btn">
+          <button
+            data-testid="start-recipe-btn"
+            className="start-recipe-btn"
+            onClick={ () => handleStartClick() }
+          >
             Start Recipe
           </button>) }
       {isInProgress && <button data-testid="start-recipe-btn">Continue Recipe</button>}
