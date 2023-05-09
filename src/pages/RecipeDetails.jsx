@@ -4,10 +4,10 @@ import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
 import { RecipeContext } from '../context/RecipeProvider';
 import RecipeCard from '../components/RecipeCard';
 import './RecipeDetails.css';
-// import shareIcon from '../images/shareIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import DrinkDetails from '../components/DrinkDetails';
 import MealDetails from '../components/MealDetails';
+import { getLocalStorageDoneRecipes } from '../utils/localStorageFunctions';
 
 const copy = require('clipboard-copy');
 
@@ -26,14 +26,6 @@ function RecipeDetails() {
 
   const { location: { pathname } } = useHistory();
   const history = useHistory();
-
-  const getLocalStorageDoneRecipes = (currRecipe) => {
-    if (localStorage.getItem('doneRecipes')) {
-      const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
-      const hasInLocalStorage = doneRecipes.some((e) => e.id === currRecipe[0].idMeal);
-      setIsDone(hasInLocalStorage);
-    }
-  };
 
   const getLocalStorageInProgressRecipes = useCallback(async (currRecipe) => {
     if (localStorage.getItem('inProgressRecipes')) {
@@ -56,7 +48,8 @@ function RecipeDetails() {
     }
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
-    getLocalStorageDoneRecipes(recipeDetails);
+    setIsDone(getLocalStorageDoneRecipes(recipeDetails));
+
     getLocalStorageInProgressRecipes(recipeDetails);
     if (response.meals) {
       const embed = recipeDetails[0].strYoutube.replace('watch?v=', 'embed/');
