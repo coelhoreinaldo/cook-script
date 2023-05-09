@@ -4,6 +4,12 @@ import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
 import { RecipeContext } from '../context/RecipeProvider';
 import RecipeCard from '../components/RecipeCard';
 import './RecipeDetails.css';
+import shareIcon from '../images/shareIcon.svg';
+import DrinkDetails from '../components/DrinkDetails';
+import MealDetails from '../components/MealDetails';
+import { getLocalStorageDoneRecipes } from '../utils/localStorageFunctions';
+
+const copy = require('clipboard-copy');
 
 const MAX_RECIPES_QUANTITY = 6;
 
@@ -15,22 +21,21 @@ function RecipeDetails() {
 
   const { mealsData, drinksData, getData, getCategories } = useContext(RecipeContext);
   const [isDone, setIsDone] = useState(false);
+  const [isInProgress, setIsInProgress] = useState(false);
+  const [showLinkCopied, setShowLinkCopied] = useState(false);
+
   const { location: { pathname } } = useHistory();
+  const history = useHistory();
 
-  const getLocalStorageDoneRecipes = (currRecipe) => {
-    if (localStorage.getItem('doneRecipes')) {
-      const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
-      const hasInLocalStorage = doneRecipes.some((e) => e.id === currRecipe[0].idMeal);
-      setIsDone(hasInLocalStorage);
+  const getLocalStorageInProgressRecipes = useCallback(async (currRecipe) => {
+    if (localStorage.getItem('inProgressRecipes')) {
+      const inProgressLocal = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      const inProgressRecipes = Object.keys(inProgressLocal[pathname.split('/')[1]]);
+      if (inProgressRecipes.includes(currRecipe[0].idDrink || currRecipe[0].idMeal)) {
+        setIsInProgress(true);
+      }
     }
-  };
-
-  // const getLocalStorageInProgressRecipes = () => {
-  //   if (localStorage.getItem('inProgressRecipes')) {
-  //     const inProgressLocal = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  //     console.log(inProgressLocal);
-  //   }
-  // };
+  }, [pathname]);
 
   const getRecipeDetails = useCallback(async () => {
     let API_URL;
@@ -43,8 +48,9 @@ function RecipeDetails() {
     }
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
-    getLocalStorageDoneRecipes(recipeDetails);
-    // getLocalStorageInProgressRecipes(recipeDetails);
+    setIsDone(getLocalStorageDoneRecipes(recipeDetails));
+
+    getLocalStorageInProgressRecipes(recipeDetails);
     if (response.meals) {
       const embed = recipeDetails[0].strYoutube.replace('watch?v=', 'embed/');
       recipeDetails[0].strYoutube = embed;
@@ -61,7 +67,60 @@ function RecipeDetails() {
 
     setRecipeIngredients(ingredients);
     setRecipeMeasures(measures);
-  }, [fetchApi, pathname, setCurrentRecipe, setRecipeIngredients, setRecipeMeasures]);
+  }, [
+    fetchApi, getLocalStorageInProgressRecipes, pathname,
+    setCurrentRecipe, setRecipeIngredients, setRecipeMeasures,
+  ]);
+
+  const handleStartClick = () => {
+    const PATHNAME_PAGE = pathname.split('/')[1];
+    let recipeId;
+    if (PATHNAME_PAGE === 'meals') {
+      recipeId = currentRecipe[0].idMeal;
+    } else {
+      recipeId = currentRecipe[0].idDrink;
+    }
+    history.push(`/${PATHNAME_PAGE}/${recipeId}/in-progress`);
+  };
+
+  const handleShareClick = () => {
+    setShowLinkCopied(true);
+    copy(window.location.href);
+  };
+
+  const handleFavoriteClick = (item) => {
+    let recipeInfo;
+    if (pathname.includes('/meals')) {
+      recipeInfo = {
+        id: item.idMeal,
+        type: 'meal',
+        nationality: item.strArea || '',
+        category: item.strCategory,
+        alcoholicOrNot: '',
+        name: item.strMeal,
+        image: item.strMealThumb,
+      };
+    } else {
+      recipeInfo = {
+        id: item.idDrink,
+        type: 'drink',
+        nationality: item.strArea || '',
+        category: item.strCategory,
+        alcoholicOrNot: item.strAlcoholic || 'Non-alcoholic',
+        name: item.strDrink,
+        image: item.strDrinkThumb,
+      };
+    }
+    if (localStorage.getItem('favoriteRecipes')) {
+      const favoriteRecipesStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      localStorage.setItem(
+        'favoriteRecipes',
+        JSON.stringify([...favoriteRecipesStorage, recipeInfo]),
+      );
+    } else {
+      localStorage.setItem('favoriteRecipes', JSON.stringify([recipeInfo]));
+    }
+  };
 
   useEffect(() => {
     getRecipeDetails();
@@ -69,17 +128,6 @@ function RecipeDetails() {
     getCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // const inProgress = {
-  //   drinks: {
-  //     15997: ['lista-de-ingredientes-utilizados'],
-  //   },
-  //   meals: {
-  //     53060: ['lista-de-ingredientes-utilizados'],
-  //   },
-  // };
-
-  // localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
 
   if (isFetching) {
     return <p>Loading</p>;
@@ -95,34 +143,16 @@ function RecipeDetails() {
         ? (
           <section>
             { currentRecipe.map((e) => (
-              <section key={ e.idMeal }>
-                <img
-                  src={ e.strMealThumb }
-                  alt={ e.strMeal }
-                  data-testid="recipe-photo"
-                  width={ 260 }
-                />
-                <h2 data-testid="recipe-title">{ e.strMeal }</h2>
-                <h3 data-testid="recipe-category">{ e.strCategory }</h3>
-                <ul>
-                  { recipeIngredients.map((ing, i) => (
-                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-                      { ing }
-                    </li>)) }
-                  { recipeMeasures.map((ing, i) => (
-                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-                      { ing }
-                    </li>)) }
-                </ul>
-                <p data-testid="instructions">{ e.strInstructions }</p>
-                <iframe
-                  title="Recipe"
-                  width="260"
-                  data-testid="video"
-                  allowFullScreen
-                  src={ e.strYoutube }
-                />
-              </section>
+              <MealDetails
+                key={ e.idMeal }
+                strMealThumb={ e.strMealThumb }
+                strMeal={ e.strMeal }
+                strCategory={ e.strCategory }
+                strYoutube={ e.strYoutube }
+                recipeIngredients={ recipeIngredients }
+                recipeMeasures={ recipeMeasures }
+                strInstructions={ e.strInstructions }
+              />
             )) }
             <section className="recomendations">
               { drinksData
@@ -144,31 +174,16 @@ function RecipeDetails() {
         : (
           <section>
             { currentRecipe.map((e) => (
-              <section key={ e.idDrink }>
-                <img
-                  src={ e.strDrinkThumb }
-                  alt={ e.strDrink }
-                  data-testid="recipe-photo"
-                  width={ 260 }
-                />
-                <h2 data-testid="recipe-title">{ e.strDrink }</h2>
-                <h3 data-testid="recipe-category">
-                  { e.strCategory }
-                  { ' ' }
-                  { e.strAlcoholic }
-                </h3>
-                <ul>
-                  { recipeIngredients.map((ing, i) => (
-                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-                      { ing }
-                    </li>)) }
-                  { recipeMeasures.map((ing, i) => (
-                    <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-                      { ing }
-                    </li>)) }
-                </ul>
-                <p data-testid="instructions">{ e.strInstructions }</p>
-              </section>
+              <DrinkDetails
+                key={ e.idDrink }
+                strDrinkThumb={ e.strDrinkThumb }
+                strDrink={ e.strDrink }
+                strCategory={ e.strCategory }
+                strAlcoholic={ e.strAlcoholic }
+                recipeIngredients={ recipeIngredients }
+                recipeMeasures={ recipeMeasures }
+                strInstructions={ e.strInstructions }
+              />
             )) }
             <section className="recomendations">
               { mealsData
@@ -190,9 +205,26 @@ function RecipeDetails() {
         ) }
       { !isDone
         && (
-          <button data-testid="start-recipe-btn" className="start-recipe-btn">
+          <button
+            data-testid="start-recipe-btn"
+            className="start-recipe-btn"
+            onClick={ () => handleStartClick() }
+          >
             Start Recipe
           </button>) }
+      {isInProgress && <button data-testid="start-recipe-btn">Continue Recipe</button>}
+      <button data-testid="share-btn" onClick={ handleShareClick }>
+        <img src={ shareIcon } alt="share icon" />
+
+      </button>
+      {showLinkCopied && <small>Link copied!</small>}
+      <button
+        data-testid="favorite-btn"
+        onClick={ () => handleFavoriteClick(currentRecipe[0]) }
+      >
+        Favorite
+
+      </button>
     </div>
   );
 }
