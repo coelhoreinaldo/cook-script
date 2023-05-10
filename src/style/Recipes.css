@@ -1,0 +1,32 @@
+body {
+  background-color: #fcebb6;
+}
+
+nav {
+  /* background-color: red; */
+  display: flex;
+  justify-content: space-around;
+  border-bottom: #f07818 2px solid;
+  margin-bottom: 20px;
+}
+
+nav > button {
+  border: #fcebb6 solid 2px;
+  background-color: #fcebb6;
+  color: #f07818;
+  height: 50px;
+  font-weight:700;
+  font-size: 18px;
+}
+
+.recipe-page-card {
+  /* background-color: #f07818; */
+  border-radius: 15px;
+
+}
+
+.recipe-page-card > h3 {
+  background-color: #78c0a8;
+  color:black
+  /* border-radius:  15px;; */
+}

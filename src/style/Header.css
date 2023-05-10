@@ -37,7 +37,8 @@
 
 .form-container {
  /* background-color: red; */
- width: 30%;
+ width: 50%;
+ max-width: 600px;
  display: flex;
  flex-direction: column;
  align-items: center;
@@ -48,9 +49,10 @@
   /* border-radius: 1.25rem; */
   border-radius: 5px;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.3);
-  padding-left: 2.5rem;
   position: absolute;
-  width: 30%;
+  width: 50%;
+  max-width: 600px;
+  text-align: center;
 }
 
 .filter-container {
@@ -76,4 +78,7 @@
   border: #78c0a8 1px solid;
   border-radius: 1.25rem;
   color: #78c0a8;
+  width: 70%;
+  max-width: 300px;
+  align-self: center;
 }

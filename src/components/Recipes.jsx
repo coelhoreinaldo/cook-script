@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { RecipeContext } from '../context/RecipeProvider';
 import RecipeCard from './RecipeCard';
+import '../style/Recipes.css';
 
 function Recipes() {
   const { location: { pathname } } = useHistory();
