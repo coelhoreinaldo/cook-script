@@ -7,13 +7,16 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import Provider from './context/Provider';
+import DoneRecipesProvider from './context/DoneRecipesProvider';
 
 ReactDOM
   .createRoot(document.getElementById('root'))
   .render(
     <BrowserRouter>
       <Provider>
-        <App />
+        <DoneRecipesProvider>
+          <App />
+        </DoneRecipesProvider>
       </Provider>
     </BrowserRouter>,
   );
