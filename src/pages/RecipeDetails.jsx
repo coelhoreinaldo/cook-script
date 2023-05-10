@@ -124,6 +124,7 @@ function RecipeDetails() {
       return;
     }
     localStorage.setItem('favoriteRecipes', JSON.stringify([recipeInfo]));
+    verifyFavoriteInStorage(item);
   };
 
   useEffect(() => {
