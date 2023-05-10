@@ -1,0 +1,79 @@
+.header-top {
+  display: flex;
+  background-color: #f0a830;
+  height: 57px;
+  justify-content: space-between;
+  align-items: center;
+}
+.header-top > button {
+  background-color:#f07818;
+  border-radius: 20%;
+  border: #fcebb6 solid 1px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+  height: 90%;
+}
+.header-logo{
+  display: flex;
+  align-items: center;
+}
+
+.header-logo > img {
+  height: 52px;
+  margin-bottom: 5px;
+  margin-right: 10px;
+}
+
+.header-bottom {
+  background-color: #fcebb6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-bottom > h1 {
+  color: #036564;
+  font-weight: 800;
+}
+
+.form-container {
+ /* background-color: red; */
+ width: 30%;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+
+.search-input {
+  border: 2px solid #036564;
+  /* border-radius: 1.25rem; */
+  border-radius: 5px;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.3);
+  padding-left: 2.5rem;
+  position: absolute;
+  width: 30%;
+}
+
+.filter-container {
+  background-color: #78c0a8;
+  padding: 10px;
+  width: 100%;
+  margin-top: 25px;
+  /* border-radius: 5px; */
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-container > div {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 5px;
+}
+
+.filter-container > button {
+  background-color: #036564;
+  border: #78c0a8 1px solid;
+  border-radius: 1.25rem;
+  color: #78c0a8;
+}

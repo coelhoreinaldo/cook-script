@@ -4,6 +4,8 @@ import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 import { SearchBarContext } from '../context/SearchBarProvider';
 import SearchBar from './SearchBar';
+import panelaImg from '../images/panelaImg.png';
+import '../style/Header.css';
 
 const withoutSearch = ['profile', 'done-recipes', 'favorite-recipes'];
 
@@ -35,18 +37,25 @@ function Header() {
   const title = pageHeaderTitle(location);
   return (
     <header>
-      {/* lógica de renderização */}
-      <button type="button" onClick={ () => history.push('/profile') }>
-        <img src={ profileIcon } alt="userImage" data-testid="profile-top-btn" />
-      </button>
-      <h1 data-testid="page-title">{title}</h1>
-      { !withoutSearch.includes(location.split('/')[1])
-        && (
-          <button type="button" onClick={ changeVisibility }>
-            <img src={ searchIcon } alt="pesquisar" data-testid="search-top-btn" />
-          </button>
-        )}
-      {searchBarVisible && <SearchBar />}
+      <div className="header-top">
+        <button type="button" onClick={ () => history.push('/profile') }>
+          <img src={ profileIcon } alt="userImage" data-testid="profile-top-btn" />
+        </button>
+        <div className="header-logo">
+          <img src={ panelaImg } alt="recipes app" />
+          <h1>Recipes App</h1>
+        </div>
+        { !withoutSearch.includes(location.split('/')[1])
+          && (
+            <button type="button" onClick={ changeVisibility }>
+              <img src={ searchIcon } alt="pesquisar" data-testid="search-top-btn" />
+            </button>
+          )}
+      </div>
+      <div className="header-bottom">
+        <h1 data-testid="page-title">{title}</h1>
+        {searchBarVisible && <SearchBar />}
+      </div>
     </header>
   );
 }

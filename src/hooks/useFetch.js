@@ -12,6 +12,7 @@ function useFetch() {
       return data;
     } catch (error) {
       setErrorMessage('404 not found');
+      return [];
     } finally {
       setIsFetching(false);
     }
