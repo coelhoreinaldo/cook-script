@@ -26,7 +26,7 @@ function RecipeDetailsProvider({ children }) {
 
   return (
     <RecipeDetailsContext.Provider value={ values }>
-      {children}
+      { children }
     </RecipeDetailsContext.Provider>
   );
 }
