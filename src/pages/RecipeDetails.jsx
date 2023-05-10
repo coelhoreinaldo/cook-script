@@ -8,6 +8,8 @@ import shareIcon from '../images/shareIcon.svg';
 import DrinkDetails from '../components/DrinkDetails';
 import MealDetails from '../components/MealDetails';
 import { getLocalStorageDoneRecipes } from '../utils/localStorageFunctions';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 
 const copy = require('clipboard-copy');
 
@@ -23,6 +25,7 @@ function RecipeDetails() {
   const [isDone, setIsDone] = useState(false);
   const [isInProgress, setIsInProgress] = useState(false);
   const [showLinkCopied, setShowLinkCopied] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const { location: { pathname } } = useHistory();
   const history = useHistory();
@@ -37,6 +40,15 @@ function RecipeDetails() {
     }
   }, [pathname]);
 
+  const verifyFavoriteInStorage = useCallback((currRecipe) => {
+    if (localStorage.getItem('favoriteRecipes')) {
+      const favoriteRecipesStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      const check = favoriteRecipesStorage
+        .some((e) => e.id === currRecipe.idDrink || currRecipe.idMeal);
+      setIsFavorite(check);
+    }
+  }, []);
+
   const getRecipeDetails = useCallback(async () => {
     let API_URL;
     const PATHNAME_PAGE = pathname.split('/')[1];
@@ -49,8 +61,8 @@ function RecipeDetails() {
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
     setIsDone(getLocalStorageDoneRecipes(recipeDetails));
-
     getLocalStorageInProgressRecipes(recipeDetails);
+    verifyFavoriteInStorage(recipeDetails[0]);
     if (response.meals) {
       const embed = recipeDetails[0].strYoutube.replace('watch?v=', 'embed/');
       recipeDetails[0].strYoutube = embed;
@@ -67,10 +79,8 @@ function RecipeDetails() {
 
     setRecipeIngredients(ingredients);
     setRecipeMeasures(measures);
-  }, [
-    fetchApi, getLocalStorageInProgressRecipes, pathname,
-    setCurrentRecipe, setRecipeIngredients, setRecipeMeasures,
-  ]);
+  }, [fetchApi, getLocalStorageInProgressRecipes, pathname, setCurrentRecipe,
+    setRecipeIngredients, setRecipeMeasures, verifyFavoriteInStorage]);
 
   const handleStartClick = () => {
     const PATHNAME_PAGE = pathname.split('/')[1];
@@ -89,37 +99,31 @@ function RecipeDetails() {
   };
 
   const handleFavoriteClick = (item) => {
-    let recipeInfo;
-    if (pathname.includes('/meals')) {
-      recipeInfo = {
-        id: item.idMeal,
-        type: 'meal',
-        nationality: item.strArea || '',
-        category: item.strCategory,
-        alcoholicOrNot: '',
-        name: item.strMeal,
-        image: item.strMealThumb,
-      };
-    } else {
-      recipeInfo = {
-        id: item.idDrink,
-        type: 'drink',
-        nationality: item.strArea || '',
-        category: item.strCategory,
-        alcoholicOrNot: item.strAlcoholic || 'Non-alcoholic',
-        name: item.strDrink,
-        image: item.strDrinkThumb,
-      };
-    }
+    const recipeInfo = {
+      id: item.idMeal || item.idDrink,
+      type: item.idMeal ? 'meal' : 'drink',
+      nationality: item.strArea || '',
+      category: item.strCategory,
+      alcoholicOrNot: item.strAlcoholic || '',
+      name: item.strMeal || item.strDrink,
+      image: item.strMealThumb || item.strDrinkThumb,
+    };
     if (localStorage.getItem('favoriteRecipes')) {
       const favoriteRecipesStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      if (favoriteRecipesStorage.some((e) => e.id === recipeInfo.id)) {
+        const filtered = favoriteRecipesStorage.filter((e) => e.id !== recipeInfo.id);
+        localStorage.setItem('favoriteRecipes', JSON.stringify(filtered));
+        verifyFavoriteInStorage(item);
+        return;
+      }
       localStorage.setItem(
         'favoriteRecipes',
         JSON.stringify([...favoriteRecipesStorage, recipeInfo]),
       );
-    } else {
-      localStorage.setItem('favoriteRecipes', JSON.stringify([recipeInfo]));
+      verifyFavoriteInStorage(item);
+      return;
     }
+    localStorage.setItem('favoriteRecipes', JSON.stringify([recipeInfo]));
   };
 
   useEffect(() => {
@@ -215,15 +219,16 @@ function RecipeDetails() {
       {isInProgress && <button data-testid="start-recipe-btn">Continue Recipe</button>}
       <button data-testid="share-btn" onClick={ handleShareClick }>
         <img src={ shareIcon } alt="share icon" />
-
       </button>
       {showLinkCopied && <small>Link copied!</small>}
       <button
-        data-testid="favorite-btn"
         onClick={ () => handleFavoriteClick(currentRecipe[0]) }
       >
-        Favorite
-
+        <img
+          src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+          data-testid="favorite-btn"
+          alt="favorite icon"
+        />
       </button>
     </div>
   );
