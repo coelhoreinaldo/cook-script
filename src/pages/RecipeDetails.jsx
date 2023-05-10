@@ -17,7 +17,7 @@ const MAX_RECIPES_QUANTITY = 6;
 
 function RecipeDetails() {
   const {
-    currentRecipe, setCurrentRecipe, isFetching, errorMessage, fetchApi,
+    currentRecipe, setCurrentRecipe, isFetching, fetchApi,
     setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
   } = useContext(RecipeDetailsContext);
 
@@ -135,12 +135,16 @@ function RecipeDetails() {
   }, []);
 
   if (isFetching) {
-    return <p>Loading</p>;
+    return (
+      <div className="spinner-grow text-primary" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    );
   }
 
-  if (errorMessage) {
-    return <p>{ errorMessage }</p>;
-  }
+  // if (errorMessage) {
+  //   return <p>{ errorMessage }</p>;
+  // }
 
   return (
     <div className="recipe-details">
