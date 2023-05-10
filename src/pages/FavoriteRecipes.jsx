@@ -1,8 +1,13 @@
+import { useState } from 'react';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import Header from '../components/Header';
 
+const copy = require('clipboard-copy');
+
 function FavoriteRecipes() {
+  const [copyLink, setCopyLink] = useState(false);
+
   // const favoriteRecipes = [
   //   {
   //     id: '52977',
@@ -27,11 +32,9 @@ function FavoriteRecipes() {
   const recovery = localStorage.getItem('favoriteRecipes');
   const newTeste = JSON.parse(recovery);
 
-  // const copy = require('clipboard-copy');
-
   const handleShareClick = (type, id) => {
     copy(`http://localhost:3000/${type}s/${id}`);
-    alert('Link copied!');
+    setCopyLink(true);
   };
 
   return (
@@ -72,6 +75,7 @@ function FavoriteRecipes() {
           </button>
         </div>
       ))}
+      {copyLink && <span>Link copied!</span>}
     </div>
   );
 }
