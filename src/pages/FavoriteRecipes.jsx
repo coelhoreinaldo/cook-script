@@ -27,7 +27,7 @@ function FavoriteRecipes() {
   const recovery = localStorage.getItem('favoriteRecipes');
   const newTeste = JSON.parse(recovery);
 
-  const copy = require('clipboard-copy');
+  // const copy = require('clipboard-copy');
 
   const handleShareClick = (type, id) => {
     copy(`http://localhost:3000/${type}s/${id}`);
