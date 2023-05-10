@@ -6,7 +6,7 @@ import { ProfileContext } from '../context/ProfileProvider';
 function Profile() {
   const { getEmail, submitButton } = useContext(ProfileContext);
   return (
-    <div>
+    <>
       <Header />
       <section>
         <h2 data-testid="profile-email">{ getEmail ? getEmail.email : []}</h2>
@@ -37,7 +37,7 @@ function Profile() {
       </section>
       <Footer />
 
-    </div>
+    </>
   );
 }
 

@@ -1,32 +1,47 @@
 body {
-  background-color: #fcebb6;
+  background-color: var(--orange-terciary);
 }
 
 nav {
   /* background-color: red; */
   display: flex;
   justify-content: space-around;
-  border-bottom: #f07818 2px solid;
+  border-bottom: var(--orange-primary) 2px solid;
   margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: auto auto auto;
 }
 
 nav > button {
-  border: #fcebb6 solid 2px;
-  background-color: #fcebb6;
+  border: var(--orange-terciary) solid 2px;
+  background-color: var(--orange-terciary);
   color: #f07818;
-  height: 50px;
+  height: 40px;
   font-weight:700;
-  font-size: 18px;
+  font-size: 100%;
+  width: 120px;
+  overflow: hidden;
+  /* box-sizing: border-box; */
+}
+
+nav > button:hover {
+  background-color: var(--orange-primary);
+  color: white;
 }
 
 .recipe-page-card {
-  /* background-color: #f07818; */
-  border-radius: 15px;
 
+  text-decoration: none;
+  height: fit-content;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .recipe-page-card > h3 {
-  background-color: #78c0a8;
-  color:black
-  /* border-radius:  15px;; */
+  background-color: var(--blue-secondary);
+  color:black;
+  margin: 0;
+  text-align: center;
 }

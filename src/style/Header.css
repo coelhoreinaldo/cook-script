@@ -1,14 +1,15 @@
 .header-top {
   display: flex;
-  background-color: #f0a830;
+  background-color: var(--orange-secondary);
   height: 57px;
   justify-content: space-between;
   align-items: center;
+  padding: 0 16px;
 }
 .header-top > button {
-  background-color:#f07818;
+  background-color:var(--orange-secondary);
   border-radius: 20%;
-  border: #fcebb6 solid 1px;
+  border: var(--orange-terciary) solid 1px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
   height: 90%;
 }
@@ -24,39 +25,42 @@
 }
 
 .header-bottom {
-  background-color: #fcebb6;
+  background-color: var(--orange-terciary);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .header-bottom > h1 {
-  color: #036564;
+  color: var(--blue-primary);
   font-weight: 800;
 }
 
 .form-container {
  /* background-color: red; */
- width: 50%;
+ width: 100%;
  max-width: 600px;
  display: flex;
  flex-direction: column;
  align-items: center;
+ width: 90%;
 }
 
 .search-input {
-  border: 2px solid #036564;
+  /* border: 2px solid #036564; */
+  border: 2px solid var(--blue-primary);
   /* border-radius: 1.25rem; */
   border-radius: 5px;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.3);
   position: absolute;
-  width: 50%;
+  width: 90%;
   max-width: 600px;
   text-align: center;
 }
 
 .filter-container {
-  background-color: #78c0a8;
+  /* background-color: #78c0a8; */
+  background-color: var(--blue-secondary);
   padding: 10px;
   width: 100%;
   margin-top: 25px;
@@ -74,10 +78,11 @@
 }
 
 .filter-container > button {
-  background-color: #036564;
-  border: #78c0a8 1px solid;
+  /* background-color: #036564; */
+  background-color: var(--blue-primary);
+  border: var(--blue-secondary) 1px solid;
   border-radius: 1.25rem;
-  color: #78c0a8;
+  color: var(--blue-secondary);
   width: 70%;
   max-width: 300px;
   align-self: center;
