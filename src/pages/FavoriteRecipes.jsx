@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState,
+  // useEffect,
+} from 'react';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import Header from '../components/Header';
@@ -7,8 +9,9 @@ const copy = require('clipboard-copy');
 
 function FavoriteRecipes() {
   const [copyLink, setCopyLink] = useState(false);
+  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
 
-  // const favoriteRecipes = [
+  // const churros = [
   //   {
   //     id: '52977',
   //     type: 'meal',
@@ -28,9 +31,18 @@ function FavoriteRecipes() {
   //     image: 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg',
   //   },
   // ];
-
+  // localStorage.setItem('favoriteRecipes', JSON.stringify(churros));
   const recovery = localStorage.getItem('favoriteRecipes');
   const newTeste = JSON.parse(recovery);
+
+  const removeFavoriteRecipeLocalStorage = (id) => {
+    const getFavoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    const updatedFavorites = getFavoriteRecipes.filter((recipe) => recipe.id !== id);
+    localStorage.setItem('favoriteRecipes', JSON.stringify(updatedFavorites));
+    setFavoriteRecipes(updatedFavorites);
+    console.log(updatedFavorites);
+    console.log(favoriteRecipes);
+  };
 
   const handleShareClick = (type, id) => {
     copy(`http://localhost:3000/${type}s/${id}`);
@@ -66,7 +78,9 @@ function FavoriteRecipes() {
               data-testid={ `${index}-horizontal-share-btn` }
             />
           </button>
-          <button>
+          <button
+            onClick={ () => removeFavoriteRecipeLocalStorage(e.id) }
+          >
             <img
               src={ blackHeartIcon }
               alt=""
