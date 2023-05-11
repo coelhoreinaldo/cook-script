@@ -9,7 +9,11 @@ const copy = require('clipboard-copy');
 
 function FavoriteRecipes() {
   const [copyLink, setCopyLink] = useState(false);
-  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
+  const [favoriteRecipes, setFavoriteRecipes] = useState(() => {
+    const recovery = localStorage.getItem('favoriteRecipes');
+    return recovery ? JSON.parse(recovery) : [];
+  });
+  const [typeFilter, setTypeFilter] = useState('all');
 
   // const churros = [
   //   {
@@ -32,30 +36,55 @@ function FavoriteRecipes() {
   //   },
   // ];
   // localStorage.setItem('favoriteRecipes', JSON.stringify(churros));
-  const recovery = localStorage.getItem('favoriteRecipes');
-  const newTeste = JSON.parse(recovery);
 
   const removeFavoriteRecipeLocalStorage = (id) => {
     const getFavoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
     const updatedFavorites = getFavoriteRecipes.filter((recipe) => recipe.id !== id);
     localStorage.setItem('favoriteRecipes', JSON.stringify(updatedFavorites));
     setFavoriteRecipes(updatedFavorites);
-    console.log(updatedFavorites);
-    console.log(favoriteRecipes);
+    // console.log(updatedFavorites);
   };
+  console.log(favoriteRecipes);
+
+  // useEffect(() => {
+  //   newTeste;
+  // }, [newTeste]);
 
   const handleShareClick = (type, id) => {
     copy(`http://localhost:3000/${type}s/${id}`);
     setCopyLink(true);
   };
 
+  const handleFilter = (type) => {
+    setTypeFilter(type);
+  };
+
+  const filteredRecipes = typeFilter === 'all'
+    ? favoriteRecipes
+    : favoriteRecipes.filter((recipe) => recipe.type === typeFilter);
+
   return (
     <div>
       <Header />
-      <button data-testid="filter-by-all-btn">All</button>
-      <button data-testid="filter-by-meal-btn">Meals</button>
-      <button data-testid="filter-by-drink-btn">Drinks</button>
-      {newTeste && newTeste.map((e, index) => (
+      <button
+        data-testid="filter-by-all-btn"
+        onClick={ () => handleFilter('all') }
+      >
+        All
+      </button>
+      <button
+        data-testid="filter-by-meal-btn"
+        onClick={ () => handleFilter('meal') }
+      >
+        Meals
+      </button>
+      <button
+        data-testid="filter-by-drink-btn"
+        onClick={ () => handleFilter('drink') }
+      >
+        Drinks
+      </button>
+      {filteredRecipes.map((e, index) => (
         <div key={ e.id }>
           <img
             width={ 144 }
