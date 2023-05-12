@@ -5,9 +5,11 @@ import LoginProvider from './LoginProvider';
 import SearchBarProvider from './SearchBarProvider';
 import RecipeDetailsProvider from './RecipeDetailsProvider';
 import ProfileProvider from './ProfileProvider';
+// import { InProgressContext } from './inProgressContext';
 
 function Provider({ children }) {
   return (
+    // <InProgressContext>
     <RecipeProvider>
       <RecipeDetailsProvider>
         <LoginProvider>
@@ -19,6 +21,7 @@ function Provider({ children }) {
         </LoginProvider>
       </RecipeDetailsProvider>
     </RecipeProvider>
+    // </InProgressContext>
   );
 }
 
