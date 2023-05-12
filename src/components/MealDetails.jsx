@@ -3,19 +3,23 @@ import PropTypes from 'prop-types';
 
 function MealDetails({
   strMealThumb, strMeal, strCategory,
-  recipeIngredients, recipeMeasures, strInstructions, strYoutube,
+  recipeIngredients, recipeMeasures, strInstructions, strYoutube, imgClass,
 }) {
   return (
-    <div>
-      <section>
+    <section>
+      <section className="img-title">
         <img
           src={ strMealThumb }
           alt={ strMeal }
           data-testid="recipe-photo"
           width={ 260 }
+          className={ imgClass }
         />
-        <h2 data-testid="recipe-title">{ strMeal }</h2>
-        <h3 data-testid="recipe-category">{ strCategory }</h3>
+        <h2 data-testid="recipe-title" className="recipe-title">{ strMeal }</h2>
+      </section>
+      <h3 data-testid="recipe-category">{ strCategory }</h3>
+      <section>
+        <h3>Ingredients</h3>
         <ul>
           { recipeIngredients.map((ing, i) => (
             <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
@@ -26,7 +30,13 @@ function MealDetails({
               { ing }
             </li>)) }
         </ul>
+      </section>
+      <section>
+        <h3>Instructions</h3>
         <p data-testid="instructions">{ strInstructions }</p>
+      </section>
+      <section>
+        <h3>Video</h3>
         <iframe
           title="Recipe"
           width="260"
@@ -35,7 +45,7 @@ function MealDetails({
           src={ strYoutube }
         />
       </section>
-    </div>
+    </section>
   );
 }
 
@@ -47,6 +57,7 @@ MealDetails.propTypes = {
   recipeIngredients: PropTypes.arrayOf(PropTypes.string).isRequired,
   recipeMeasures: PropTypes.arrayOf(PropTypes.string).isRequired,
   strInstructions: PropTypes.string.isRequired,
+  imgClass: PropTypes.string.isRequired,
 };
 
 export default MealDetails;
