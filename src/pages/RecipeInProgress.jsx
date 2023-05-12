@@ -59,6 +59,7 @@ function RecipesInProgress() {
   }, []);
 
   console.log(currentRecipe);
+  console.log(pathname);
 
   return (
     <div>
