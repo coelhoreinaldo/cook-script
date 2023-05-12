@@ -2,6 +2,7 @@ import React, { useContext, useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Header from '../components/Header';
 import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
+import './RecipeInProgress.css';
 // import { InProgressContext } from '../context/inProgressContext';
 
 function RecipesInProgress() {
@@ -86,7 +87,9 @@ function RecipesInProgress() {
                       key={ index }
                       data-testid={ `${index}-ingredient-step` }
                       htmlFor="ingredient"
+                      className={ checkedIngredients.includes(index) ? 'checked' : '' }
                     >
+                      {`${recipeMeasures[index]} ${ing}`}
                       <input
                         type="checkbox"
                         value={ ing }
@@ -94,18 +97,6 @@ function RecipesInProgress() {
                         checked={ checkedIngredients.includes(index) }
                         onChange={ (event) => handleIngredientToggle(event, index) }
                       />
-                      <span
-                        style={ {
-                          textDecoration:
-                            checkedIngredients.includes(index) ? 'line-through' : 'none',
-                          textDecorationColor: checkedIngredients.includes(index)
-                            ? 'rgb(0, 0, 0)' : 'rgb(0,0,0)',
-                          textDecorationStyle: checkedIngredients.includes(index)
-                            ? 'solid' : 'none',
-                        } }
-                      >
-                        {`${recipeMeasures[index]} ${ing}`}
-                      </span>
                     </label>
                   ))}
                 </div>
@@ -140,7 +131,9 @@ function RecipesInProgress() {
                       key={ index }
                       data-testid={ `${index}-ingredient-step` }
                       htmlFor="ingredient"
+                      className={ checkedIngredients.includes(index) ? 'checked' : '' }
                     >
+                      {`${recipeMeasures[index]} ${ing}`}
                       <input
                         type="checkbox"
                         value={ ing }
@@ -148,18 +141,6 @@ function RecipesInProgress() {
                         checked={ checkedIngredients.includes(index) }
                         onChange={ (event) => handleIngredientToggle(event, index) }
                       />
-                      <span
-                        style={ {
-                          textDecoration: checkedIngredients.includes(index)
-                            ? 'line-through' : 'none',
-                          textDecorationColor: checkedIngredients.includes(index)
-                            ? 'rgb(0, 0, 0)' : 'rgb(0, 0, 0)',
-                          textDecorationStyle: checkedIngredients.includes(index)
-                            ? 'solid' : 'none',
-                        } }
-                      >
-                        {`${recipeMeasures[index]} ${ing}`}
-                      </span>
                     </label>
 
                   ))}
