@@ -13,16 +13,12 @@ function RecipeCard({
       to={ `/${pathname}/${idRecipe}` }
     >
       <h3 data-testid={ dataTestIdTitle }>{strRecipe}</h3>
-      <figure className="figure">
-
-        <img
-          width={ 200 }
-          className=" figure-img rounded"
-          src={ strRecipeThumb }
-          alt={ strRecipe }
-          data-testid={ `${index}-card-img` }
-        />
-      </figure>
+      <img
+        width={ 150 }
+        src={ strRecipeThumb }
+        alt={ strRecipe }
+        data-testid={ `${index}-card-img` }
+      />
     </Link>
   );
 }

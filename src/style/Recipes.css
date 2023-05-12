@@ -1,0 +1,47 @@
+body {
+  background-color: var(--orange-terciary);
+}
+
+nav {
+  border-bottom: var(--orange-primary) 2px solid;
+
+  /* background-color: red; */
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+nav > button {
+  background-color: var(--orange-terciary);
+  border: var(--orange-terciary) solid 2px;
+  color: #f07818;
+  font-size: 100%;
+  font-weight: 700;
+  height: 40px;
+  overflow: hidden;
+  width: 120px;
+
+  /* box-sizing: border-box; */
+}
+
+nav > button:hover {
+  background-color: var(--orange-primary);
+  color: white;
+}
+
+.recipe-page-card {
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0 3px 6px , rgba(0, 0, 0, 0.23) 0 3px 6px;
+  height: fit-content;
+  margin-bottom: 20px;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.recipe-page-card > h3 {
+  background-color: var(--blue-secondary);
+  color: black;
+  margin: 0;
+  text-align: center;
+}

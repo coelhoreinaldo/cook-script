@@ -8,15 +8,16 @@ function SearchBar() {
   } = useContext(SearchBarContext);
 
   return (
-    <form>
+    <form className="form-container">
       <input
+        className="search-input"
         data-testid="search-input"
         type="text"
         name="inputSearch"
         placeholder="Search Recipes"
         onChange={ handleFilter }
       />
-      <section>
+      <section className="filter-container">
         <div>
           <label>
             <input

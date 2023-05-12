@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
 import { RecipeContext } from '../context/RecipeProvider';
 import RecipeCard from '../components/RecipeCard';
-import './RecipeDetails.css';
+import '../style/RecipeDetails.css';
 import shareIcon from '../images/shareIcon.svg';
 import DrinkDetails from '../components/DrinkDetails';
 import MealDetails from '../components/MealDetails';
@@ -70,11 +70,11 @@ function RecipeDetails() {
     setCurrentRecipe(recipeDetails);
     const recipeEntries = Object.entries(recipeDetails[0]);
     const ingredients = recipeEntries
-      .filter(([key, value]) => key.includes('strIngredient') && value)
+      .filter(([key, value]) => key.includes('strIngredient') && value && value !== ' ')
       .map((item) => item[1]);
 
     const measures = recipeEntries
-      .filter(([key, value]) => key.includes('strMeasure') && value)
+      .filter(([key, value]) => key.includes('strMeasure') && value && value !== ' ')
       .map((item) => item[1]);
 
     setRecipeIngredients(ingredients);
@@ -142,10 +142,6 @@ function RecipeDetails() {
     );
   }
 
-  // if (errorMessage) {
-  //   return <p>{ errorMessage }</p>;
-  // }
-
   return (
     <div className="recipe-details">
       { pathname.includes('meals')
@@ -153,6 +149,7 @@ function RecipeDetails() {
           <section>
             { currentRecipe.map((e) => (
               <MealDetails
+                imgClass="recipe-img-details"
                 key={ e.idMeal }
                 strMealThumb={ e.strMealThumb }
                 strMeal={ e.strMeal }
@@ -185,6 +182,7 @@ function RecipeDetails() {
             { currentRecipe.map((e) => (
               <DrinkDetails
                 key={ e.idDrink }
+                imgClass="recipe-img-details"
                 strDrinkThumb={ e.strDrinkThumb }
                 strDrink={ e.strDrink }
                 strCategory={ e.strCategory }
@@ -212,6 +210,21 @@ function RecipeDetails() {
             </section>
           </section>
         ) }
+      <section className="like-favorite-btns">
+        <button data-testid="share-btn" onClick={ handleShareClick }>
+          <img src={ shareIcon } alt="share icon" />
+        </button>
+        {showLinkCopied && <small>Link copied!</small>}
+        <button
+          onClick={ () => handleFavoriteClick(currentRecipe[0]) }
+        >
+          <img
+            src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+            data-testid="favorite-btn"
+            alt="favorite icon"
+          />
+        </button>
+      </section>
       { !isDone
         && (
           <button
@@ -221,20 +234,12 @@ function RecipeDetails() {
           >
             Start Recipe
           </button>) }
-      {isInProgress && <button data-testid="start-recipe-btn">Continue Recipe</button>}
-      <button data-testid="share-btn" onClick={ handleShareClick }>
-        <img src={ shareIcon } alt="share icon" />
-      </button>
-      {showLinkCopied && <small>Link copied!</small>}
-      <button
-        onClick={ () => handleFavoriteClick(currentRecipe[0]) }
-      >
-        <img
-          src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
-          data-testid="favorite-btn"
-          alt="favorite icon"
-        />
-      </button>
+      {isInProgress
+      && (
+        <button data-testid="start-recipe-btn" className="start-recipe-btn">
+          Continue Recipe
+        </button>
+      )}
     </div>
   );
 }
