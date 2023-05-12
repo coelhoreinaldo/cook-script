@@ -6,7 +6,7 @@ function MealDetails({
   recipeIngredients, recipeMeasures, strInstructions, strYoutube, imgClass,
 }) {
   return (
-    <section>
+    <>
       <section className="img-title">
         <img
           src={ strMealThumb }
@@ -45,7 +45,7 @@ function MealDetails({
           src={ strYoutube }
         />
       </section>
-    </section>
+    </>
   );
 }
 

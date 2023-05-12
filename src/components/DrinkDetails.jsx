@@ -6,7 +6,7 @@ function DrinkDetails({
   recipeIngredients, recipeMeasures, strInstructions, imgClass,
 }) {
   return (
-    <section>
+    <>
       <section className="img-title">
         <img
           src={ strDrinkThumb }
@@ -39,7 +39,7 @@ function DrinkDetails({
         <h3>Instructions</h3>
         <p data-testid="instructions">{ strInstructions }</p>
       </section>
-    </section>
+    </>
 
   );
 }

@@ -55,3 +55,23 @@
 .recipe-details .like-favorite-btns {
   margin-bottom: 40px;
 }
+
+@media only screen and ( min-width : 768px ) {
+
+  .recipe-details .recipe-img-details {
+    aspect-ratio: 1/1;
+    width: 600px;
+  }
+
+  .recipe-details .recipe-title {
+    color: var(--blue-secondary);
+    font-size: xx-large;
+    font-weight: 900;
+    margin-top: -20%;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    z-index: 1000;
+  }
+
+}

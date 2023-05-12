@@ -70,11 +70,11 @@ function RecipeDetails() {
     setCurrentRecipe(recipeDetails);
     const recipeEntries = Object.entries(recipeDetails[0]);
     const ingredients = recipeEntries
-      .filter(([key, value]) => key.includes('strIngredient') && value)
+      .filter(([key, value]) => key.includes('strIngredient') && value && value !== ' ')
       .map((item) => item[1]);
 
     const measures = recipeEntries
-      .filter(([key, value]) => key.includes('strMeasure') && value)
+      .filter(([key, value]) => key.includes('strMeasure') && value && value !== ' ')
       .map((item) => item[1]);
 
     setRecipeIngredients(ingredients);
