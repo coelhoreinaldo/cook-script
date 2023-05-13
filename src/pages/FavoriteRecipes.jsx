@@ -1,6 +1,7 @@
 import { useState,
   // useEffect,
 } from 'react';
+import { Link } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import Header from '../components/Header';
@@ -85,14 +86,20 @@ function FavoriteRecipes() {
         Drinks
       </button>
       {filteredRecipes.map((e, index) => (
-        <div key={ e.id }>
-          <img
-            width={ 144 }
-            src={ e.image }
-            alt={ e.nome }
-            data-testid={ `${index}-horizontal-image` }
-          />
-          <h3 data-testid={ `${index}-horizontal-name` }>{e.name}</h3>
+        <div
+          key={ e.id }
+        >
+          <Link
+            to={ `/${e.type}s/${e.id}` }
+          >
+            <img
+              width={ 144 }
+              src={ e.image }
+              alt={ e.nome }
+              data-testid={ `${index}-horizontal-image` }
+            />
+            <h3 data-testid={ `${index}-horizontal-name` }>{e.name}</h3>
+          </Link>
           <p
             data-testid={ `${index}-horizontal-top-text` }
           >
