@@ -34,7 +34,10 @@ function DoneRecipes() {
   } = useContext(DoneRecipesContext);
   const history = useHistory();
   const time = 5000;
-  const alcoholic = mockFilter.some((recipe) => recipe.alcoholicOrNot !== '');
+  let alcoholic;
+  if (mockFilter) {
+    alcoholic = mockFilter.some((recipe) => recipe.alcoholicOrNot !== '');
+  }
 
   useEffect(() => {
     if (showMessage) {
@@ -44,6 +47,7 @@ function DoneRecipes() {
       return () => clearTimeout(timer);
     }
   }, [showMessage, setShowMessage]);
+
   return (
     <div>
       <Header />
@@ -73,7 +77,7 @@ function DoneRecipes() {
         </button>
       </section>
       <section>
-        {mockFilter.map((recipe, index) => (
+        {mockFilter && mockFilter.map((recipe, index) => (
           <div key={ index }>
             <button onClick={ () => history.push(`/${recipe.type}s/${recipe.id}`) }>
               <img

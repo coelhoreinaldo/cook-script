@@ -5,6 +5,7 @@ import { act } from 'react-dom/test-utils';
 import renderWithRouter from './renderWithRouter';
 import App from '../App';
 import Provider from '../context/Provider';
+import DoneRecipesProvider from '../context/DoneRecipesProvider';
 
 const email = 'trybe@trybe.com';
 const senha = '1234567';
@@ -13,7 +14,9 @@ const testidSenha = 'password-input';
 const testIDTitle = 'page-title';
 describe('<Header />', () => {
   it('Should present title according to the route', async () => {
-    const { history } = renderWithRouter(<Provider><App /></Provider>);
+    const { history } = renderWithRouter(
+      <Provider><DoneRecipesProvider><App /></DoneRecipesProvider></Provider>,
+    );
     act(() => {
       history.push('/meals');
     });
