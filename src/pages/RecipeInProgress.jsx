@@ -25,56 +25,6 @@ function RecipesInProgress() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showLinkCopied, setShowLinkCopied] = useState(false);
 
-  const handleIngredientToggle = (event, ingred) => {
-    if (event.target.checked) {
-      setCheckedIngredients([...checkedIngredients, ingred]);
-      return;
-    }
-    setCheckedIngredients(checkedIngredients.filter((e) => e !== ingred));
-  };
-
-  useEffect(() => {
-    let template;
-    console.log('entrou no useeffect');
-    if (localStorage.getItem('inProgressRecipes')) {
-      const data = JSON.parse(localStorage.getItem('inProgressRecipes'));
-
-      if (recipeType === 'drinks') {
-        template = {
-          drinks: {
-            ...data.drinks, [id]: checkedIngredients,
-          },
-          meals: {
-            ...data.meals,
-          },
-        };
-        localStorage.setItem(
-          'inProgressRecipes',
-          JSON.stringify(template),
-        );
-      } else {
-        template = {
-          drinks: {
-            ...data.drinks,
-          },
-          meals: {
-            ...data.meals, [id]: checkedIngredients,
-          },
-        };
-      }
-    } else {
-      template = {
-        [recipeType]: {
-          [id]: checkedIngredients,
-        },
-      };
-    }
-    localStorage.setItem(
-      'inProgressRecipes',
-      JSON.stringify(template),
-    );
-  }, [checkedIngredients]);
-
   const verifyFavoriteInStorage = useCallback((currRecipe) => {
     if (localStorage.getItem('favoriteRecipes')) {
       const favoriteRecipesStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
@@ -117,8 +67,7 @@ function RecipesInProgress() {
     if (localStorage.getItem('inProgressRecipes')) {
       const storageArray = JSON.parse(localStorage.getItem('inProgressRecipes'));
       setCheckedIngredients(storageArray[recipeType][id]);
-      console.log(storageArray);
-      console.log('olá');
+      console.log(storageArray[recipeType]);
     }
   };
 
@@ -193,6 +142,58 @@ function RecipesInProgress() {
     getRecipeDetails();
     getLocalStorageIngredients();
   }, []);
+  const handleIngredientToggle = (event, ingred) => {
+    if (event.target.checked) {
+      setCheckedIngredients([...checkedIngredients, ingred]);
+      return;
+    }
+    setCheckedIngredients(checkedIngredients.filter((e) => e !== ingred));
+  };
+
+  useEffect(() => {
+    let template;
+    if (localStorage.getItem('inProgressRecipes')) {
+      const data = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
+      if (recipeType === 'drinks') {
+        template = {
+          drinks: {
+            ...data.drinks, [id]: checkedIngredients,
+          },
+          meals: {
+            ...data.meals,
+          },
+        };
+        localStorage.setItem(
+          'inProgressRecipes',
+          JSON.stringify(template),
+        );
+      } else {
+        template = {
+          drinks: {
+            ...data.drinks,
+          },
+          meals: {
+            ...data.meals, [id]: checkedIngredients,
+          },
+        };
+        localStorage.setItem(
+          'inProgressRecipes',
+          JSON.stringify(template),
+        );
+      }
+    } else {
+      template = {
+        [recipeType]: {
+          [id]: checkedIngredients,
+        },
+      };
+    }
+    localStorage.setItem(
+      'inProgressRecipes',
+      JSON.stringify(template),
+    );
+  }, [checkedIngredients]);
 
   return (
     <div>
