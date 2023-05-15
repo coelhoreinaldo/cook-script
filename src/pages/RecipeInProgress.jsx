@@ -138,19 +138,6 @@ function RecipesInProgress() {
                   width={ 260 }
                 />
                 <h2 data-testid="recipe-title">{meal.strMeal}</h2>
-                <button data-testid="share-btn" onClick={ handleShareClick }>
-                  <img src={ shareIcon } alt="share icon" />
-                </button>
-                {showLinkCopied && <small>Link copied!</small>}
-                <button
-                  onClick={ () => handleFavoriteClick(currentRecipe[0]) }
-                >
-                  <img
-                    src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
-                    data-testid="favorite-btn"
-                    alt="favorite icon"
-                  />
-                </button>
                 <h3 data-testid="recipe-category">{meal.strCategory}</h3>
                 <div>
                   {recipeIngredients.map((ing, index) => (
@@ -172,7 +159,6 @@ function RecipesInProgress() {
                   ))}
                 </div>
                 <span data-testid="instructions">{meal.strInstructions}</span>
-                <button data-testid="finish-recipe-btn">Finalizar</button>
               </section>
             ))}
           </section>)
@@ -187,19 +173,6 @@ function RecipesInProgress() {
                   width={ 260 }
                 />
                 <h2 data-testid="recipe-title">{drink.strDrink}</h2>
-                <button data-testid="share-btn" onClick={ handleShareClick }>
-                  <img src={ shareIcon } alt="share icon" />
-                </button>
-                {showLinkCopied && <small>Link copied!</small>}
-                <button
-                  onClick={ () => handleFavoriteClick(currentRecipe[0]) }
-                >
-                  <img
-                    src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
-                    data-testid="favorite-btn"
-                    alt="favorite icon"
-                  />
-                </button>
                 <h3 data-testid="recipe-category">
                   {drink.strCategory}
                   <span data-testid="instructions">{drink.strInstructions}</span>
@@ -226,11 +199,28 @@ function RecipesInProgress() {
                   ))}
                 </div>
                 <span data-testid="instructions">{drink.strInstructions}</span>
-                <button data-testid="finish-recipe-btn">Finalizar</button>
               </section>
-
             ))}
           </section>)}
+      <button data-testid="share-btn" onClick={ handleShareClick }>
+        <img src={ shareIcon } alt="share icon" />
+      </button>
+      {showLinkCopied && <small>Link copied!</small>}
+      <button
+        onClick={ () => handleFavoriteClick(currentRecipe[0]) }
+      >
+        <img
+          src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+          data-testid="favorite-btn"
+          alt="favorite icon"
+        />
+      </button>
+      <button
+        data-testid="finish-recipe-btn"
+        disabled={ checkedIngredients.length !== recipeIngredients.length }
+      >
+        Finalizar
+      </button>
     </div>
   );
 }
