@@ -43,7 +43,7 @@ function Header() {
         </button>
         <div className="header-logo">
           <img src={ panelaImg } alt="recipes app" />
-          <h1>Recipes App</h1>
+          <h1>Cook Script</h1>
         </div>
         { !withoutSearch.includes(location.split('/')[1])
           && (

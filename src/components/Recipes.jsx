@@ -59,7 +59,7 @@ function Recipes() {
 
         </button>
       </nav>
-      <section className="d-flex flex-wrap justify-content-evenly">
+      <section className="recipes-card-container">
         { pathname === '/meals'
           ? filteredMeals.map((e, index) => (
             <RecipeCard

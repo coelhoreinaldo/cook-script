@@ -4,8 +4,6 @@ body {
 
 nav {
   border-bottom: var(--orange-primary) 2px solid;
-
-  /* background-color: red; */
   display: grid;
   grid-template-columns: auto auto auto;
   justify-content: space-around;
@@ -19,10 +17,8 @@ nav > button {
   font-size: 100%;
   font-weight: 700;
   height: 40px;
-  overflow: hidden;
-  width: 120px;
-
-  /* box-sizing: border-box; */
+  min-width: 100px;
+  white-space: nowrap;
 }
 
 nav > button:hover {
@@ -37,11 +33,25 @@ nav > button:hover {
   margin-bottom: 20px;
   overflow: hidden;
   text-decoration: none;
+  width: 150px;
 }
 
 .recipe-page-card > h3 {
+  align-items: center;
   background-color: var(--blue-secondary);
   color: black;
+  display: flex;
+  font-size: 75%;
+  height: 30px;
+  justify-content: center;
   margin: 0;
+  padding: 2px 0;
   text-align: center;
+}
+
+.recipes-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-bottom: 50px;
 }

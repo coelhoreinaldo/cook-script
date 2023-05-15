@@ -1,8 +1,10 @@
 import React, { useContext, useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import Header from '../components/Header';
 import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
-import './RecipeInProgress.css';
+import '../style/RecipeInProgress.css';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+
 // import { InProgressContext } from '../context/inProgressContext';
 
 function RecipesInProgress() {
@@ -60,24 +62,36 @@ function RecipesInProgress() {
   }, []);
 
   return (
-    <div>
-      <Header />
+    <div className="recipe-container">
       {pathname.includes('meals')
         ? (
-          <section>
+          <>
             {currentRecipe.map((meal) => (
               <section key={ meal.idMeal }>
-                <img
-                  src={ meal.strMealThumb }
-                  alt={ meal.strMealThumb }
-                  data-testid="recipe-photo"
-                  width={ 260 }
-                />
-                <h2 data-testid="recipe-title">{meal.strMeal}</h2>
-                <button data-testid="share-btn">Compartilhar</button>
-                <button data-testid="favorite-btn">Favoritar</button>
-                <h3 data-testid="recipe-category">{meal.strCategory}</h3>
+                <section className="img-title">
+                  <img
+                    className="recipe-img"
+                    src={ meal.strMealThumb }
+                    alt={ meal.strMealThumb }
+                    data-testid="recipe-photo"
+                    // width={ 260 }
+                  />
+                  <h2
+                    data-testid="recipe-title"
+                    className="recipe-title"
+                  >
+                    {meal.strMeal}
+                  </h2>
+                </section>
+                <h3
+                  data-testid="recipe-category"
+                  className="recipe-category"
+                >
+                  {meal.strCategory}
+                </h3>
+                <hr />
                 <div>
+                  <h3>Ingredients</h3>
                   {recipeIngredients.map((ing, index) => (
 
                     <label
@@ -99,56 +113,73 @@ function RecipesInProgress() {
                 </div>
                 <span data-testid="instructions">{meal.strInstructions}</span>
                 <button data-testid="finish-recipe-btn">Finalizar</button>
+                <button data-testid="share-btn">Compartilhar</button>
+                <button data-testid="favorite-btn">Favoritar</button>
               </section>
 
             ))}
-          </section>)
+          </>)
         : (
-          <section>
+          <>
             {currentRecipe.map((drink) => (
               <section key={ drink.idDrink }>
-                <img
-                  src={ drink.strDrinkThumb }
-                  alt={ drink.strDrink }
-                  data-testid="recipe-photo"
-                  width={ 260 }
-                />
-                <h2 data-testid="recipe-title">{drink.strDrink}</h2>
-                <button data-testid="share-btn">Compartilhar</button>
-                <button data-testid="favorite-btn">Favoritar</button>
-                <h3 data-testid="recipe-category">
+                <section className="img-title">
+                  <img
+                    className="recipe-img"
+                    src={ drink.strDrinkThumb }
+                    alt={ drink.strDrink }
+                    data-testid="recipe-photo"
+                    // width={ 260 }
+                  />
+                  <h2
+                    data-testid="recipe-title"
+                    className="recipe-title"
+                  >
+                    {drink.strDrink}
+                  </h2>
+                </section>
+                <h3 data-testid="recipe-category" className="recipe-category">
                   {drink.strCategory}
-                  <span data-testid="instructions">{drink.strInstructions}</span>
-                  {' '}
+                  {' - '}
                   {drink.strAlcoholic}
                 </h3>
-                <div>
-                  {recipeIngredients.map((ing, index) => (
-                    <label
-                      key={ index }
-                      data-testid={ `${index}-ingredient-step` }
-                      htmlFor="ingredient"
-                      className={ checkedIngredients.includes(index) ? 'checked' : '' }
-                    >
-                      {`${recipeMeasures[index]} ${ing}`}
-                      <input
-                        type="checkbox"
-                        value={ ing }
-                        id="check"
-                        checked={ checkedIngredients.includes(index) }
-                        onChange={ (event) => handleIngredientToggle(event, index) }
-                      />
-                    </label>
+                <hr />
+                <div className="ingredients">
+                  <h3>Ingredients</h3>
+                  <section className="ingredients-list">
+                    {recipeIngredients.map((ing, index) => (
+                      <label
+                        key={ index }
+                        data-testid={ `${index}-ingredient-step` }
+                        htmlFor="ingredient"
+                        className={ checkedIngredients.includes(index) ? 'checked' : '' }
+                      >
+                        <input
+                          type="checkbox"
+                          value={ ing }
+                          id="check"
+                          checked={ checkedIngredients.includes(index) }
+                          onChange={ (event) => handleIngredientToggle(event, index) }
+                        />
+                        {`${recipeMeasures[index]} ${ing}`}
+                      </label>
 
-                  ))}
-
+                    ))}
+                  </section>
                 </div>
-                <span data-testid="instructions">{drink.strInstructions}</span>
+                <section className="instructions">
+                  <h3>Instructions</h3>
+                  <span data-testid="instructions">{drink.strInstructions}</span>
+                </section>
+                <section className="like-favorite-btns">
+                  <button data-testid="share-btn">Compartilhar</button>
+                  <button data-testid="favorite-btn">Favoritar</button>
+                </section>
                 <button data-testid="finish-recipe-btn">Finalizar</button>
               </section>
 
             ))}
-          </section>)}
+          </>)}
     </div>
   );
 }
