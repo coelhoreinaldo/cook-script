@@ -67,7 +67,6 @@ function RecipesInProgress() {
     if (localStorage.getItem('inProgressRecipes')) {
       const storageArray = JSON.parse(localStorage.getItem('inProgressRecipes'));
       setCheckedIngredients(storageArray[recipeType][id]);
-      console.log(storageArray[recipeType]);
     }
   };
 
@@ -108,7 +107,6 @@ function RecipesInProgress() {
   };
 
   const handleFinishRecipe = (item) => {
-    console.log(item);
     const date = new Date();
     const recipeInfo = {
       id: item.idMeal || item.idDrink,
