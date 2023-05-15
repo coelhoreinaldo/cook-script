@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import Header from '../components/Header';
 import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
 import './RecipeInProgress.css';
-// import { InProgressContext } from '../context/inProgressContext';
 
 function RecipesInProgress() {
   const {
@@ -11,20 +10,34 @@ function RecipesInProgress() {
     setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
   } = useContext(RecipeDetailsContext);
 
-  // const {
-  //   checkedIngredients, handleIngredientToggle,
-  // } = useContext(InProgressContext);
-
   const [checkedIngredients, setCheckedIngredients] = useState([]);
 
-  const handleIngredientToggle = (event, index) => {
+  const handleIngredientToggle = (event, ingred) => {
     if (event.target.checked) {
-      setCheckedIngredients([...checkedIngredients, index]);
+      setCheckedIngredients([...checkedIngredients, ingred]);
+      localStorage.setItem(
+        'inProgressRecipes',
+        JSON.stringify([...checkedIngredients, ingred]),
+      );
     } else {
-      setCheckedIngredients(checkedIngredients.filter((i) => i !== index));
+      setCheckedIngredients(checkedIngredients.filter((e) => e !== ingred));
+      localStorage.setItem(
+        'inProgressRecipes',
+        JSON.stringify([...checkedIngredients.filter((e) => e !== ingred)]),
+      );
     }
   };
 
+  //   {
+  //     drinks: {
+  //         id-da-bebida: [lista-de-ingredientes-utilizados],
+  //         ...
+  //     },
+  //     meals: {
+  //         id-da-comida: [lista-de-ingredientes-utilizados],
+  //         ...
+  //     }
+  // }
   const { location: { pathname } } = useHistory();
 
   const getRecipeDetails = useCallback(async () => {
@@ -38,7 +51,6 @@ function RecipesInProgress() {
     }
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
-    // console.log(recipeDetails);
     setCurrentRecipe(recipeDetails);
 
     const recipeEntries = Object.entries(recipeDetails[0]);
@@ -55,8 +67,16 @@ function RecipesInProgress() {
     setRecipeMeasures(measures);
   }, [fetchApi, pathname, setCurrentRecipe, setRecipeIngredients, setRecipeMeasures]);
 
+  const getLocalStorageIngredients = () => {
+    if (localStorage.getItem('inProgressRecipes')) {
+      const storageArray = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      setCheckedIngredients(storageArray);
+    }
+  };
+
   useEffect(() => {
     getRecipeDetails();
+    getLocalStorageIngredients();
   }, []);
 
   return (
@@ -79,20 +99,19 @@ function RecipesInProgress() {
                 <h3 data-testid="recipe-category">{meal.strCategory}</h3>
                 <div>
                   {recipeIngredients.map((ing, index) => (
-
                     <label
                       key={ index }
                       data-testid={ `${index}-ingredient-step` }
                       htmlFor="ingredient"
-                      className={ checkedIngredients.includes(index) ? 'checked' : '' }
+                      className={ checkedIngredients.includes(ing) ? 'checked' : '' }
                     >
                       {`${recipeMeasures[index]} ${ing}`}
                       <input
                         type="checkbox"
                         value={ ing }
                         id="check"
-                        checked={ checkedIngredients.includes(index) }
-                        onChange={ (event) => handleIngredientToggle(event, index) }
+                        checked={ checkedIngredients.includes(ing) }
+                        onChange={ (event) => handleIngredientToggle(event, ing) }
                       />
                     </label>
                   ))}
@@ -100,7 +119,6 @@ function RecipesInProgress() {
                 <span data-testid="instructions">{meal.strInstructions}</span>
                 <button data-testid="finish-recipe-btn">Finalizar</button>
               </section>
-
             ))}
           </section>)
         : (
@@ -128,20 +146,18 @@ function RecipesInProgress() {
                       key={ index }
                       data-testid={ `${index}-ingredient-step` }
                       htmlFor="ingredient"
-                      className={ checkedIngredients.includes(index) ? 'checked' : '' }
+                      className={ checkedIngredients.includes(ing) ? 'checked' : '' }
                     >
                       {`${recipeMeasures[index]} ${ing}`}
                       <input
                         type="checkbox"
                         value={ ing }
                         id="check"
-                        checked={ checkedIngredients.includes(index) }
-                        onChange={ (event) => handleIngredientToggle(event, index) }
+                        checked={ checkedIngredients.includes(ing) }
+                        onChange={ (event) => handleIngredientToggle(event, ing) }
                       />
                     </label>
-
                   ))}
-
                 </div>
                 <span data-testid="instructions">{drink.strInstructions}</span>
                 <button data-testid="finish-recipe-btn">Finalizar</button>
