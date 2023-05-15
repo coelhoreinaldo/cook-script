@@ -6,6 +6,9 @@ import './RecipeInProgress.css';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
+import { getRecipesAndIngredients,
+  monitorCheckedIngredients,
+  verifyFavoriteInStorage } from '../utils/recipeDetails';
 
 const copy = require('clipboard-copy');
 
@@ -25,43 +28,22 @@ function RecipesInProgress() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showLinkCopied, setShowLinkCopied] = useState(false);
 
-  const verifyFavoriteInStorage = useCallback((currRecipe) => {
-    if (localStorage.getItem('favoriteRecipes')) {
-      const favoriteRecipesStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
-      const check = favoriteRecipesStorage
-        .some((e) => e.id === currRecipe.idDrink || currRecipe.idMeal);
-      setIsFavorite(check);
-    }
-  }, []);
-
   const getRecipeDetails = useCallback(async () => {
     let API_URL;
-    const PATHNAME_PAGE = pathname.split('/')[1];
-    const PATHNAME_ID = pathname.split('/')[2];
-    if (PATHNAME_PAGE === 'meals') {
-      API_URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${PATHNAME_ID}`;
+    if (recipeType === 'meals') {
+      API_URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
     } else {
-      API_URL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${PATHNAME_ID}`;
+      API_URL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
     }
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
-    verifyFavoriteInStorage(recipeDetails[0]);
+    setIsFavorite(verifyFavoriteInStorage(recipeDetails[0]));
     setCurrentRecipe(recipeDetails);
 
-    const recipeEntries = Object.entries(recipeDetails[0]);
-
-    const ingredients = recipeEntries
-      .filter(([key, value]) => key.includes('strIngredient') && value)
-      .map((item) => item[1]);
-
-    const measures = recipeEntries
-      .filter(([key, value]) => key.includes('strMeasure') && value)
-      .map((item) => item[1]);
-
-    setRecipeIngredients(ingredients);
-    setRecipeMeasures(measures);
-  }, [fetchApi, pathname,
-    setCurrentRecipe, setRecipeIngredients, setRecipeMeasures, verifyFavoriteInStorage]);
+    setRecipeIngredients(getRecipesAndIngredients(recipeDetails[0]).ingredients);
+    setRecipeMeasures(getRecipesAndIngredients(recipeDetails[0]).measures);
+  }, [fetchApi, id, recipeType, setCurrentRecipe, setRecipeIngredients,
+    setRecipeMeasures]);
 
   const getLocalStorageIngredients = () => {
     if (localStorage.getItem('inProgressRecipes')) {
@@ -85,18 +67,19 @@ function RecipesInProgress() {
       if (favoriteRecipesStorage.some((e) => e.id === recipeInfo.id)) {
         const filtered = favoriteRecipesStorage.filter((e) => e.id !== recipeInfo.id);
         localStorage.setItem('favoriteRecipes', JSON.stringify(filtered));
-        verifyFavoriteInStorage(item);
+        setIsFavorite(verifyFavoriteInStorage(item));
         return;
       }
       localStorage.setItem(
         'favoriteRecipes',
         JSON.stringify([...favoriteRecipesStorage, recipeInfo]),
       );
-      verifyFavoriteInStorage(item);
+      setIsFavorite(verifyFavoriteInStorage(item));
+
       return;
     }
     localStorage.setItem('favoriteRecipes', JSON.stringify([recipeInfo]));
-    verifyFavoriteInStorage(item);
+    setIsFavorite(verifyFavoriteInStorage(item));
   };
 
   const handleShareClick = () => {
@@ -151,48 +134,7 @@ function RecipesInProgress() {
   };
 
   useEffect(() => {
-    let template;
-    if (localStorage.getItem('inProgressRecipes')) {
-      const data = JSON.parse(localStorage.getItem('inProgressRecipes'));
-
-      if (recipeType === 'drinks') {
-        template = {
-          drinks: {
-            ...data.drinks, [id]: checkedIngredients,
-          },
-          meals: {
-            ...data.meals,
-          },
-        };
-        localStorage.setItem(
-          'inProgressRecipes',
-          JSON.stringify(template),
-        );
-      } else {
-        template = {
-          drinks: {
-            ...data.drinks,
-          },
-          meals: {
-            ...data.meals, [id]: checkedIngredients,
-          },
-        };
-        localStorage.setItem(
-          'inProgressRecipes',
-          JSON.stringify(template),
-        );
-      }
-    } else {
-      template = {
-        [recipeType]: {
-          [id]: checkedIngredients,
-        },
-      };
-    }
-    localStorage.setItem(
-      'inProgressRecipes',
-      JSON.stringify(template),
-    );
+    monitorCheckedIngredients(id, recipeType, checkedIngredients);
   }, [checkedIngredients]);
 
   return (
