@@ -15,6 +15,12 @@ function RecipesInProgress() {
     setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
   } = useContext(RecipeDetailsContext);
 
+  const { location: { pathname } } = useHistory();
+  const history = useHistory();
+
+  const id = pathname.split('/')[2];
+  const recipeType = pathname.split('/')[1];
+
   const [checkedIngredients, setCheckedIngredients] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
   const [showLinkCopied, setShowLinkCopied] = useState(false);
@@ -22,20 +28,52 @@ function RecipesInProgress() {
   const handleIngredientToggle = (event, ingred) => {
     if (event.target.checked) {
       setCheckedIngredients([...checkedIngredients, ingred]);
-      localStorage.setItem(
-        'inProgressRecipes',
-        JSON.stringify([...checkedIngredients, ingred]),
-      );
-    } else {
-      setCheckedIngredients(checkedIngredients.filter((e) => e !== ingred));
-      localStorage.setItem(
-        'inProgressRecipes',
-        JSON.stringify([...checkedIngredients.filter((e) => e !== ingred)]),
-      );
+      return;
     }
+    setCheckedIngredients(checkedIngredients.filter((e) => e !== ingred));
   };
 
-  const { location: { pathname } } = useHistory();
+  useEffect(() => {
+    let template;
+    console.log('entrou no useeffect');
+    if (localStorage.getItem('inProgressRecipes')) {
+      const data = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
+      if (recipeType === 'drinks') {
+        template = {
+          drinks: {
+            ...data.drinks, [id]: checkedIngredients,
+          },
+          meals: {
+            ...data.meals,
+          },
+        };
+        localStorage.setItem(
+          'inProgressRecipes',
+          JSON.stringify(template),
+        );
+      } else {
+        template = {
+          drinks: {
+            ...data.drinks,
+          },
+          meals: {
+            ...data.meals, [id]: checkedIngredients,
+          },
+        };
+      }
+    } else {
+      template = {
+        [recipeType]: {
+          [id]: checkedIngredients,
+        },
+      };
+    }
+    localStorage.setItem(
+      'inProgressRecipes',
+      JSON.stringify(template),
+    );
+  }, [checkedIngredients]);
 
   const verifyFavoriteInStorage = useCallback((currRecipe) => {
     if (localStorage.getItem('favoriteRecipes')) {
@@ -78,7 +116,9 @@ function RecipesInProgress() {
   const getLocalStorageIngredients = () => {
     if (localStorage.getItem('inProgressRecipes')) {
       const storageArray = JSON.parse(localStorage.getItem('inProgressRecipes'));
-      setCheckedIngredients(storageArray);
+      setCheckedIngredients(storageArray[recipeType][id]);
+      console.log(storageArray);
+      console.log('olá');
     }
   };
 
@@ -116,6 +156,37 @@ function RecipesInProgress() {
     const path = window.location.href;
     const link = path.split('/').filter((e, i, arr) => i !== arr.length - 1);
     copy(link.join('/'));
+  };
+
+  const handleFinishRecipe = (item) => {
+    console.log(item);
+    const recipeInfo = {
+      id: item.idMeal || item.idDrink,
+      type: item.idMeal ? 'meal' : 'drink',
+      nationality: item.strArea || '',
+      category: item.strCategory,
+      alcoholicOrNot: item.strAlcoholic || '',
+      name: item.strMeal || item.strDrink,
+      image: item.strMealThumb || item.strDrinkThumb,
+      doneDate: '',
+      tags: item.strTag || [],
+    };
+
+    if (localStorage.getItem('doneRecipes')) {
+      const doneRecipesStorage = JSON.parse(localStorage.getItem('doneRecipes'));
+      if (doneRecipesStorage.some((e) => e.id === recipeInfo.id)) {
+        const filtered = doneRecipesStorage.filter((e) => e.id !== recipeInfo.id);
+        localStorage.setItem('doneRecipes', JSON.stringify(filtered));
+        return;
+      }
+      localStorage.setItem(
+        'doneRecipes',
+        JSON.stringify([...doneRecipesStorage, recipeInfo]),
+      );
+      return;
+    }
+    localStorage.setItem('doneRecipes', JSON.stringify([recipeInfo]));
+    history.push('/done-recipes');
   };
 
   useEffect(() => {
@@ -218,6 +289,7 @@ function RecipesInProgress() {
       <button
         data-testid="finish-recipe-btn"
         disabled={ checkedIngredients.length !== recipeIngredients.length }
+        onClick={ () => handleFinishRecipe(currentRecipe[0]) }
       >
         Finalizar
       </button>
