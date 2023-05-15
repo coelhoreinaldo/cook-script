@@ -3,7 +3,14 @@ import { useHistory } from 'react-router-dom';
 import Header from '../components/Header';
 import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
 import './RecipeInProgress.css';
-// import { InProgressContext } from '../context/inProgressContext';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import shareIcon from '../images/shareIcon.svg';
+import { getRecipesAndIngredients,
+  monitorCheckedIngredients,
+  verifyFavoriteInStorage } from '../utils/recipeDetails';
+
+const copy = require('clipboard-copy');
 
 function RecipesInProgress() {
   const {
@@ -11,53 +18,124 @@ function RecipesInProgress() {
     setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
   } = useContext(RecipeDetailsContext);
 
-  // const {
-  //   checkedIngredients, handleIngredientToggle,
-  // } = useContext(InProgressContext);
+  const { location: { pathname } } = useHistory();
+  const history = useHistory();
+
+  const id = pathname.split('/')[2];
+  const recipeType = pathname.split('/')[1];
 
   const [checkedIngredients, setCheckedIngredients] = useState([]);
-
-  const handleIngredientToggle = (event, index) => {
-    if (event.target.checked) {
-      setCheckedIngredients([...checkedIngredients, index]);
-    } else {
-      setCheckedIngredients(checkedIngredients.filter((i) => i !== index));
-    }
-  };
-
-  const { location: { pathname } } = useHistory();
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [showLinkCopied, setShowLinkCopied] = useState(false);
 
   const getRecipeDetails = useCallback(async () => {
     let API_URL;
-    const PATHNAME_PAGE = pathname.split('/')[1];
-    const PATHNAME_ID = pathname.split('/')[2];
-    if (PATHNAME_PAGE === 'meals') {
-      API_URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${PATHNAME_ID}`;
+    if (recipeType === 'meals') {
+      API_URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
     } else {
-      API_URL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${PATHNAME_ID}`;
+      API_URL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
     }
     const response = await fetchApi(API_URL);
     const recipeDetails = response.meals || response.drinks;
-    // console.log(recipeDetails);
+    setIsFavorite(verifyFavoriteInStorage(recipeDetails[0]));
     setCurrentRecipe(recipeDetails);
 
-    const recipeEntries = Object.entries(recipeDetails[0]);
+    setRecipeIngredients(getRecipesAndIngredients(recipeDetails[0]).ingredients);
+    setRecipeMeasures(getRecipesAndIngredients(recipeDetails[0]).measures);
+  }, [fetchApi, id, recipeType, setCurrentRecipe, setRecipeIngredients,
+    setRecipeMeasures]);
 
-    const ingredients = recipeEntries
-      .filter(([key, value]) => key.includes('strIngredient') && value)
-      .map((item) => item[1]);
+  const getLocalStorageIngredients = () => {
+    if (localStorage.getItem('inProgressRecipes')) {
+      const storageArray = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      setCheckedIngredients(storageArray[recipeType][id]);
+    }
+  };
 
-    const measures = recipeEntries
-      .filter(([key, value]) => key.includes('strMeasure') && value)
-      .map((item) => item[1]);
+  const handleFavoriteClick = (item) => {
+    const recipeInfo = {
+      id: item.idMeal || item.idDrink,
+      type: item.idMeal ? 'meal' : 'drink',
+      nationality: item.strArea || '',
+      category: item.strCategory,
+      alcoholicOrNot: item.strAlcoholic || '',
+      name: item.strMeal || item.strDrink,
+      image: item.strMealThumb || item.strDrinkThumb,
+    };
+    if (localStorage.getItem('favoriteRecipes')) {
+      const favoriteRecipesStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      if (favoriteRecipesStorage.some((e) => e.id === recipeInfo.id)) {
+        const filtered = favoriteRecipesStorage.filter((e) => e.id !== recipeInfo.id);
+        localStorage.setItem('favoriteRecipes', JSON.stringify(filtered));
+        setIsFavorite(verifyFavoriteInStorage(item));
+        return;
+      }
+      localStorage.setItem(
+        'favoriteRecipes',
+        JSON.stringify([...favoriteRecipesStorage, recipeInfo]),
+      );
+      setIsFavorite(verifyFavoriteInStorage(item));
 
-    setRecipeIngredients(ingredients);
-    setRecipeMeasures(measures);
-  }, [fetchApi, pathname, setCurrentRecipe, setRecipeIngredients, setRecipeMeasures]);
+      return;
+    }
+    localStorage.setItem('favoriteRecipes', JSON.stringify([recipeInfo]));
+    setIsFavorite(verifyFavoriteInStorage(item));
+  };
+
+  const handleShareClick = () => {
+    setShowLinkCopied(true);
+    const path = window.location.href;
+    const link = path.split('/').filter((e, i, arr) => i !== arr.length - 1);
+    copy(link.join('/'));
+  };
+
+  const handleFinishRecipe = (item) => {
+    const date = new Date();
+    const recipeInfo = {
+      id: item.idMeal || item.idDrink,
+      type: item.idMeal ? 'meal' : 'drink',
+      nationality: item.strArea || '',
+      category: item.strCategory,
+      alcoholicOrNot: item.strAlcoholic || '',
+      name: item.strMeal || item.strDrink,
+      image: item.strMealThumb || item.strDrinkThumb,
+      doneDate: date.toISOString(),
+      tags: item.strTags ? item.strTags.split(',') : [],
+    };
+
+    if (localStorage.getItem('doneRecipes')) {
+      const doneRecipesStorage = JSON.parse(localStorage.getItem('doneRecipes'));
+      if (doneRecipesStorage.some((e) => e.id === recipeInfo.id)) {
+        const filtered = doneRecipesStorage.filter((e) => e.id !== recipeInfo.id);
+        localStorage.setItem('doneRecipes', JSON.stringify(filtered));
+        return;
+      }
+      localStorage.setItem(
+        'doneRecipes',
+        JSON.stringify([...doneRecipesStorage, recipeInfo]),
+      );
+      return;
+    }
+    localStorage.setItem('doneRecipes', JSON.stringify([recipeInfo]));
+    history.push('/done-recipes');
+  };
 
   useEffect(() => {
     getRecipeDetails();
+    getLocalStorageIngredients();
   }, []);
+
+  const handleIngredientToggle = (event, ingred) => {
+    if (event.target.checked) {
+      setCheckedIngredients([...checkedIngredients, ingred]);
+      return;
+    }
+    setCheckedIngredients(checkedIngredients.filter((e) => e !== ingred));
+  };
+
+  useEffect(() => {
+    monitorCheckedIngredients(id, recipeType, checkedIngredients);
+  }, [checkedIngredients]);
 
   return (
     <div>
@@ -74,33 +152,28 @@ function RecipesInProgress() {
                   width={ 260 }
                 />
                 <h2 data-testid="recipe-title">{meal.strMeal}</h2>
-                <button data-testid="share-btn">Compartilhar</button>
-                <button data-testid="favorite-btn">Favoritar</button>
                 <h3 data-testid="recipe-category">{meal.strCategory}</h3>
                 <div>
                   {recipeIngredients.map((ing, index) => (
-
                     <label
                       key={ index }
                       data-testid={ `${index}-ingredient-step` }
                       htmlFor="ingredient"
-                      className={ checkedIngredients.includes(index) ? 'checked' : '' }
+                      className={ checkedIngredients.includes(ing) ? 'checked' : '' }
                     >
                       {`${recipeMeasures[index]} ${ing}`}
                       <input
                         type="checkbox"
                         value={ ing }
                         id="check"
-                        checked={ checkedIngredients.includes(index) }
-                        onChange={ (event) => handleIngredientToggle(event, index) }
+                        checked={ checkedIngredients.includes(ing) }
+                        onChange={ (event) => handleIngredientToggle(event, ing) }
                       />
                     </label>
                   ))}
                 </div>
                 <span data-testid="instructions">{meal.strInstructions}</span>
-                <button data-testid="finish-recipe-btn">Finalizar</button>
               </section>
-
             ))}
           </section>)
         : (
@@ -114,8 +187,6 @@ function RecipesInProgress() {
                   width={ 260 }
                 />
                 <h2 data-testid="recipe-title">{drink.strDrink}</h2>
-                <button data-testid="share-btn">Compartilhar</button>
-                <button data-testid="favorite-btn">Favoritar</button>
                 <h3 data-testid="recipe-category">
                   {drink.strCategory}
                   <span data-testid="instructions">{drink.strInstructions}</span>
@@ -128,27 +199,43 @@ function RecipesInProgress() {
                       key={ index }
                       data-testid={ `${index}-ingredient-step` }
                       htmlFor="ingredient"
-                      className={ checkedIngredients.includes(index) ? 'checked' : '' }
+                      className={ checkedIngredients.includes(ing) ? 'checked' : '' }
                     >
                       {`${recipeMeasures[index]} ${ing}`}
                       <input
                         type="checkbox"
                         value={ ing }
                         id="check"
-                        checked={ checkedIngredients.includes(index) }
-                        onChange={ (event) => handleIngredientToggle(event, index) }
+                        checked={ checkedIngredients.includes(ing) }
+                        onChange={ (event) => handleIngredientToggle(event, ing) }
                       />
                     </label>
-
                   ))}
-
                 </div>
                 <span data-testid="instructions">{drink.strInstructions}</span>
-                <button data-testid="finish-recipe-btn">Finalizar</button>
               </section>
-
             ))}
           </section>)}
+      <button data-testid="share-btn" onClick={ handleShareClick }>
+        <img src={ shareIcon } alt="share icon" />
+      </button>
+      {showLinkCopied && <small>Link copied!</small>}
+      <button
+        onClick={ () => handleFavoriteClick(currentRecipe[0]) }
+      >
+        <img
+          src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+          data-testid="favorite-btn"
+          alt="favorite icon"
+        />
+      </button>
+      <button
+        data-testid="finish-recipe-btn"
+        disabled={ checkedIngredients.length !== recipeIngredients.length }
+        onClick={ () => handleFinishRecipe(currentRecipe[0]) }
+      >
+        Finalizar
+      </button>
     </div>
   );
 }
