@@ -109,6 +109,7 @@ function RecipesInProgress() {
 
   const handleFinishRecipe = (item) => {
     console.log(item);
+    const date = new Date();
     const recipeInfo = {
       id: item.idMeal || item.idDrink,
       type: item.idMeal ? 'meal' : 'drink',
@@ -117,8 +118,8 @@ function RecipesInProgress() {
       alcoholicOrNot: item.strAlcoholic || '',
       name: item.strMeal || item.strDrink,
       image: item.strMealThumb || item.strDrinkThumb,
-      doneDate: '',
-      tags: item.strTag || [],
+      doneDate: date.toISOString(),
+      tags: item.strTags ? item.strTags.split(',') : [],
     };
 
     if (localStorage.getItem('doneRecipes')) {
@@ -142,6 +143,7 @@ function RecipesInProgress() {
     getRecipeDetails();
     getLocalStorageIngredients();
   }, []);
+
   const handleIngredientToggle = (event, ingred) => {
     if (event.target.checked) {
       setCheckedIngredients([...checkedIngredients, ingred]);
