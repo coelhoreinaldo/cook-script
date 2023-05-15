@@ -17,14 +17,15 @@ function DrinkDetails({
         />
         <h2 data-testid="recipe-title" className="recipe-title">{ strDrink }</h2>
       </section>
-      <h3 data-testid="recipe-category">
+      <h3 data-testid="recipe-category" className="recipe-category">
         { strCategory }
         { ' ' }
         { strAlcoholic }
       </h3>
-      <section>
+      <hr />
+      <section className="ingredients">
         <h3>Ingredients</h3>
-        <ul>
+        <ul className="ingredients-list">
           { recipeIngredients.map((ing, i) => (
             <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
               { ing }
@@ -35,7 +36,7 @@ function DrinkDetails({
             </li>)) }
         </ul>
       </section>
-      <section>
+      <section className="instructions">
         <h3>Instructions</h3>
         <p data-testid="instructions">{ strInstructions }</p>
       </section>

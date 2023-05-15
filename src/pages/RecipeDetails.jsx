@@ -215,9 +215,7 @@ function RecipeDetails() {
           <img src={ shareIcon } alt="share icon" />
         </button>
         {showLinkCopied && <small>Link copied!</small>}
-        <button
-          onClick={ () => handleFavoriteClick(currentRecipe[0]) }
-        >
+        <button onClick={ () => handleFavoriteClick(currentRecipe[0]) }>
           <img
             src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
             data-testid="favorite-btn"

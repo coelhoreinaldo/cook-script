@@ -17,29 +17,34 @@ function MealDetails({
         />
         <h2 data-testid="recipe-title" className="recipe-title">{ strMeal }</h2>
       </section>
-      <h3 data-testid="recipe-category">{ strCategory }</h3>
-      <section>
+      <h3 data-testid="recipe-category" className="recipe-category">{ strCategory }</h3>
+      <hr />
+      <section className="ingredients">
         <h3>Ingredients</h3>
-        <ul>
-          { recipeIngredients.map((ing, i) => (
-            <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-              { ing }
-            </li>)) }
-          { recipeMeasures.map((ing, i) => (
-            <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-              { ing }
-            </li>)) }
+        <ul className="ingredients-list">
+          <div>
+            { recipeIngredients.map((ing, i) => (
+              <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
+                { ing }
+              </li>)) }
+          </div>
+          <div>
+            { recipeMeasures.map((ing, i) => (
+              <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
+                { ing }
+              </li>)) }
+          </div>
         </ul>
       </section>
-      <section>
+      <section className="instructions">
         <h3>Instructions</h3>
         <p data-testid="instructions">{ strInstructions }</p>
       </section>
-      <section>
+      <section className="video">
         <h3>Video</h3>
         <iframe
           title="Recipe"
-          width="260"
+          width="280px"
           data-testid="video"
           allowFullScreen
           src={ strYoutube }

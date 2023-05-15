@@ -2,8 +2,8 @@
   align-items: center;
   display: flex;
   flex-direction: column;
+  gap: 4px;
   justify-content: center;
-  width: 100%;
 }
 
 .recipe-details .img-title {
@@ -16,13 +16,40 @@
 }
 
 .recipe-details .recipe-title {
-  color: var(--blue-secondary);
+  background-color: rgba(255, 255, 255, 0.574);
+  color: var(--blue-primary);
   font-size: xx-large;
   font-weight: 900;
   margin-top: -50%;
   position: absolute;
   text-align: center;
   width: 100%;
+}
+
+.recipe-details .recipe-category {
+  font-weight: 700;
+  margin: 0;
+  padding: 16px 0 0;
+  text-align: center;
+}
+
+.recipe-details .ingredients, .recipe-details .instructions, .recipe-details .video {
+  background-color: var(--blue-terciary);
+  margin: 4px 16px;
+  padding: 2px 8px;
+}
+
+.recipe-details .ingredients-list {
+  display: flex;
+  gap: 40px;
+  list-style: square;
+}
+
+.recipe-details .video {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 8px;
 }
 
 .recipe-details .recomendations {
@@ -35,8 +62,20 @@
 }
 
 .recipe-details .recomendation-card {
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0 3px 6px , rgba(0, 0, 0, 0.23) 0 3px 6px;
+  height: fit-content;
   margin: 16px;
+  text-align: center;
+  text-decoration: none;
   width: 100%;
+}
+
+.recipe-details .recomendation-card > h3 {
+  background-color: var(--blue-secondary);
+  color: black;
+  margin: 0;
+  text-align: center;
 }
 
 .recipe-details .recomendation-card img {
@@ -48,12 +87,29 @@
 }
 
 .recipe-details .start-recipe-btn {
+  background-color: var(--blue-primary);
+  border: 1px solid;
   bottom: 0;
+  color: white;
+  height: 40px;
   position: fixed;
+  width: 100%;
 }
 
 .recipe-details .like-favorite-btns {
-  margin-bottom: 40px;
+  display: flex;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.recipe-details .like-favorite-btns button {
+  background-color: var(--orange-secondary);
+  border: var(--orange-secondary) solid 2px;
+  color: #f07818;
+  font-size: 100%;
+  font-weight: 700;
+  height: 40px;
+  width: 80px;
 }
 
 @media only screen and ( min-width : 768px ) {
