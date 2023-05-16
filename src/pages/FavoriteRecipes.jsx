@@ -21,7 +21,6 @@ function FavoriteRecipes() {
     localStorage.setItem('favoriteRecipes', JSON.stringify(updatedFavorites));
     setFavoriteRecipes(updatedFavorites);
   };
-  console.log(favoriteRecipes);
 
   const handleShareClick = (type, id) => {
     copy(`http://localhost:3000/${type}s/${id}`);

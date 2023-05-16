@@ -100,8 +100,6 @@ function DoneRecipes() {
             ))}
           </div>
         ))}
-        {showMessage
-        && <h1 data-testid="link-copied"> Link copied! </h1>}
       </section>
     </div>
   );
