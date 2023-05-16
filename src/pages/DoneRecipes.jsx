@@ -1,4 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext,
+  // useEffect,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import Header from '../components/Header';
 import shareImage from '../images/shareIcon.svg';
@@ -6,19 +8,20 @@ import { DoneRecipesContext } from '../context/DoneRecipesProvider';
 import '../style/DoneRecipes.css';
 
 function DoneRecipes() {
-  const { mockFilter, filterButton, showMessage, setShowMessage, copyUrl,
+  const { mockFilter, filterButton, showMessage,
+    // setShowMessage,
+    copyUrl,
   } = useContext(DoneRecipesContext);
   const history = useHistory();
-  const time = 5000;
-
-  useEffect(() => {
-    if (showMessage) {
-      const timer = setTimeout(() => {
-        setShowMessage(false);
-      }, time);
-      return () => clearTimeout(timer);
-    }
-  }, [showMessage, setShowMessage]);
+  // const time = 5000;
+  // useEffect(() => {
+  //   if (showMessage) {
+  //     const timer = setTimeout(() => {
+  //       setShowMessage(false);
+  //     }, time);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [showMessage, setShowMessage]);
 
   return (
     <div>
@@ -84,7 +87,6 @@ function DoneRecipes() {
                       alt="Imagem para Compartilhar"
                       data-testid={ `${index}-horizontal-share-btn` }
                     />)}
-
               </button>
             </div>
             { mockFilter[index].tags.map((tag, i) => (
@@ -98,6 +100,8 @@ function DoneRecipes() {
             ))}
           </div>
         ))}
+        {showMessage
+        && <h1 data-testid="link-copied"> Link copied! </h1>}
       </section>
     </div>
   );
