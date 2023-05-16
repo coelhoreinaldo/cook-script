@@ -10,10 +10,6 @@ function DoneRecipes() {
   } = useContext(DoneRecipesContext);
   const history = useHistory();
   const time = 5000;
-  let alcoholic;
-  if (mockFilter) {
-    alcoholic = mockFilter.some((recipe) => recipe.alcoholicOrNot !== '');
-  }
 
   useEffect(() => {
     if (showMessage) {
@@ -64,8 +60,10 @@ function DoneRecipes() {
               />
             </button>
             <h3 data-testid={ `${index}-horizontal-top-text` }>
-              {`${recipe.category}`}
-              {alcoholic && ` ${recipe.alcoholicOrNot}`}
+              {/* {console.log(recipe.alcoholicOrNot !== '')} */}
+              {recipe.alcoholicOrNot !== ''
+                ? ` ${recipe.category} - ${recipe.alcoholicOrNot}`
+                : `${recipe.nationality} - ${recipe.category}`}
             </h3>
             <p data-testid={ `${index}-horizontal-done-date` }>{recipe.doneDate}</p>
             <div className="buttons-container">

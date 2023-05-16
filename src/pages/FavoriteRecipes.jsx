@@ -1,10 +1,9 @@
-import { useState,
-  // useEffect,
-} from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import Header from '../components/Header';
+import '../style/FavoriteRecipes.css';
 
 const copy = require('clipboard-copy');
 
@@ -40,65 +39,74 @@ function FavoriteRecipes() {
   return (
     <div>
       <Header />
-      <button
-        data-testid="filter-by-all-btn"
-        onClick={ () => handleFilter('all') }
-      >
-        All
-      </button>
-      <button
-        data-testid="filter-by-meal-btn"
-        onClick={ () => handleFilter('meal') }
-      >
-        Meals
-      </button>
-      <button
-        data-testid="filter-by-drink-btn"
-        onClick={ () => handleFilter('drink') }
-      >
-        Drinks
-      </button>
-      {filteredRecipes.map((e, index) => (
-        <div
-          key={ e.id }
+      <nav>
+        <button
+          data-testid="filter-by-all-btn"
+          onClick={ () => handleFilter('all') }
         >
-          <Link
-            to={ `/${e.type}s/${e.id}` }
+          All
+        </button>
+        <button
+          data-testid="filter-by-meal-btn"
+          onClick={ () => handleFilter('meal') }
+        >
+          Meals
+        </button>
+        <button
+          data-testid="filter-by-drink-btn"
+          onClick={ () => handleFilter('drink') }
+        >
+          Drinks
+        </button>
+      </nav>
+      <section className="favorite-recipes-container">
+        {filteredRecipes.map((e, index) => (
+          <div
+            key={ e.id }
+            className="recipe-page-card"
           >
-            <img
-              width={ 144 }
-              src={ e.image }
-              alt={ e.nome }
-              data-testid={ `${index}-horizontal-image` }
-            />
-            <h3 data-testid={ `${index}-horizontal-name` }>{e.name}</h3>
-          </Link>
-          <p
-            data-testid={ `${index}-horizontal-top-text` }
-          >
-            {e.alcoholicOrNot ? e.alcoholicOrNot : `${e.nationality} - ${e.category} `}
-          </p>
-          <button
-            onClick={ () => handleShareClick(e.type, e.id) }
-          >
-            <img
-              src={ shareIcon }
-              alt=""
-              data-testid={ `${index}-horizontal-share-btn` }
-            />
-          </button>
-          <button
-            onClick={ () => removeFavoriteRecipeLocalStorage(e.id) }
-          >
-            <img
-              src={ blackHeartIcon }
-              alt=""
-              data-testid={ `${index}-horizontal-favorite-btn` }
-            />
-          </button>
-        </div>
-      ))}
-      {copyLink && <span>Link copied!</span>}
+            <Link
+              to={ `/${e.type}s/${e.id}` }
+            >
+              <img
+                width={ 150 }
+                src={ e.image }
+                alt={ e.nome }
+                data-testid={ `${index}-horizontal-image` }
+              />
+              <h3 data-testid={ `${index}-horizontal-name` }>{e.name}</h3>
+            </Link>
+            <p
+              data-testid={ `${index}-horizontal-top-text` }
+            >
+              {e.alcoholicOrNot ? e.alcoholicOrNot : `${e.nationality} - ${e.category} `}
+            </p>
+            <div className="buttons-container">
+              <button
+                onClick={ () => handleShareClick(e.type, e.id) }
+              >
+                {copyLink ? <p>Link copied!</p> : (
+                  <img
+                    src={ shareIcon }
+                    alt=""
+                    data-testid={ `${index}-horizontal-share-btn` }
+                  />
+                )}
+
+              </button>
+              <button
+                onClick={ () => removeFavoriteRecipeLocalStorage(e.id) }
+              >
+                <img
+                  src={ blackHeartIcon }
+                  alt=""
+                  data-testid={ `${index}-horizontal-favorite-btn` }
+                />
+              </button>
+            </div>
+          </div>
+        ))}
+      </section>
     </div>
   );
 }

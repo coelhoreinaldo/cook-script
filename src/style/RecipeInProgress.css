@@ -69,11 +69,17 @@
 .like-favorite-btns button {
   background-color: var(--orange-secondary);
   border: var(--orange-secondary) solid 2px;
-  color: #f07818;
+  color: #181614;
   font-size: 100%;
   font-weight: 700;
   height: 40px;
   width: 80px;
+}
+
+.like-favorite-btns p {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
 }
 
 .checked {
