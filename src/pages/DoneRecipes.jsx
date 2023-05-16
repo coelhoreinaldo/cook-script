@@ -1,4 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext,
+  // useEffect,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import Header from '../components/Header';
 import shareImage from '../images/shareIcon.svg';
@@ -30,23 +32,25 @@ const doneRecipesMock = [
 ];
 function DoneRecipes() {
   localStorage.setItem('doneRecipes', JSON.stringify(doneRecipesMock));
-  const { mockFilter, filterButton, showMessage, setShowMessage, copyUrl,
+  const { mockFilter, filterButton, showMessage,
+    // setShowMessage,
+    copyUrl,
   } = useContext(DoneRecipesContext);
   const history = useHistory();
-  const time = 5000;
+  // const time = 5000;
   let alcoholic;
   if (mockFilter) {
     alcoholic = mockFilter.some((recipe) => recipe.alcoholicOrNot !== '');
   }
 
-  useEffect(() => {
-    if (showMessage) {
-      const timer = setTimeout(() => {
-        setShowMessage(false);
-      }, time);
-      return () => clearTimeout(timer);
-    }
-  }, [showMessage, setShowMessage]);
+  // useEffect(() => {
+  //   if (showMessage) {
+  //     const timer = setTimeout(() => {
+  //       setShowMessage(false);
+  //     }, time);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [showMessage, setShowMessage]);
 
   return (
     <div>
@@ -105,7 +109,6 @@ function DoneRecipes() {
 
             </button>
             <h1 data-testid={ `${index}-horizontal-done-date` }>{recipe.doneDate}</h1>
-            {showMessage && <h1>Link copied!</h1>}
             <button
               onClick={ () => copyUrl(recipe.type, recipe.id) }
             >
@@ -126,6 +129,8 @@ function DoneRecipes() {
             ))}
           </div>
         ))}
+        {showMessage
+        && <h1 data-testid="link-copied"> Link copied! </h1>}
       </section>
     </div>
   );
