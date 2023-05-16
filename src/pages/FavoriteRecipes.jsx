@@ -98,7 +98,7 @@ function FavoriteRecipes() {
           </button>
         </div>
       ))}
-      {copyLink && <span>Link copied!</span>}
+      {copyLink && <span data-testid="link-copied-favorite">Link copied!</span>}
     </div>
   );
 }
