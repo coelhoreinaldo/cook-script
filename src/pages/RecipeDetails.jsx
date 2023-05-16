@@ -7,7 +7,7 @@ import '../style/RecipeDetails.css';
 import shareIcon from '../images/shareIcon.svg';
 import DrinkDetails from '../components/DrinkDetails';
 import MealDetails from '../components/MealDetails';
-import { getLocalStorageDoneRecipes } from '../utils/localStorageFunctions';
+import { getLocalStorageDoneRecipes } from '../utils/recipeDetails';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 

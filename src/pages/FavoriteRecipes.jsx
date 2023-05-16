@@ -16,40 +16,13 @@ function FavoriteRecipes() {
   });
   const [typeFilter, setTypeFilter] = useState('all');
 
-  // const churros = [
-  //   {
-  //     id: '52977',
-  //     type: 'meal',
-  //     nationality: 'turkish',
-  //     category: 'side',
-  //     alcoholicOrNot: '',
-  //     name: 'corba',
-  //     image: 'https://www.themealdb.com/images/media/meals/58oia61564916529.jpg',
-  //   },
-  //   {
-  //     id: '15997',
-  //     type: 'drink',
-  //     nationality: '',
-  //     category: 'Ordinary Drink',
-  //     alcoholicOrNot: 'Optional alcohol',
-  //     name: 'GG',
-  //     image: 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg',
-  //   },
-  // ];
-  // localStorage.setItem('favoriteRecipes', JSON.stringify(churros));
-
   const removeFavoriteRecipeLocalStorage = (id) => {
     const getFavoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
     const updatedFavorites = getFavoriteRecipes.filter((recipe) => recipe.id !== id);
     localStorage.setItem('favoriteRecipes', JSON.stringify(updatedFavorites));
     setFavoriteRecipes(updatedFavorites);
-    // console.log(updatedFavorites);
   };
   console.log(favoriteRecipes);
-
-  // useEffect(() => {
-  //   newTeste;
-  // }, [newTeste]);
 
   const handleShareClick = (type, id) => {
     copy(`http://localhost:3000/${type}s/${id}`);

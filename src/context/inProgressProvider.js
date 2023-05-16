@@ -1,22 +1,16 @@
-import React, { useContext, useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import shareIcon from '../images/shareIcon.svg';
-import { getRecipesAndIngredients,
-  monitorCheckedIngredients,
-  verifyFavoriteInStorage } from '../utils/recipeDetails';
-import '../style/RecipeInProgress.css';
-// import MealInProgress from '../components/MealInProgress';
-import DrinkInProgress from '../components/DrinkInProgress';
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { RecipeDetailsContext } from './RecipeDetailsProvider';
 
 const copy = require('clipboard-copy');
 
-function RecipesInProgress() {
+export const InProgressContext = createContext();
+
+function InProgressProvider({ children }) {
   const {
-    currentRecipe, setCurrentRecipe, fetchApi, isFetching,
-    setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
+    setCurrentRecipe, fetchApi,
+    setRecipeIngredients, setRecipeMeasures,
   } = useContext(RecipeDetailsContext);
 
   const { location: { pathname } } = useHistory();
@@ -47,8 +41,7 @@ function RecipesInProgress() {
     setRecipeMeasures]);
 
   const getLocalStorageIngredients = () => {
-    if (localStorage.getItem('inProgressRecipes')
-    && JSON.parse(localStorage.getItem('inProgressRecipes'))[recipeType][id]) {
+    if (localStorage.getItem('inProgressRecipes')) {
       const storageArray = JSON.parse(localStorage.getItem('inProgressRecipes'));
       setCheckedIngredients(storageArray[recipeType][id]);
     }
@@ -104,6 +97,7 @@ function RecipesInProgress() {
       doneDate: date.toISOString(),
       tags: item.strTags ? item.strTags.split(',') : [],
     };
+
     if (localStorage.getItem('doneRecipes')) {
       const doneRecipesStorage = JSON.parse(localStorage.getItem('doneRecipes'));
       if (doneRecipesStorage.some((e) => e.id === recipeInfo.id)) {
@@ -118,15 +112,8 @@ function RecipesInProgress() {
       return;
     }
     localStorage.setItem('doneRecipes', JSON.stringify([recipeInfo]));
-    console.log(item);
     history.push('/done-recipes');
   };
-
-  useEffect(() => {
-    getRecipeDetails();
-    getLocalStorageIngredients();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleIngredientToggle = (event, ingred) => {
     if (event.target.checked) {
@@ -136,89 +123,30 @@ function RecipesInProgress() {
     setCheckedIngredients(checkedIngredients.filter((e) => e !== ingred));
   };
 
-  useEffect(() => {
-    monitorCheckedIngredients(id, recipeType, checkedIngredients);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checkedIngredients]);
+  const values = useMemo(() => ({
+    getRecipeDetails,
+    getLocalStorageIngredients,
+    handleFavoriteClick,
+    handleShareClick,
+    handleFinishRecipe,
+    handleIngredientToggle,
+    checkedIngredients,
+    isFavorite,
+    showLinkCopied,
+  }), [checkedIngredients, isFavorite, showLinkCopied]);
 
-  if (isFetching) {
-    return <p>Loading</p>;
-  }
   return (
-    <div className="recipe-container">
-      {pathname.includes('meals')
-        ? (
-          <>
-            {currentRecipe.map((meal) => (
-              <section key={ meal.idMeal }>
-                <img
-                  src={ meal.strMealThumb }
-                  alt={ meal.strMealThumb }
-                  data-testid="recipe-photo"
-                  width={ 260 }
-                />
-                <h2 data-testid="recipe-title">{meal.strMeal}</h2>
-                <h3 data-testid="recipe-category">{meal.strCategory}</h3>
-                <div>
-                  {recipeIngredients.map((ing, index) => (
-                    <label
-                      key={ index }
-                      data-testid={ `${index}-ingredient-step` }
-                      htmlFor="ingredient"
-                      className={ checkedIngredients.includes(ing) ? 'checked' : '' }
-                    >
-                      {`${recipeMeasures[index]} ${ing}`}
-                      <input
-                        type="checkbox"
-                        value={ ing }
-                        id="check"
-                        checked={ checkedIngredients.includes(ing) }
-                        onChange={ (event) => handleIngredientToggle(event, ing) }
-                      />
-                    </label>
-                  ))}
-                </div>
-                <span data-testid="instructions">{meal.strInstructions}</span>
-              </section>
-            ))}
-          </>)
-        : (
-          <>
-            {currentRecipe.map((drink) => (
-              <DrinkInProgress
-                key={ drink.idDrink }
-                drink={ drink }
-                recipeIngredients={ recipeIngredients }
-                recipeMeasures={ recipeMeasures }
-                checkedIngredients={ checkedIngredients }
-                handleIngredientToggle={ handleIngredientToggle }
-              />
-            ))}
-          </>)}
-      <section className="like-favorite-btns">
-        <button data-testid="share-btn" onClick={ handleShareClick }>
-          <img src={ shareIcon } alt="share icon" />
-        </button>
-        {showLinkCopied && <small>Link copied!</small>}
-        <button
-          onClick={ () => handleFavoriteClick(currentRecipe[0]) }
-        >
-          <img
-            src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
-            data-testid="favorite-btn"
-            alt="favorite icon"
-          />
-        </button>
-        <button
-          data-testid="finish-recipe-btn"
-          disabled={ checkedIngredients.length !== recipeIngredients.length }
-          onClick={ () => handleFinishRecipe(currentRecipe[0]) }
-        >
-          Finalizar
-        </button>
-      </section>
-    </div>
+    <InProgressProvider.Provider value={ values }>
+      {children}
+    </InProgressProvider.Provider>
   );
 }
 
-export default RecipesInProgress;
+InProgressProvider.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
+};
+
+export default InProgressProvider;
