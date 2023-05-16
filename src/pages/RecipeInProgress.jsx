@@ -46,8 +46,10 @@ function RecipesInProgress() {
     setRecipeMeasures]);
 
   const getLocalStorageIngredients = () => {
-    if (localStorage.getItem('inProgressRecipes')) {
+    if (localStorage.getItem('inProgressRecipes')
+    && JSON.parse(localStorage.getItem('inProgressRecipes'))[recipeType][id]) {
       const storageArray = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      console.log(storageArray[recipeType][id]);
       setCheckedIngredients(storageArray[recipeType][id]);
     }
   };
@@ -123,6 +125,7 @@ function RecipesInProgress() {
   useEffect(() => {
     getRecipeDetails();
     getLocalStorageIngredients();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleIngredientToggle = (event, ingred) => {
@@ -135,8 +138,10 @@ function RecipesInProgress() {
 
   useEffect(() => {
     monitorCheckedIngredients(id, recipeType, checkedIngredients);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedIngredients]);
 
+  console.log();
   return (
     <div>
       <Header />
