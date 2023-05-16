@@ -1,0 +1,20 @@
+.profile-container {
+  text-align: center;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.btn-container button {
+  background-color: var(--blue-primary);
+  border: var(--blue-terciary) solid 3px;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0 3px 6px , rgba(0, 0, 0, 0.23) 0 3px 6px;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  height: 40px;
+  width: 30%;
+}

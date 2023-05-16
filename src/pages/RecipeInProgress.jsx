@@ -179,9 +179,10 @@ function RecipesInProgress() {
             ))}
           </>)}
       <section className="like-favorite-btns">
-        {showLinkCopied && <small>Link copied!</small>}
         <button data-testid="share-btn" onClick={ handleShareClick }>
-          <img src={ shareIcon } alt="share icon" />
+          {showLinkCopied ? <p>Link copied!</p> : (
+            <img src={ shareIcon } alt="share icon" />
+          )}
         </button>
         <button
           onClick={ () => handleFavoriteClick(currentRecipe[0]) }
