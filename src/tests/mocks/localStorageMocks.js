@@ -84,15 +84,6 @@ export const doneRecipesStorage2 = [{
 ];
 
 export const favoriteRecipesStorage = [
-  // {
-  // id: '15997',
-  // type: 'drink',
-  // nationality: '',
-  // category: 'Ordinary Drink',
-  // alcoholicOrNot: 'Optional alcohol',
-  // name: 'GG',
-  // image: 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg',
-// },
   {
     id: '52771',
     type: 'meal',
