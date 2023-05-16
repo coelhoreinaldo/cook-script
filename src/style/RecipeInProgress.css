@@ -50,7 +50,51 @@
   flex-direction: column;
 }
 
+.finish-recipe-btn {
+  background-color: var(--blue-primary);
+  border: var(--blue-primary) 1px solid;
+  bottom: 0;
+  color: white;
+  height: 40px;
+  position: fixed;
+  width: 100%;
+}
+
+.like-favorite-btns {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.like-favorite-btns button {
+  background-color: var(--orange-secondary);
+  border: var(--orange-secondary) solid 2px;
+  color: #f07818;
+  font-size: 100%;
+  font-weight: 700;
+  height: 40px;
+  width: 80px;
+}
 
 .checked {
   text-decoration: line-through solid black;
+}
+
+@media only screen and ( min-width : 768px ) {
+
+  .recipe-img {
+    aspect-ratio: 1/1;
+    width: 600px;
+  }
+
+  .recipe-title {
+    color: var(--blue-secondary);
+    font-size: xx-large;
+    font-weight: 900;
+    margin-top: -20%;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    z-index: 1000;
+  }
 }

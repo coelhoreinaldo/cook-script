@@ -24,27 +24,32 @@ function MealInProgress({
         {meal.strCategory}
       </h3>
       <hr />
-      <div>
+      <div className="ingredients">
         <h3>Ingredients</h3>
-        {recipeIngredients.map((ing, index) => (
-          <label
-            key={ index }
-            data-testid={ `${index}-ingredient-step` }
-            htmlFor="ingredient"
-            className={ checkedIngredients.includes(ing) ? 'checked' : '' }
-          >
-            <input
-              type="checkbox"
-              value={ ing }
-              id="check"
-              checked={ checkedIngredients.includes(ing) }
-              onChange={ (event) => handleIngredientToggle(event, ing) }
-            />
-            {`${recipeMeasures[index]} ${ing}`}
-          </label>
-        ))}
+        <section className="ingredients-list">
+          {recipeIngredients.map((ing, index) => (
+            <label
+              key={ index }
+              data-testid={ `${index}-ingredient-step` }
+              htmlFor="ingredient"
+              className={ checkedIngredients.includes(ing) ? 'checked' : '' }
+            >
+              <input
+                type="checkbox"
+                value={ ing }
+                id="check"
+                checked={ checkedIngredients.includes(ing) }
+                onChange={ (event) => handleIngredientToggle(event, ing) }
+              />
+              {`${recipeMeasures[index]} ${ing}`}
+            </label>
+          ))}
+        </section>
       </div>
-      <span data-testid="instructions">{meal.strInstructions}</span>
+      <section className="instructions">
+        <h3>Instructions</h3>
+        <span data-testid="instructions">{meal.strInstructions}</span>
+      </section>
     </section>
   );
 }

@@ -45,7 +45,6 @@ function DrinkInProgress({
               />
               {`${recipeMeasures[index]} ${ing}`}
             </label>
-
           ))}
         </section>
       </div>

@@ -7,9 +7,9 @@ import shareIcon from '../images/shareIcon.svg';
 import { getRecipesAndIngredients,
   monitorCheckedIngredients,
   verifyFavoriteInStorage } from '../utils/recipeDetails';
-import '../style/RecipeInProgress.css';
-// import MealInProgress from '../components/MealInProgress';
 import DrinkInProgress from '../components/DrinkInProgress';
+import MealInProgress from '../components/MealInProgress';
+import '../style/RecipeInProgress.css';
 
 const copy = require('clipboard-copy');
 
@@ -107,6 +107,7 @@ function RecipesInProgress() {
     if (localStorage.getItem('doneRecipes')) {
       const doneRecipesStorage = JSON.parse(localStorage.getItem('doneRecipes'));
       if (doneRecipesStorage.some((e) => e.id === recipeInfo.id)) {
+        console.log('entrei');
         const filtered = doneRecipesStorage.filter((e) => e.id !== recipeInfo.id);
         localStorage.setItem('doneRecipes', JSON.stringify(filtered));
         return;
@@ -115,10 +116,10 @@ function RecipesInProgress() {
         'doneRecipes',
         JSON.stringify([...doneRecipesStorage, recipeInfo]),
       );
+      history.push('/done-recipes');
       return;
     }
     localStorage.setItem('doneRecipes', JSON.stringify([recipeInfo]));
-    console.log(item);
     history.push('/done-recipes');
   };
 
@@ -150,36 +151,14 @@ function RecipesInProgress() {
         ? (
           <>
             {currentRecipe.map((meal) => (
-              <section key={ meal.idMeal }>
-                <img
-                  src={ meal.strMealThumb }
-                  alt={ meal.strMealThumb }
-                  data-testid="recipe-photo"
-                  width={ 260 }
-                />
-                <h2 data-testid="recipe-title">{meal.strMeal}</h2>
-                <h3 data-testid="recipe-category">{meal.strCategory}</h3>
-                <div>
-                  {recipeIngredients.map((ing, index) => (
-                    <label
-                      key={ index }
-                      data-testid={ `${index}-ingredient-step` }
-                      htmlFor="ingredient"
-                      className={ checkedIngredients.includes(ing) ? 'checked' : '' }
-                    >
-                      {`${recipeMeasures[index]} ${ing}`}
-                      <input
-                        type="checkbox"
-                        value={ ing }
-                        id="check"
-                        checked={ checkedIngredients.includes(ing) }
-                        onChange={ (event) => handleIngredientToggle(event, ing) }
-                      />
-                    </label>
-                  ))}
-                </div>
-                <span data-testid="instructions">{meal.strInstructions}</span>
-              </section>
+              <MealInProgress
+                key={ meal.idMeal }
+                meal={ meal }
+                recipeIngredients={ recipeIngredients }
+                recipeMeasures={ recipeMeasures }
+                checkedIngredients={ checkedIngredients }
+                handleIngredientToggle={ handleIngredientToggle }
+              />
             ))}
           </>)
         : (
@@ -196,10 +175,10 @@ function RecipesInProgress() {
             ))}
           </>)}
       <section className="like-favorite-btns">
+        {showLinkCopied && <small>Link copied!</small>}
         <button data-testid="share-btn" onClick={ handleShareClick }>
           <img src={ shareIcon } alt="share icon" />
         </button>
-        {showLinkCopied && <small>Link copied!</small>}
         <button
           onClick={ () => handleFavoriteClick(currentRecipe[0]) }
         >
@@ -209,14 +188,15 @@ function RecipesInProgress() {
             alt="favorite icon"
           />
         </button>
-        <button
-          data-testid="finish-recipe-btn"
-          disabled={ checkedIngredients.length !== recipeIngredients.length }
-          onClick={ () => handleFinishRecipe(currentRecipe[0]) }
-        >
-          Finalizar
-        </button>
       </section>
+      <button
+        data-testid="finish-recipe-btn"
+        className="finish-recipe-btn"
+        disabled={ checkedIngredients.length !== recipeIngredients.length }
+        onClick={ () => handleFinishRecipe(currentRecipe[0]) }
+      >
+        Finalizar
+      </button>
     </div>
   );
 }

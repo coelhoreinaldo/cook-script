@@ -215,6 +215,7 @@ function RecipeDetails() {
           </section>
         ) }
       <section className="like-favorite-btns">
+        {showLinkCopied && <small>Link copied!</small>}
         <button data-testid="share-btn" onClick={ handleShareClick }>
           <img src={ shareIcon } alt="share icon" />
         </button>
@@ -226,7 +227,6 @@ function RecipeDetails() {
           />
         </button>
       </section>
-      {showLinkCopied && <small>Link copied!</small>}
       { !isDone
         && (
           <button
