@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import Header from '../components/Header';
 import shareImage from '../images/shareIcon.svg';
 import { DoneRecipesContext } from '../context/DoneRecipesProvider';
+import '../style/DoneRecipes.css';
 
 function DoneRecipes() {
   const { mockFilter, filterButton, showMessage, setShowMessage, copyUrl,
@@ -26,7 +27,7 @@ function DoneRecipes() {
   return (
     <div>
       <Header />
-      <section>
+      <nav>
         <button
           type="button"
           data-testid="filter-by-all-btn"
@@ -50,49 +51,47 @@ function DoneRecipes() {
           Drinks
 
         </button>
-      </section>
-      <section>
+      </nav>
+      <section className="done-recipes-container">
         {mockFilter && mockFilter.map((recipe, index) => (
-          <div key={ index }>
+          <div key={ index } className="recipe-page-card">
             <button onClick={ () => history.push(`/${recipe.type}s/${recipe.id}`) }>
               <img
-                width={ 350 }
+                width={ 150 }
                 src={ recipe.image }
                 alt={ recipe.name }
                 data-testid={ `${index}-horizontal-image` }
               />
             </button>
-            <h1 data-testid={ `${index}-horizontal-top-text` }>
-              {`${recipe.nationality} - ${recipe.category}`}
+            <h3 data-testid={ `${index}-horizontal-top-text` }>
+              {`${recipe.category}`}
+              {alcoholic && ` ${recipe.alcoholicOrNot}`}
+            </h3>
+            <p data-testid={ `${index}-horizontal-done-date` }>{recipe.doneDate}</p>
+            <div className="buttons-container">
+              <button
+                onClick={ () => history.push(`/${recipe.type}s/${recipe.id}`) }
+                data-testid={ `${index}-horizontal-name` }
+              >
+                {recipe.name}
+              </button>
+              <button
+                onClick={ () => copyUrl(recipe.type, recipe.id) }
+              >
+                {showMessage
+                  ? <p>Link copied!</p>
+                  : (
+                    <img
+                      src={ shareImage }
+                      alt="Imagem para Compartilhar"
+                      data-testid={ `${index}-horizontal-share-btn` }
+                    />)}
 
-            </h1>
-            {alcoholic
-              ? (
-                <h1 data-testid={ `${index}-horizontal-top-text` }>
-                  {recipe.alcoholicOrNot}
-
-                </h1>) : ''}
-            <button
-              onClick={ () => history.push(`/${recipe.type}s/${recipe.id}`) }
-              data-testid={ `${index}-horizontal-name` }
-            >
-              {recipe.name}
-
-            </button>
-            <h1 data-testid={ `${index}-horizontal-done-date` }>{recipe.doneDate}</h1>
-            {showMessage && <h1>Link copied!</h1>}
-            <button
-              onClick={ () => copyUrl(recipe.type, recipe.id) }
-            >
-              <img
-                src={ shareImage }
-                alt="Imagem para Compartilhar"
-                data-testid={ `${index}-horizontal-share-btn` }
-              />
-            </button>
-
+              </button>
+            </div>
             { mockFilter[index].tags.map((tag, i) => (
               <span
+                className="recipe-tags"
                 key={ i }
                 data-testid={ `${index}-${tag}-horizontal-tag` }
               >
