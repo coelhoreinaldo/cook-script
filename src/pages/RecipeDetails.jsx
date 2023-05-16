@@ -143,6 +143,8 @@ function RecipeDetails() {
                 strInstructions={ e.strInstructions }
               />
             )) }
+            <hr />
+            <h5>Experimente também:</h5>
             <section className="recomendations">
               { drinksData
                 .filter((e, i) => i < MAX_RECIPES_QUANTITY)
@@ -175,6 +177,8 @@ function RecipeDetails() {
                 strInstructions={ e.strInstructions }
               />
             )) }
+            <hr />
+            <h5>Experimente também:</h5>
             <section className="recomendations">
               { mealsData
                 .filter((e, i) => i < MAX_RECIPES_QUANTITY)
@@ -194,10 +198,10 @@ function RecipeDetails() {
           </section>
         ) }
       <section className="like-favorite-btns">
+        {showLinkCopied && <small>Link copied!</small>}
         <button data-testid="share-btn" onClick={ handleShareClick }>
           <img src={ shareIcon } alt="share icon" />
         </button>
-        {showLinkCopied && <small>Link copied!</small>}
         <button onClick={ () => handleFavoriteClick(currentRecipe[0]) }>
           <img
             src={ isFavorite ? blackHeartIcon : whiteHeartIcon }

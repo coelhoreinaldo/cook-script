@@ -12,7 +12,6 @@ function MealDetails({
           src={ strMealThumb }
           alt={ strMeal }
           data-testid="recipe-photo"
-          width={ 260 }
           className={ imgClass }
         />
         <h2 data-testid="recipe-title" className="recipe-title">{ strMeal }</h2>
