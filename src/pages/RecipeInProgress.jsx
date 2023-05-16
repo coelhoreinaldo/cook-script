@@ -107,7 +107,6 @@ function RecipesInProgress() {
     if (localStorage.getItem('doneRecipes')) {
       const doneRecipesStorage = JSON.parse(localStorage.getItem('doneRecipes'));
       if (doneRecipesStorage.some((e) => e.id === recipeInfo.id)) {
-        console.log('entrei');
         const filtered = doneRecipesStorage.filter((e) => e.id !== recipeInfo.id);
         localStorage.setItem('doneRecipes', JSON.stringify(filtered));
         return;
@@ -143,8 +142,13 @@ function RecipesInProgress() {
   }, [checkedIngredients]);
 
   if (isFetching) {
-    return <p>Loading</p>;
+    return (
+      <div className="spinner-grow text-primary" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    );
   }
+
   return (
     <div className="recipe-container">
       {pathname.includes('meals')

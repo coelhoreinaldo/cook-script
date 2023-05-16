@@ -7,6 +7,8 @@ import Provider from '../context/Provider';
 import fetchMock from '../../cypress/mocks/fetch';
 import { favoriteRecipesStorage, recipesInProgressStorage } from './mocks/localStorageMocks';
 
+jest.mock('clipboard-copy');
+
 const whiteHeartIcon = 'whiteHeartIcon.svg';
 
 describe('the meals recipe details page', () => {
@@ -52,6 +54,7 @@ describe('the meals recipe details page', () => {
     expect(shareBtn).toBeInTheDocument();
     const linkCopiedEl = screen.queryByText(/link copied/i);
     expect(linkCopiedEl).not.toBeInTheDocument();
+    userEvent.click(shareBtn);
   });
 
   it('should verify if meal recipe it is in recipes in progress', async () => {
