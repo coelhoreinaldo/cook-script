@@ -33,13 +33,13 @@ function DrinkInProgress({
             <label
               key={ index }
               data-testid={ `${index}-ingredient-step` }
-              htmlFor="ingredient"
+              htmlFor={ ing }
               className={ checkedIngredients.includes(ing) ? 'checked' : '' }
             >
               <input
                 type="checkbox"
                 value={ ing }
-                id="check"
+                id={ ing }
                 checked={ checkedIngredients.includes(ing) }
                 onChange={ (event) => handleIngredientToggle(event, ing) }
               />
