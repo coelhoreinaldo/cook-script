@@ -14,7 +14,7 @@ const copy = require('clipboard-copy');
 
 function RecipesInProgress() {
   const {
-    currentRecipe, setCurrentRecipe, fetchApi,
+    currentRecipe, setCurrentRecipe, fetchApi, isFetching,
     setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
   } = useContext(RecipeDetailsContext);
 
@@ -49,7 +49,6 @@ function RecipesInProgress() {
     if (localStorage.getItem('inProgressRecipes')
     && JSON.parse(localStorage.getItem('inProgressRecipes'))[recipeType][id]) {
       const storageArray = JSON.parse(localStorage.getItem('inProgressRecipes'));
-      console.log(storageArray[recipeType][id]);
       setCheckedIngredients(storageArray[recipeType][id]);
     }
   };
@@ -116,6 +115,7 @@ function RecipesInProgress() {
         'doneRecipes',
         JSON.stringify([...doneRecipesStorage, recipeInfo]),
       );
+      history.push('/done-recipes');
       return;
     }
     localStorage.setItem('doneRecipes', JSON.stringify([recipeInfo]));
@@ -141,7 +141,9 @@ function RecipesInProgress() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedIngredients]);
 
-  console.log();
+  if (isFetching) {
+    return <p>Loading</p>;
+  }
   return (
     <div>
       <Header />
