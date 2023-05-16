@@ -12,28 +12,31 @@ function DrinkDetails({
           src={ strDrinkThumb }
           alt={ strDrink }
           data-testid="recipe-photo"
-          width={ 260 }
           className={ imgClass }
         />
         <h2 data-testid="recipe-title" className="recipe-title">{ strDrink }</h2>
       </section>
       <h3 data-testid="recipe-category" className="recipe-category">
         { strCategory }
-        { ' ' }
+        { ' - ' }
         { strAlcoholic }
       </h3>
       <hr />
       <section className="ingredients">
         <h3>Ingredients</h3>
         <ul className="ingredients-list">
-          { recipeIngredients.map((ing, i) => (
-            <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-              { ing }
-            </li>)) }
-          { recipeMeasures.map((ing, i) => (
-            <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
-              { ing }
-            </li>)) }
+          <div>
+            { recipeIngredients.map((ing, i) => (
+              <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
+                { ing }
+              </li>)) }
+          </div>
+          <div>
+            { recipeMeasures.map((ing, i) => (
+              <li data-testid={ `${i}-ingredient-name-and-measure` } key={ i }>
+                { ing }
+              </li>)) }
+          </div>
         </ul>
       </section>
       <section className="instructions">

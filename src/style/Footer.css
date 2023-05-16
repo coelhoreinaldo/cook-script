@@ -1,0 +1,32 @@
+.footer {
+  align-items: end;
+  background-color: var(--orange-primary);
+  bottom: 0;
+  display: flex;
+  height: 55px;
+  justify-content: space-around;
+  position: fixed;
+  width: 100%;
+}
+
+.footer button {
+  border: 0;
+
+  /* box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3); */
+  height: 80%;
+  width: 50%;
+}
+
+.footer img {
+  height: 80%;
+}
+
+.selected {
+  background-color: var(--orange-primary);
+}
+
+.unselected {
+  background-color: #249b97;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}

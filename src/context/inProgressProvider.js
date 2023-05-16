@@ -1,22 +1,16 @@
-import React, { useContext, useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { RecipeDetailsContext } from '../context/RecipeDetailsProvider';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import shareIcon from '../images/shareIcon.svg';
-import { getRecipesAndIngredients,
-  monitorCheckedIngredients,
-  verifyFavoriteInStorage } from '../utils/recipeDetails';
-import DrinkInProgress from '../components/DrinkInProgress';
-import MealInProgress from '../components/MealInProgress';
-import '../style/RecipeInProgress.css';
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { RecipeDetailsContext } from './RecipeDetailsProvider';
 
 const copy = require('clipboard-copy');
 
-function RecipesInProgress() {
+export const InProgressContext = createContext();
+
+function InProgressProvider({ children }) {
   const {
-    currentRecipe, setCurrentRecipe, fetchApi, isFetching,
-    setRecipeIngredients, recipeIngredients, setRecipeMeasures, recipeMeasures,
+    setCurrentRecipe, fetchApi,
+    setRecipeIngredients, setRecipeMeasures,
   } = useContext(RecipeDetailsContext);
 
   const { location: { pathname } } = useHistory();
@@ -47,8 +41,7 @@ function RecipesInProgress() {
     setRecipeMeasures]);
 
   const getLocalStorageIngredients = () => {
-    if (localStorage.getItem('inProgressRecipes')
-    && JSON.parse(localStorage.getItem('inProgressRecipes'))[recipeType][id]) {
+    if (localStorage.getItem('inProgressRecipes')) {
       const storageArray = JSON.parse(localStorage.getItem('inProgressRecipes'));
       setCheckedIngredients(storageArray[recipeType][id]);
     }
@@ -104,10 +97,10 @@ function RecipesInProgress() {
       doneDate: date.toISOString(),
       tags: item.strTags ? item.strTags.split(',') : [],
     };
+
     if (localStorage.getItem('doneRecipes')) {
       const doneRecipesStorage = JSON.parse(localStorage.getItem('doneRecipes'));
       if (doneRecipesStorage.some((e) => e.id === recipeInfo.id)) {
-        console.log('entrei');
         const filtered = doneRecipesStorage.filter((e) => e.id !== recipeInfo.id);
         localStorage.setItem('doneRecipes', JSON.stringify(filtered));
         return;
@@ -116,18 +109,11 @@ function RecipesInProgress() {
         'doneRecipes',
         JSON.stringify([...doneRecipesStorage, recipeInfo]),
       );
-      history.push('/done-recipes');
       return;
     }
     localStorage.setItem('doneRecipes', JSON.stringify([recipeInfo]));
     history.push('/done-recipes');
   };
-
-  useEffect(() => {
-    getRecipeDetails();
-    getLocalStorageIngredients();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleIngredientToggle = (event, ingred) => {
     if (event.target.checked) {
@@ -137,68 +123,30 @@ function RecipesInProgress() {
     setCheckedIngredients(checkedIngredients.filter((e) => e !== ingred));
   };
 
-  useEffect(() => {
-    monitorCheckedIngredients(id, recipeType, checkedIngredients);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checkedIngredients]);
+  const values = useMemo(() => ({
+    getRecipeDetails,
+    getLocalStorageIngredients,
+    handleFavoriteClick,
+    handleShareClick,
+    handleFinishRecipe,
+    handleIngredientToggle,
+    checkedIngredients,
+    isFavorite,
+    showLinkCopied,
+  }), [checkedIngredients, isFavorite, showLinkCopied]);
 
-  if (isFetching) {
-    return <p>Loading</p>;
-  }
   return (
-    <div className="recipe-container">
-      {pathname.includes('meals')
-        ? (
-          <>
-            {currentRecipe.map((meal) => (
-              <MealInProgress
-                key={ meal.idMeal }
-                meal={ meal }
-                recipeIngredients={ recipeIngredients }
-                recipeMeasures={ recipeMeasures }
-                checkedIngredients={ checkedIngredients }
-                handleIngredientToggle={ handleIngredientToggle }
-              />
-            ))}
-          </>)
-        : (
-          <>
-            {currentRecipe.map((drink) => (
-              <DrinkInProgress
-                key={ drink.idDrink }
-                drink={ drink }
-                recipeIngredients={ recipeIngredients }
-                recipeMeasures={ recipeMeasures }
-                checkedIngredients={ checkedIngredients }
-                handleIngredientToggle={ handleIngredientToggle }
-              />
-            ))}
-          </>)}
-      <section className="like-favorite-btns">
-        {showLinkCopied && <small>Link copied!</small>}
-        <button data-testid="share-btn" onClick={ handleShareClick }>
-          <img src={ shareIcon } alt="share icon" />
-        </button>
-        <button
-          onClick={ () => handleFavoriteClick(currentRecipe[0]) }
-        >
-          <img
-            src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
-            data-testid="favorite-btn"
-            alt="favorite icon"
-          />
-        </button>
-      </section>
-      <button
-        data-testid="finish-recipe-btn"
-        className="finish-recipe-btn"
-        disabled={ checkedIngredients.length !== recipeIngredients.length }
-        onClick={ () => handleFinishRecipe(currentRecipe[0]) }
-      >
-        Finalizar
-      </button>
-    </div>
+    <InProgressProvider.Provider value={ values }>
+      {children}
+    </InProgressProvider.Provider>
   );
 }
 
-export default RecipesInProgress;
+InProgressProvider.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
+};
+
+export default InProgressProvider;
