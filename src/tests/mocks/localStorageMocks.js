@@ -35,14 +35,18 @@ export const recipesInProgressStorage = {
   },
 };
 
+const ordinaryDrink = 'Ordinary Drink';
+const optionalAlcohol = 'Optional alcohol';
+const ggDrinkImage = 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg';
+
 export const doneRecipesStorage = [{
   id: '15997',
   type: 'drink',
   nationality: '',
-  category: 'Ordinary Drink',
-  alcoholicOrNot: 'Optional alcohol',
+  category: ordinaryDrink,
+  alcoholicOrNot: optionalAlcohol,
   name: 'GG',
-  image: 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg',
+  image: ggDrinkImage,
   doneDate: '2020',
   tags: ['teste', 'teste'],
 },
@@ -63,10 +67,10 @@ export const doneRecipesStorage2 = [{
   id: '21332',
   type: 'drink',
   nationality: '',
-  category: 'Ordinary Drink',
-  alcoholicOrNot: 'Optional alcohol',
+  category: ordinaryDrink,
+  alcoholicOrNot: optionalAlcohol,
   name: 'GG',
-  image: 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg',
+  image: ggDrinkImage,
   doneDate: '2020',
   tags: ['teste', 'teste'],
 },
@@ -84,6 +88,15 @@ export const doneRecipesStorage2 = [{
 ];
 
 export const favoriteRecipesStorage = [
+  {
+    id: '15997',
+    type: 'drink',
+    nationality: '',
+    category: ordinaryDrink,
+    alcoholicOrNot: optionalAlcohol,
+    name: 'GG',
+    image: ggDrinkImage,
+  },
   {
     id: '52771',
     type: 'meal',
