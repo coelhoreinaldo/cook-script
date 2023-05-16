@@ -80,7 +80,7 @@ function DoneRecipes() {
                 onClick={ () => copyUrl(recipe.type, recipe.id) }
               >
                 {showMessage
-                  ? <p>Link copied!</p>
+                  ? <p data-testid="link-copied">Link copied!</p>
                   : (
                     <img
                       src={ shareImage }

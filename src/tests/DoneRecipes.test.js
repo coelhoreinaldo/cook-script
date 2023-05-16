@@ -92,8 +92,8 @@ describe('Testa o componente Done Recipes', () => {
     const btnShare = await screen.findByTestId('0-horizontal-share-btn');
     expect(btnShare).toBeInTheDocument();
     userEvent.click(btnShare);
-    const linkCopied = await screen.findByTestId('link-copied');
-    expect(linkCopied).toBeInTheDocument();
+    const linkCopied = await screen.findAllByTestId('link-copied');
+    expect(linkCopied[0]).toBeInTheDocument();
   });
   it('Testando os botões de filtro', () => {
     jest.spyOn(global, 'fetch');
