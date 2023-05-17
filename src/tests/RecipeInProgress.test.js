@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
 import Provider from '../context/Provider';
-import fetchMock from '../../cypress/mocks/fetch';
+import fetchMock from './mocks/fetch';
 import DoneRecipesProvider from '../context/DoneRecipesProvider';
 import { doneRecipesStorage, doneRecipesStorage2, favoriteRecipesStorage, recipesInProgressStorage } from './mocks/localStorageMocks';
 

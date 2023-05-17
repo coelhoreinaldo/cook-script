@@ -54,10 +54,6 @@ describe('Testa o componente Favorites Recipe', () => {
     expect(localStorage.getItem('favoriteRecipes')).toBeNull();
   });
   it('Testando botão share', async () => {
-    // jest.spyOn(global, 'fetch');
-    // global.fetch.mockResolvedValue({
-    //   json: jest.fn().mockResolvedValue(favoriteRecipeMock),
-    // });
     renderWithRouter(
       <Provider>
         <FavoriteRecipes />
