@@ -77,5 +77,20 @@ describe('<Header />', () => {
 
     const searchInputEl = await screen.findByTestId('search-input');
     expect(searchInputEl).toBeInTheDocument();
+    const letterFilterEl = screen.getByText(/first letter/i);
+    expect(letterFilterEl).toBeInTheDocument();
+    userEvent.type(searchInputEl, 'c');
+    const searchBtnEl = screen.getByTestId('exec-search-btn');
+    userEvent.click(searchBtnEl);
+
+    const nameFilterEl = screen.getByText(/name/i);
+    expect(nameFilterEl).toBeInTheDocument();
+    userEvent.click(nameFilterEl);
+    userEvent.clear(searchInputEl);
+    userEvent.type(searchInputEl, 'corba');
+    userEvent.click(searchBtnEl);
+
+    const ingredientFilterEl = screen.getByText(/ingredient/i);
+    expect(ingredientFilterEl).toBeInTheDocument();
   });
 });

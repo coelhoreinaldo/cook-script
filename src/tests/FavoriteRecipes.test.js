@@ -6,30 +6,38 @@ import Provider from '../context/Provider';
 import FavoriteRecipes from '../pages/FavoriteRecipes';
 import { favoriteRecipeMock } from './mocks/favoriteRecipesMock';
 
-const localStorageMock = (() => {
-  let store = {};
+jest.mock('clipboard-copy');
 
-  return {
-    getItem: (key) => store[key] || null,
-    setItem: (key, value) => {
-      store[key] = value.toString();
-    },
-    removeItem: (key) => {
-      delete store[key];
-    },
-    clear: () => {
-      store = {};
-    },
-  };
-})();
+// const localStorageMock = (() => {
+//   let store = {};
 
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
+//   return {
+//     getItem: (key) => store[key] || null,
+//     setItem: (key, value) => {
+//       store[key] = value.toString();
+//     },
+//     removeItem: (key) => {
+//       delete store[key];
+//     },
+//     clear: () => {
+//       store = {};
+//     },
+//   };
+// })();
+
+// Object.defineProperty(window, 'localStorage', {
+//   value: localStorageMock,
+// });
 
 describe('Testa o componente Favorites Recipe', () => {
-  it('Testa o botão de desfavoritar', () => {
+  beforeEach(() => {
     localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipeMock));
+  });
+  afterEach(() => {
+    localStorage.clear();
+  });
+  it('Testa o botão de desfavoritar', () => {
+    // localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipeMock));
     renderWithRouter(
       <Provider>
         <FavoriteRecipes />
@@ -46,10 +54,10 @@ describe('Testa o componente Favorites Recipe', () => {
     expect(localStorage.getItem('favoriteRecipes')).toBeNull();
   });
   it('Testando botão share', async () => {
-    jest.spyOn(global, 'fetch');
-    global.fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue(favoriteRecipeMock),
-    });
+    // jest.spyOn(global, 'fetch');
+    // global.fetch.mockResolvedValue({
+    //   json: jest.fn().mockResolvedValue(favoriteRecipeMock),
+    // });
     renderWithRouter(
       <Provider>
         <FavoriteRecipes />
@@ -57,20 +65,35 @@ describe('Testa o componente Favorites Recipe', () => {
     );
 
     const btnMealsFilter = screen.getByTestId('filter-by-meal-btn');
+    expect(btnMealsFilter).toBeInTheDocument();
     userEvent.click(btnMealsFilter);
-    const nationalityTitle = screen.getByText(/italian/i);
-    expect(nationalityTitle).toBeInTheDocument();
+    const mealTitle = await screen.findByText(/spicy/i);
+    expect(mealTitle).toBeInTheDocument();
 
     const btnDrinkFIlter = screen.getByTestId('filter-by-drink-btn');
+    expect(btnDrinkFIlter).toBeInTheDocument();
+
     userEvent.click(btnDrinkFIlter);
-    const drinkAlcool = screen.getByRole('heading', { name: /alcoholic/i });
+    const drinkAlcool = screen.getByTestId('0-horizontal-top-text');
     expect(drinkAlcool).toBeInTheDocument();
 
     const btnAllFilter = screen.getByTestId('filter-by-all-btn');
+    expect(btnAllFilter).toBeInTheDocument();
+
     userEvent.click(btnAllFilter);
-    const allNationality = screen.getByText(/italian/i);
+    const allNationality = await screen.findByText(/italian/i);
     expect(allNationality).toBeInTheDocument();
-    const allDrink = screen.getByRole('heading', { name: /alcoholic/i });
+    const allDrink = screen.getByTestId('1-horizontal-top-text');
     expect(allDrink).toBeInTheDocument();
+  });
+
+  it('', async () => {
+    renderWithRouter(
+      <Provider>
+        <FavoriteRecipes />
+      </Provider>,
+    );
+    const shareBtn = await screen.findByTestId('1-horizontal-share-btn');
+    userEvent.click(shareBtn);
   });
 });
