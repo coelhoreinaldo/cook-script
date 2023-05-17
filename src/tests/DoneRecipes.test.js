@@ -136,4 +136,18 @@ describe('Testa o componente Done Recipes', () => {
     const { pathname } = history.location;
     expect(pathname).toBe('/meals/52771');
   });
+  it('Testando o history', () => {
+    const { history } = renderWithRouter(
+      <Provider>
+        <DoneRecipesProvider>
+          <DoneRecipes />
+        </DoneRecipesProvider>
+      </Provider>,
+    );
+    const btnRecipeDetails = screen.getAllByTestId('push-to-details')[0];
+    userEvent.click(btnRecipeDetails);
+
+    const { pathname } = history.location;
+    expect(pathname).toBe('/meals/52771');
+  });
 });

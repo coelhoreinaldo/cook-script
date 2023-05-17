@@ -54,7 +54,10 @@ function DoneRecipes() {
       <section className="done-recipes-container">
         {mockFilter && mockFilter.map((recipe, index) => (
           <div key={ index } className="recipe-page-card">
-            <button onClick={ () => history.push(`/${recipe.type}s/${recipe.id}`) }>
+            <button
+              data-testid="push-to-details"
+              onClick={ () => history.push(`/${recipe.type}s/${recipe.id}`) }
+            >
               <img
                 width={ 150 }
                 src={ recipe.image }

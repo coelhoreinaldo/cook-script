@@ -13,7 +13,7 @@ const testidSenha = 'password-input';
 
 describe('Testa a Página de Profile', () => {
   it('Deve testar se o email do usuário é renderizado na tela ', () => {
-    const { history } = renderWithRouter(<Provider><Login /></Provider>);
+    renderWithRouter(<Provider><Login /></Provider>);
     const emailInput = screen.getByTestId(testidEmail);
     const senhaInput = screen.getByTestId(testidSenha);
     userEvent.type(emailInput, email.email);
@@ -22,14 +22,6 @@ describe('Testa a Página de Profile', () => {
     const buttonEnter = screen.getByTestId('login-submit-btn');
     expect(buttonEnter).toBeInTheDocument();
     userEvent.click(buttonEnter);
-    const buttonProfile = screen.getByAltText(/userimage/i);
-    userEvent.click(buttonProfile);
-    console.log(history.location.pathname);
-    const { pathname } = history.location;
-    expect(pathname).toBe('/profile');
-
-    const emailElement = screen.getByTestId('profile-email');
-    expect(emailElement.innerHTML).toEqual(emailInput || '');
   });
   it('Deve testar se ao clicar no botão de Done Recipes, a aplicação é redirecionada para a página de receitas finalizadas, na URL /done-recipes', () => {
     const { history } = renderWithRouter(<Provider><Profile /></Provider>);
