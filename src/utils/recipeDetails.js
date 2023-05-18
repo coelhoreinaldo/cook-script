@@ -9,11 +9,13 @@ export const getLocalStorageDoneRecipes = (currRecipe) => {
 export const getRecipesAndIngredients = (recipeDetails) => {
   const recipeEntries = Object.entries(recipeDetails);
   const ingredients = recipeEntries
-    .filter(([key, value]) => key.includes('strIngredient') && value && value !== ' ')
+    .filter(([key, value]) => key.includes('strIngredient') && value && value !== ' '
+    && value !== null)
     .map((item) => item[1]);
 
   const measures = recipeEntries
-    .filter(([key, value]) => key.includes('strMeasure') && value !== ' ')
+    .filter(([key, value]) => key.includes('strMeasure') && value !== ' '
+    && value !== null)
     .map((item) => item[1]);
 
   return { ingredients, measures };
