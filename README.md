@@ -1,18 +1,21 @@
-# 🛰 Star Wars Planet Search
+# 🥗 CookScript
 
-<img src='/star-wars.png' alt='100% de aprovação no projeto' />
+![100% de aprovação no projeto](./app.png)
 
 ## 📘 Sobre
 
+Aplicativo de receitas em React.js
+
 ## 🧩 Funcionalidades
 
-- Visualizar os planetas de Star Wars retornados pela API.
-- Procurar um planeta pelo nome.
-- Filtrar por população, período orbital, diâmetro, período de rotação e superfície da água.
-- Adicionar mais de um filtro e removê-lo ao clicar no botão de deletar ao lado.
-- Remover todos os filtros ao clicar no botão de remover filtros.
-- Ordenar de maneira decrescente ou crescente.
-
+- Simular um login;
+- Ter acesso a uma variedade de receitas de comidas e/ou bebidas;
+- Filtrá-las por tipo;
+- Conferir detalhes de uma receita (ingredientes, instruções, vídeos explicativos);
+- Iniciar uma receita e controlar o andamento marcando quais ingredientes já foram usados;
+- Finalizar uma receita;
+- Adicionar uma receita aos favoritos;
+- Visualizar o perfil e acessar as receitas feitas, favoritadas e em progresso.
 
 ## ⚛️ Ferramentas
 
@@ -42,7 +45,7 @@ Projeto construído utilizando React.js.
 
 ## 📝 Nota
 
-<img src='/grade.png' alt='100% de aprovação no projeto' />
+![100% de aprovação no projeto](./grade.png)
 
 ## 🧪 Cobertura de Testes
 
